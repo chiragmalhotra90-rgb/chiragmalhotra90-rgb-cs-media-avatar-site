@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { chatComplete } from "@/lib/avatar/llm";
-import { SYSTEM_PROMPT } from "@/lib/avatar/system-prompt";
+import { buildSystemPrompt } from "@/lib/avatar/system-prompt";
+import type { Mood } from "@/lib/avatar/mood-greetings";
 import { ChatMessage } from "z-ai-web-dev-sdk";
 
 /**
@@ -15,12 +16,19 @@ import { ChatMessage } from "z-ai-web-dev-sdk";
  * `sessionToken` and we'll re-validate it here.
  */
 
+function parseMood(value: unknown): Mood {
+  return value === "casual" || value === "funny" || value === "professional"
+    ? value
+    : "professional";
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const message = String(body.message ?? "").trim();
     const history: ChatMessage[] = Array.isArray(body.history) ? body.history : [];
     const sessionToken = body.sessionToken ? String(body.sessionToken) : undefined;
+    const mood = parseMood(body.mood);
 
     if (!message) {
       return NextResponse.json(
@@ -30,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     const messages: ChatMessage[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: buildSystemPrompt(mood) },
       ...history.slice(-8).map((m) => ({
         role: (m.role === "assistant" ? "assistant" : "user") as "assistant" | "user",
         content: String(m.content ?? ""),

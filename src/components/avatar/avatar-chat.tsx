@@ -3,11 +3,28 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Loader2, Volume2, VolumeX, Mic, Square } from "lucide-react";
+import {
+  personalizeGreeting,
+  pickGreeting,
+  type Mood,
+} from "@/lib/avatar/mood-greetings";
+import {
+  useVisitorStatus,
+  type VisitorStatus,
+} from "@/lib/avatar/use-visitor-status";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const GREETING =
-  "Hi. I'm the CS Media digital spokesperson. We bring brands to life — photography, video, AI avatars, websites, CRM, branding, marketing and automation, all under one connected engine. What brings you here today?";
+const MOOD_STORAGE_KEY = "cs-mood";
+const DEFAULT_MOOD: Mood = "professional";
+
+function isMood(value: string | null): value is Mood {
+  return value === "casual" || value === "funny" || value === "professional";
+}
+
+function getGreeting(mood: Mood, status: VisitorStatus) {
+  return personalizeGreeting(pickGreeting(mood, status));
+}
 
 /**
  * AvatarChat
@@ -32,8 +49,13 @@ export function AvatarChat({
   onSpeakingChange: (speaking: boolean) => void;
   onAudioLevel?: (level: number) => void;
 }) {
+  const visitorStatus = useVisitorStatus();
+  const initialGreeting = getGreeting(DEFAULT_MOOD, "first-time");
+  const [mood, setMood] = useState<Mood>(DEFAULT_MOOD);
+  const [greetingVersion, setGreetingVersion] = useState(0);
+  const [currentGreeting, setCurrentGreeting] = useState(initialGreeting);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: GREETING },
+    { role: "assistant", content: initialGreeting },
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -45,6 +67,8 @@ export function AvatarChat({
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const recogRef = useRef<any>(null);
+  const spokenGreetingRef = useRef<string | null>(null);
+  const forceFirstTimeGreetingRef = useRef(false);
 
   // Web Audio API nodes for amplitude analysis
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -52,7 +76,7 @@ export function AvatarChat({
   const sourceRef = useRef<AudioBufferSourceNode | null>(null);
   const gainRef = useRef<GainNode | null>(null);
   const rafRef = useRef<number>(0);
-  const dataArrRef = useRef<Uint8Array | null>(null);
+  const dataArrRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
 
   // Check on mount which TTS backend is available
   useEffect(() => {
@@ -73,13 +97,7 @@ export function AvatarChat({
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SR) setSttSupported(true);
 
-    // Speak greeting after a small delay (lets the avatar canvas mount)
-    const t = setTimeout(() => {
-      if (!muted) speak(GREETING);
-    }, 900);
-
     return () => {
-      clearTimeout(t);
       stopAllAudio();
       if (recogRef.current) {
         try {
@@ -88,6 +106,44 @@ export function AvatarChat({
       }
     };
   }, []);
+
+  useEffect(() => {
+    const savedMood = window.localStorage.getItem(MOOD_STORAGE_KEY);
+    if (isMood(savedMood)) setMood(savedMood);
+
+    const onMoodChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ mood?: unknown }>).detail;
+      const nextMood = typeof detail?.mood === "string" ? detail.mood : null;
+      if (!isMood(nextMood)) return;
+
+      forceFirstTimeGreetingRef.current = true;
+      spokenGreetingRef.current = null;
+      setMood(nextMood);
+      setGreetingVersion((version) => version + 1);
+    };
+
+    window.addEventListener("cs-mood-change", onMoodChange);
+    return () => window.removeEventListener("cs-mood-change", onMoodChange);
+  }, []);
+
+  useEffect(() => {
+    const status = forceFirstTimeGreetingRef.current
+      ? "first-time"
+      : visitorStatus;
+    const nextGreeting = getGreeting(mood, status);
+
+    forceFirstTimeGreetingRef.current = false;
+    setCurrentGreeting(nextGreeting);
+    setMessages((existing) => {
+      if (
+        existing.length <= 1 &&
+        (existing.length === 0 || existing[0].role === "assistant")
+      ) {
+        return [{ role: "assistant", content: nextGreeting }];
+      }
+      return existing;
+    });
+  }, [greetingVersion, mood, visitorStatus]);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -117,7 +173,9 @@ export function AvatarChat({
       audioCtxRef.current = ctx;
       analyserRef.current = analyser;
       gainRef.current = gain;
-      dataArrRef.current = new Uint8Array(analyser.frequencyBinCount);
+      dataArrRef.current = new Uint8Array(
+        new ArrayBuffer(analyser.frequencyBinCount)
+      );
     } catch (e) {
       // Web Audio unavailable
     }
@@ -309,6 +367,18 @@ export function AvatarChat({
     [muted, ttsMode, stopAllAudio, speakWithElevenLabs, speakWithBrowser]
   );
 
+  useEffect(() => {
+    if (!currentGreeting || muted || ttsMode === "unknown") return;
+    if (spokenGreetingRef.current === currentGreeting) return;
+
+    const t = setTimeout(() => {
+      spokenGreetingRef.current = currentGreeting;
+      speak(currentGreeting);
+    }, 900);
+
+    return () => clearTimeout(t);
+  }, [currentGreeting, muted, speak, ttsMode]);
+
   const toggleMute = () => {
     if (!muted) {
       stopAllAudio();
@@ -334,6 +404,7 @@ export function AvatarChat({
         body: JSON.stringify({
           message: trimmed,
           history: messages,
+          mood,
         }),
       });
       const data = await res.json();

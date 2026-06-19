@@ -270,9 +270,7 @@ function FaceMesh({ talking, audioLevel = 0 }: ParticleFaceProps) {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={PARTICLE_COUNT}
-            array={positions}
-            itemSize={3}
+            args={[positions, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
@@ -292,9 +290,7 @@ function FaceMesh({ talking, audioLevel = 0 }: ParticleFaceProps) {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={wirePositions.length / 3}
-            array={wirePositions}
-            itemSize={3}
+            args={[wirePositions, 3]}
           />
         </bufferGeometry>
         <lineBasicMaterial
@@ -311,9 +307,7 @@ function FaceMesh({ talking, audioLevel = 0 }: ParticleFaceProps) {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            count={eyePositions.length / 3}
-            array={eyePositions}
-            itemSize={3}
+            args={[eyePositions, 3]}
           />
         </bufferGeometry>
         <pointsMaterial

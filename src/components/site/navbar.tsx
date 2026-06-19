@@ -2,16 +2,50 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Palette as PaletteIcon } from "lucide-react";
+import {
+  Briefcase,
+  Menu,
+  Palette as PaletteIcon,
+  Sparkles,
+  X,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { NAV_LINKS } from "@/lib/site/content";
 import { PALETTES } from "@/lib/site/palettes";
 import { usePalette } from "@/lib/site/palette-context";
+import type { Mood } from "@/lib/avatar/mood-greetings";
 import { cn } from "@/lib/utils";
+
+const MOOD_STORAGE_KEY = "cs-mood";
+const FIRST_VISIT_KEY = "cs-first-visit";
+
+const MOOD_OPTIONS: {
+  id: Mood;
+  label: string;
+  paletteId: string;
+  Icon: LucideIcon;
+}[] = [
+  { id: "casual", label: "Casual", paletteId: "midnight-cyan", Icon: Sparkles },
+  { id: "funny", label: "Funny", paletteId: "lemon-berry", Icon: Zap },
+  {
+    id: "professional",
+    label: "Professional",
+    paletteId: "charcoal-sandy-steel",
+    Icon: Briefcase,
+  },
+];
+
+function isMood(value: string | null): value is Mood {
+  return value === "casual" || value === "funny" || value === "professional";
+}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [moodOpen, setMoodOpen] = useState(false);
+  const [mood, setMood] = useState<Mood>("professional");
   const { paletteId, setPaletteId, palette } = usePalette();
 
   useEffect(() => {
@@ -20,6 +54,47 @@ export function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      const savedMood = window.localStorage.getItem(MOOD_STORAGE_KEY);
+      if (isMood(savedMood)) setMood(savedMood);
+    }, 0);
+
+    const onMoodChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ mood?: unknown }>).detail;
+      const nextMood = typeof detail?.mood === "string" ? detail.mood : null;
+      if (isMood(nextMood)) setMood(nextMood);
+    };
+
+    window.addEventListener("cs-mood-change", onMoodChange);
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener("cs-mood-change", onMoodChange);
+    };
+  }, []);
+
+  const selectMood = (nextMood: Mood) => {
+    const moodConfig = MOOD_OPTIONS.find((option) => option.id === nextMood);
+    if (!moodConfig) return;
+
+    window.localStorage.setItem(MOOD_STORAGE_KEY, nextMood);
+    if (!window.localStorage.getItem(FIRST_VISIT_KEY)) {
+      window.localStorage.setItem(FIRST_VISIT_KEY, new Date().toISOString());
+    }
+    setMood(nextMood);
+    setPaletteId(moodConfig.paletteId);
+    setMoodOpen(false);
+    window.dispatchEvent(
+      new CustomEvent("cs-mood-change", {
+        detail: { mood: nextMood, freshStart: true },
+      })
+    );
+  };
+
+  const currentMood =
+    MOOD_OPTIONS.find((option) => option.id === mood) ?? MOOD_OPTIONS[2];
+  const CurrentMoodIcon = currentMood.Icon;
 
   return (
     <motion.header
@@ -75,7 +150,69 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-3 relative">
             <div className="relative">
               <button
-                onClick={() => setPaletteOpen((o) => !o)}
+                onClick={() => {
+                  setMoodOpen((o) => !o);
+                  setPaletteOpen(false);
+                }}
+                className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground hover:border-white/20"
+                aria-label="Choose avatar mood"
+              >
+                <CurrentMoodIcon size={12} style={{ color: "var(--brand-accent)" }} />
+                <span className="hidden xl:inline">{currentMood.label}</span>
+              </button>
+              <AnimatePresence>
+                {moodOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute top-full right-0 z-50 mt-2 w-56 rounded-2xl border border-white/10 bg-card p-2 shadow-2xl"
+                  >
+                    <div className="px-3 py-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                      Avatar mood
+                    </div>
+                    {MOOD_OPTIONS.map((option) => {
+                      const Icon = option.Icon;
+                      return (
+                        <button
+                          key={option.id}
+                          onClick={() => selectMood(option.id)}
+                          className={cn(
+                            "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
+                            mood === option.id
+                              ? "bg-white/[0.06]"
+                              : "hover:bg-white/[0.03]"
+                          )}
+                        >
+                          <Icon
+                            size={14}
+                            className="shrink-0"
+                            style={{ color: "var(--brand-accent)" }}
+                          />
+                          <span className="text-[12px] font-semibold text-foreground">
+                            {option.label}
+                          </span>
+                          {mood === option.id && (
+                            <span
+                              className="ml-auto h-2 w-2 rounded-full"
+                              style={{ background: "var(--brand-accent)" }}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setPaletteOpen((o) => !o);
+                  setMoodOpen(false);
+                }}
                 className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[11px] font-medium text-foreground/80 transition-colors hover:text-foreground hover:border-white/20"
                 aria-label="Choose color palette"
               >
@@ -197,6 +334,42 @@ export function Navbar() {
                   </a>
                 ))}
               </nav>
+
+              {/* Palette picker — mobile */}
+              <div className="mt-3">
+                <div className="px-1 mb-2 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                  Avatar mood
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {MOOD_OPTIONS.map((option) => {
+                    const Icon = option.Icon;
+                    return (
+                      <button
+                        key={option.id}
+                        onClick={() => {
+                          selectMood(option.id);
+                          setOpen(false);
+                        }}
+                        className={cn(
+                          "rounded-lg border px-2 py-2.5 text-center transition-colors",
+                          mood === option.id
+                            ? "border-[var(--brand-accent)] bg-white/[0.06]"
+                            : "border-white/10 bg-white/[0.02]"
+                        )}
+                      >
+                        <Icon
+                          size={15}
+                          className="mx-auto"
+                          style={{ color: "var(--brand-accent)" }}
+                        />
+                        <span className="mt-1 block text-[10px] font-medium text-foreground/80">
+                          {option.label}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* Palette picker — mobile */}
               <div className="mt-3">

@@ -3,6 +3,7 @@ import { CustomCursor } from "@/components/site/custom-cursor";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { Navbar } from "@/components/site/navbar";
 import { AvatarHero } from "@/components/avatar/avatar-hero";
+import { MoodSelector } from "@/components/avatar/mood-selector";
 import { VoiceCommandButton } from "@/components/avatar/voice-command-button";
 import { Problem } from "@/components/site/problem";
 import { Engine } from "@/components/site/engine";
@@ -34,19 +35,21 @@ export default function Home() {
           <ScrollProgress />
           <CustomCursor />
           <Navbar />
-          <main className="relative min-h-screen">
-            <AvatarHero heygenAvailable={HEYGEN_AVAILABLE} />
-            <Problem />
-            <Engine />
-            <Services />
-            <Workflow />
-            <ProofOfWork />
-            <Onboarding />
-            <Pricing />
-            <CTA />
-          </main>
-          <Footer />
-          <VoiceCommandButton />
+          <MoodSelector>
+            <main className="relative min-h-screen">
+              <AvatarHero heygenAvailable={HEYGEN_AVAILABLE} />
+              <Problem />
+              <Engine />
+              <Services />
+              <Workflow />
+              <ProofOfWork />
+              <Onboarding />
+              <Pricing />
+              <CTA />
+            </main>
+            <Footer />
+            <VoiceCommandButton />
+          </MoodSelector>
         </AvatarSourceProvider>
       </VoiceCommandProvider>
     </PaletteProvider>
