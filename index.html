@@ -192,6 +192,14 @@ nav>*{pointer-events:auto;}
 #cb-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0 2px;}
 .cb-btn{padding:8px 6px;cursor:pointer;font-family:inherit;font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:#9fd2e0;background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);border-radius:6px;transition:0.15s;}
 .cb-btn:hover{background:color-mix(in srgb,var(--accent) 17%,transparent);color:#d6f3fa;}
+#ver-perf{font-size:9.5px;letter-spacing:0.05em;color:#5e8a98;margin:10px 0 6px;font-variant-numeric:tabular-nums;}
+#ver-perf b{color:var(--accent);font-weight:600;}
+.ver-row{display:grid;grid-template-columns:34px 1fr 1fr 1fr;gap:6px;align-items:center;margin:6px 0;}
+.ver-lbl{font-size:8.5px;letter-spacing:0.16em;text-transform:uppercase;color:#5e8a98;}
+.ver-slot.filled{color:#d6f3fa;background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:color-mix(in srgb,var(--accent) 50%,transparent);}
+.ver-slot.empty{opacity:0.42;}
+.ver-slot.active{box-shadow:0 0 0 1px var(--accent),0 0 12px color-mix(in srgb,var(--accent) 55%,transparent);}
+#ver-reload{width:100%;margin-top:8px;}
 #cb-replace{grid-column:1 / -1;}
 @media(max-width:768px){#panel{top:64px;width:210px;}}
 
@@ -570,6 +578,7 @@ nav{max-width:1520px;}
       setSize(v){ sizeScale=v; save(LS.size,v); },
       setSpeed(v){ speedScale=v; save(LS.speed,v); },
       getSize(){ return sizeScale; }, getSpeed(){ return speedScale; },
+      applyTheme(combo){ if(combo) applyCombo(combo); },   // live-apply a saved theme (relights corridor via the style observer)
       makeDefault(){ save(LS.def,{ theme:load(LS.theme,null), size:sizeScale, speed:speedScale, font:load(LS.font,null), custom:load(LS.custom,[]), overrides:load(LS.overrides,{}) }); },
       reset(){ const d=load(LS.def,null); if(d){ save(LS.theme,d.theme); save(LS.size,d.size??1); save(LS.speed,d.speed??1); if(d.font) save(LS.font,d.font); else localStorage.removeItem(LS.font); save(LS.custom,d.custom||[]); save(LS.overrides,d.overrides||{}); } else { [LS.theme,LS.custom,LS.overrides,LS.font,LS.size,LS.speed].forEach(k=>localStorage.removeItem(k)); } location.reload(); },
       replace(){ for(const b of balls){ b.pos.set((Math.random()*2-1)*(bounds.x-b.r),(Math.random()*2-1)*(bounds.y-b.r),(Math.random()*2-1)*3); b.vel.set((Math.random()*2-1)*S,(Math.random()*2-1)*S,(Math.random()*2-1)*S*0.5); b.pulse=0.7; } }
@@ -622,6 +631,20 @@ nav{max-width:1520px;}
     <div class="ctl" data-key="textPos"></div>
     <div class="ctl" data-key="angleL"></div>
     <div class="ctl" data-key="angleR"></div>
+
+    <div class="grp">Versions · Mood</div>
+    <div id="ver-perf">Load <b id="perf-load">…</b> · <b id="perf-fps">…</b> fps</div>
+    <div class="ver-row"><span class="ver-lbl">Save</span>
+      <button class="cb-btn ver-slot" data-save="A">A</button>
+      <button class="cb-btn ver-slot" data-save="B">B</button>
+      <button class="cb-btn ver-slot" data-save="C">C</button>
+    </div>
+    <div class="ver-row"><span class="ver-lbl">Load</span>
+      <button class="cb-btn ver-slot" data-load="A">A</button>
+      <button class="cb-btn ver-slot" data-load="B">B</button>
+      <button class="cb-btn ver-slot" data-load="C">C</button>
+    </div>
+    <button id="ver-reload" class="cb-btn">⟳ Reload page · time the load</button>
 
     <button id="panel-reset">Reset to default</button>
   </div>
@@ -1798,21 +1821,91 @@ function setupControls() {
     angleR:      ['Right angle', -60,  60,  1,    0,     0, v => { LANE_ANGLE_R = v * Math.PI / 180; applyLaneAngles(); }],
   };
 
+  /* ---- persistence: render-control sliders survive a refresh (like the colour theme) ---- */
+  const RC_LIVE = 'render_live', RC_DEF = 'render_default';
+  const rcGet = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
+  const rcSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const saved = rcGet(RC_LIVE);
+
   for (const [key, s] of Object.entries(SPEC)) {
     const slot = document.querySelector(`.ctl[data-key="${key}"]`);
     if (!slot) continue;
     const [label, min, max, step, def, dec, apply] = s;
+    const v0 = Number.isFinite(saved[key]) ? saved[key] : def;   // restore saved value, else default
     slot.innerHTML =
-      `<div class="row"><label>${label}</label><span class="val">${def.toFixed(dec)}</span></div>` +
-      `<input type="range" min="${min}" max="${max}" step="${step}" value="${def}">`;
+      `<div class="row"><label>${label}</label><span class="val">${(+v0).toFixed(dec)}</span></div>` +
+      `<input type="range" min="${min}" max="${max}" step="${step}" value="${v0}">`;
     const input = slot.querySelector('input');
     const valEl = slot.querySelector('.val');
     input.addEventListener('input', () => {
       const v = parseFloat(input.value);
       valEl.textContent = v.toFixed(dec);
       apply(v);
+      const cur = rcGet(RC_LIVE); cur[key] = v; rcSet(RC_LIVE, cur);   // persist every change
     });
   }
+
+  // Push current slider values into the 3D scene. metalMat / seamMat and the lane
+  // groups are built asynchronously (while the loader is up), so wait for them
+  // before applying — that way restored Reflection / Edge-glow / Text-offset values
+  // actually take effect, with no visible flash. (bloom / fog / exposure / floor
+  // already exist by now, but re-applying them here is harmless.)
+  const applyAll = () => {
+    for (const [key, s] of Object.entries(SPEC)) {
+      const slot = document.querySelector(`.ctl[data-key="${key}"]`);
+      const input = slot && slot.querySelector('input');
+      if (input) s[6](parseFloat(input.value));   // s[6] === apply(v)
+    }
+  };
+  let _rcTries = 0;
+  const _rcTimer = setInterval(() => {
+    if (metalMat && seamMat && leftGroups.length && rightGroups.length) {
+      applyAll();
+      clearInterval(_rcTimer);
+    } else if (++_rcTries > 150) {
+      clearInterval(_rcTimer);
+    }
+  }, 100);
+
+  // Small API so the chroma "Make Default" / "Reset" buttons can fold the render
+  // look into the saved default and restore it on reset.
+  window.__render = {
+    // read the current value of every render slider (no writes)
+    get() {
+      const snap = {};
+      for (const key of Object.keys(SPEC)) {
+        const slot = document.querySelector(`.ctl[data-key="${key}"]`);
+        const input = slot && slot.querySelector('input');
+        if (input) snap[key] = parseFloat(input.value);
+      }
+      return snap;
+    },
+    // set the sliders to the given values, persist, and push to the live scene
+    apply(values) {
+      if (!values) return;
+      for (const [key, s] of Object.entries(SPEC)) {
+        if (!(key in values) || !Number.isFinite(values[key])) continue;
+        const slot = document.querySelector(`.ctl[data-key="${key}"]`);
+        if (!slot) continue;
+        const input = slot.querySelector('input');
+        const valEl = slot.querySelector('.val');
+        if (input) input.value = values[key];
+        if (valEl) valEl.textContent = Number(values[key]).toFixed(s[5]);
+      }
+      rcSet(RC_LIVE, { ...rcGet(RC_LIVE), ...values });   // persist
+      applyAll();                                          // apply to the 3D scene now
+    },
+    saveDefault() {
+      const snap = this.get();
+      rcSet(RC_DEF, snap); rcSet(RC_LIVE, snap);
+      return snap;
+    },
+    stageDefault() {
+      const d = rcGet(RC_DEF);
+      if (d && Object.keys(d).length) rcSet(RC_LIVE, d);
+      else { try { localStorage.removeItem(RC_LIVE); } catch (e) {} }
+    }
+  };
 
   // collapse / expand
   const panel = document.getElementById('panel');
@@ -1828,6 +1921,7 @@ function setupControls() {
       slot.querySelector('.val').textContent = def.toFixed(dec);
       apply(def);
     }
+    try { localStorage.removeItem(RC_LIVE); } catch (e) {}   // factory reset persists across refresh
   });
 }
 </script>
@@ -1857,10 +1951,15 @@ function setupControls() {
     inp.addEventListener('input',()=>{ const v=parseFloat(inp.value); val.textContent=v.toFixed(2); ready(c=>c[fn](v)); });
   });
   const bind=(id,m)=>{ const b=document.getElementById(id); if(b) b.addEventListener('click',()=>ready(c=>c[m]())); };
-  bind('cb-reset','reset'); bind('cb-replace','replace');
+  bind('cb-replace','replace');
+  // Reset → restore the saved default: stage the saved render look into live storage,
+  // then let chroma restore its colour/size/speed default and reload (which re-applies both).
+  const cbReset=document.getElementById('cb-reset');
+  if(cbReset) cbReset.addEventListener('click',()=>{ if(window.__render) window.__render.stageDefault(); ready(c=>c.reset()); });
   const dflt=document.getElementById('cb-default');
   if(dflt) dflt.addEventListener('click',()=>{
     ready(c=>c.makeDefault());
+    if(window.__render) window.__render.saveDefault();   // snapshot the whole render panel into the default too
     dflt.textContent='Saved ✓';
     setTimeout(()=>dflt.textContent='Make Default',1200);
     // Log the palette info so the user can hardcode it
@@ -1945,6 +2044,68 @@ function setupControls() {
     buttons.forEach(b=>b.classList.toggle('active', b === button));
     cases.forEach(card=>{ card.hidden = filter !== 'All' && card.dataset.vertical !== filter; });
   }));
+})();
+</script>
+
+<script>
+/* ============================================================
+   VERSION SLOTS A/B/C (full-mood presets) + load-time / live-FPS readout
+   ============================================================ */
+(function(){
+  const VKEY='render_versions', AKEY='render_versions_active';
+  const CK={theme:'chroma_theme',size:'chroma_size',speed:'chroma_speed',custom:'chroma_custom',overrides:'chroma_overrides',font:'chroma_font'};
+  const J=(k,d)=>{ try{ const v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } };
+  const W=(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+  const all=sel=>Array.from(document.querySelectorAll(sel));
+  const getVersions=()=>{ const v=J(VKEY,null); return (v&&typeof v==='object')?v:{A:null,B:null,C:null}; };
+
+  // snapshot the entire current look (render sliders + colour theme + ball size/speed + customs)
+  function capture(){
+    const render=(window.__render&&window.__render.get)?window.__render.get():J('render_live',{});
+    return { render, theme:J(CK.theme,null), size:J(CK.size,1), speed:J(CK.speed,1),
+             custom:J(CK.custom,[]), overrides:J(CK.overrides,{}), font:J(CK.font,null), ts:Date.now() };
+  }
+  // write a saved mood into every live key, then instantly apply what we can without a reload
+  function applyMood(m){
+    if(!m) return;
+    W('render_live', m.render||{});
+    if(m.theme) W(CK.theme,m.theme);
+    W(CK.size, m.size==null?1:m.size); W(CK.speed, m.speed==null?1:m.speed);
+    W(CK.custom, m.custom||[]); W(CK.overrides, m.overrides||{});
+    if(m.font) W(CK.font,m.font); else { try{ localStorage.removeItem(CK.font); }catch(e){} }
+    if(window.__render&&window.__render.apply) window.__render.apply(m.render);   // render sliders → live
+    if(window.__chroma){
+      if(m.theme&&window.__chroma.applyTheme) window.__chroma.applyTheme(m.theme); // colours → live
+      if(window.__chroma.setSize) window.__chroma.setSize(m.size==null?1:m.size);
+      if(window.__chroma.setSpeed) window.__chroma.setSpeed(m.speed==null?1:m.speed);
+    }
+    // custom balls / per-ball recolours / font are fully rebuilt on the next reload
+  }
+
+  function paint(){
+    const vs=getVersions(), active=J(AKEY,null);
+    all('.ver-slot[data-load]').forEach(b=>{ const id=b.dataset.load, has=!!vs[id];
+      b.classList.toggle('filled',has); b.classList.toggle('empty',!has); b.classList.toggle('active',has&&active===id);
+      b.title=has?('Load mood '+id+(vs[id].theme&&vs[id].theme.name?(' — '+vs[id].theme.name):'')):('Slot '+id+' is empty'); });
+    all('.ver-slot[data-save]').forEach(b=>{ b.classList.toggle('filled',!!vs[b.dataset.save]); });
+  }
+
+  all('.ver-slot[data-save]').forEach(b=> b.addEventListener('click',()=>{
+    const id=b.dataset.save, vs=getVersions(); vs[id]=capture(); W(VKEY,vs); W(AKEY,id);
+    const o=b.textContent; b.textContent='✓'; setTimeout(()=>{ b.textContent=o; },650); paint(); }));
+  all('.ver-slot[data-load]').forEach(b=> b.addEventListener('click',()=>{
+    const id=b.dataset.load, vs=getVersions(); if(!vs[id]) return; W(AKEY,id); applyMood(vs[id]); paint(); }));
+  const rl=document.getElementById('ver-reload'); if(rl) rl.addEventListener('click',()=>location.reload());
+  paint();
+
+  /* ---- perf readout: page load time (measured once) + live FPS ---- */
+  const loadEl=document.getElementById('perf-load'), fpsEl=document.getElementById('perf-fps');
+  function showLoad(){ let ms=0; try{ const n=performance.getEntriesByType('navigation')[0];
+      ms=n?(n.loadEventEnd||n.duration||n.responseEnd||0):0; }catch(e){}
+    if(!ms) ms=performance.now(); if(loadEl) loadEl.textContent=Math.max(0,Math.round(ms))+' ms'; }
+  if(document.readyState==='complete') showLoad(); else addEventListener('load',()=>setTimeout(showLoad,0));
+  let frames=0, t0=performance.now();
+  (function fps(now){ frames++; const d=now-t0; if(d>=500){ if(fpsEl) fpsEl.textContent=String(Math.round(frames*1000/d)); frames=0; t0=now; } requestAnimationFrame(fps); })(performance.now());
 })();
 </script>
 </body></html>
