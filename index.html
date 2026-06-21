@@ -455,6 +455,12 @@ nav{max-width:1520px;}
       { name:'Old Gods Red',        colours:['#160404','#CD0000','#FF3B2F'] },
       { name:'Stage Violet',        colours:['#1A0833','#7A2FF7','#B14BFF'] },
       { name:'Acid Marathon',       colours:['#1A1F05','#C6FF00','#B4E600'] },
+      { name:'Rose Quartz',         colours:['#FFB7C5','#C5A3FF'] },
+      { name:'Emerald Depths',      colours:['#1B4332','#004D40'] },
+      { name:'Night Sky & Daisy',   colours:['#061B3D','#FFF36D'] },
+      { name:'Mellow Ochre & Velvet', colours:['#EDD4A9','#412229'] },
+      { name:'Tangerine/Leaf/Grey', colours:['#F58F20','#467434','#363636'] },
+      { name:'Caramel/Papaya/Blue', colours:['#C07F45','#FCEDD6','#97C6E0'] },
     ],
     fonts: ['Montserrat','Inter','Poppins','Bebas Neue','Oswald','Space Grotesk','Syne','Sora','Archivo','Righteous','Playfair Display','DM Serif Display','Cormorant Garamond','Pacifico','Lobster'],
   };
@@ -547,7 +553,11 @@ nav{max-width:1520px;}
     load(LS.custom,[]).forEach((hex,i)=> makeBall(comboFromColour(hex),'cus-'+i+'-'+hex));
     function step(dt){ const sp=dt*speedScale; for(const b of balls){ b.pos.addScaledVector(b.vel,sp); for(const ax of ['x','y','z']){ const lim=bounds[ax]-b.r*sizeScale; if(b.pos[ax]>lim){b.pos[ax]=lim;b.vel[ax]*=-1;} if(b.pos[ax]<-lim){b.pos[ax]=-lim;b.vel[ax]*=-1;} } } for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){ const a=balls[i],c=balls[j],d=a.pos.clone().sub(c.pos),dist=d.length(),min=(a.r+c.r)*sizeScale; if(dist>0&&dist<min){ const n=d.multiplyScalar(1/dist),ov=(min-dist)/2; a.pos.addScaledVector(n,ov); c.pos.addScaledVector(n,-ov); const rel=a.vel.clone().sub(c.vel),sep=rel.dot(n); if(sep<0){ a.vel.addScaledVector(n,-sep); c.vel.addScaledVector(n,sep); } } } for(const b of balls){ b.mesh.position.copy(b.pos); b.mesh.rotation.x+=dt*0.25; b.mesh.rotation.y+=dt*0.3; if(b.pulse>0) b.pulse-=dt*3; b.mesh.scale.setScalar(sizeScale*(1+Math.max(0,b.pulse)*0.4)); } }
     function applyCombo(combo){ if(CONFIG.applyTheme){ const s=document.documentElement.style,t=combo.theme; s.setProperty('--base',t.base); s.setProperty('--text',t.text); s.setProperty('--accent',t.accent); s.setProperty('--accent2',t.accent2); s.setProperty('--grad',`linear-gradient(100deg, ${combo.colours.join(', ')}, ${combo.colours[0]})`); } save(LS.theme,combo); if(typeof CONFIG.onPick==='function') CONFIG.onPick(combo); }
-    const savedTheme=load(LS.theme,null); if(savedTheme) applyCombo(savedTheme);
+    // On load: check for saved default first, then last theme
+    const savedDefault=load(LS.def,null);
+    const savedTheme=load(LS.theme,null);
+    if(savedDefault && savedDefault.theme) applyCombo(savedDefault.theme);
+    else if(savedTheme) applyCombo(savedTheme);
     function recolourBall(b,hex){ const combo=comboFromColour(hex,b.mesh.userData.combo.name); b.mesh.material.map=gradTexture(combo.colours); b.mesh.material.needsUpdate=true; b.mesh.userData.combo=combo; overrides[b.id]=hex; save(LS.overrides,overrides); applyCombo(combo); b.pulse=1; }
     const ray=new THREE.Raycaster(), ndc=new THREE.Vector2();
     const hitBall=(x,y)=>{ ndc.set((x/innerWidth)*2-1,-(y/innerHeight)*2+1); ray.setFromCamera(ndc,camera); const h=ray.intersectObjects(balls.map(b=>b.mesh),false)[0]; return h?balls.find(b=>b.mesh===h.object):null; };
@@ -1849,7 +1859,25 @@ function setupControls() {
   const bind=(id,m)=>{ const b=document.getElementById(id); if(b) b.addEventListener('click',()=>ready(c=>c[m]())); };
   bind('cb-reset','reset'); bind('cb-replace','replace');
   const dflt=document.getElementById('cb-default');
-  if(dflt) dflt.addEventListener('click',()=>{ ready(c=>c.makeDefault()); dflt.textContent='Saved ✓'; setTimeout(()=>dflt.textContent='Make Default',1200); });
+  if(dflt) dflt.addEventListener('click',()=>{
+    ready(c=>c.makeDefault());
+    dflt.textContent='Saved ✓';
+    setTimeout(()=>dflt.textContent='Make Default',1200);
+    // Log the palette info so the user can hardcode it
+    const theme = JSON.parse(localStorage.getItem('chroma_theme') || 'null');
+    if (theme) {
+      console.log('%c⭐ Default palette saved:', 'color:#00E5FF;font-weight:bold;font-size:14px;');
+      console.log('%cName: ' + (theme.name||'Unknown'), 'color:#fff;font-size:13px;');
+      console.log('%cColours: ' + (theme.colours||[]).join(', '), 'color:#00E5FF;font-size:13px;');
+      console.log('%cTheme: ' + JSON.stringify(theme.theme||{}, null, 2), 'color:#888;font-size:12px;');
+      // Show a small popup
+      const popup = document.createElement('div');
+      popup.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;background:rgba(0,0,0,0.9);border:1px solid var(--accent);border-radius:12px;padding:14px 24px;font-family:JetBrains Mono,monospace;font-size:12px;color:var(--accent);backdrop-filter:blur(10px);box-shadow:0 0 30px var(--accent);';
+      popup.innerHTML = '⭐ Default saved: <strong>' + (theme.name||'Unknown') + '</strong><br><span style="color:#fff;opacity:0.7">' + (theme.colours||[]).join(' · ') + '</span>';
+      document.body.appendChild(popup);
+      setTimeout(()=>{ popup.style.opacity='0'; popup.style.transition='opacity 0.5s'; setTimeout(()=>popup.remove(), 500); }, 3000);
+    }
+  });
 })();
 
 /* ---- contact modal + smooth-scroll nav ---- */
