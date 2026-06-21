@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudioSW — Luxury Interior Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   RESET
+   ═══════════════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0C0C0C;
+  --bg-panel:#111111;
+  --white:#ffffff;
+  --text:#ffffff;
+  --text-muted:rgba(255,255,255,.5);
+  --text-dim:rgba(255,255,255,.3);
+  --border:rgba(255,255,255,.08);
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --gutter:clamp(24px,5vw,72px);
+  --gutter-sm:clamp(16px,3vw,40px);
+  --transition:cubic-bezier(.4,0,.2,1);
+}
+html{
+  font-size:16px;scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body{
+  font-family:var(--sans);
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+button{border:none;background:none;cursor:pointer;font-family:inherit;color:inherit}
+ul{list-style:none}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER — logo left, "Menu" text right (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:32px var(--gutter);
+  pointer-events:none;
+}
+.site-header>*{pointer-events:auto}
+
+.site-logo{
+  display:flex;align-items:center;gap:12px;
+}
+.site-logo svg{height:18px;fill:var(--white)}
+.site-logo-text{
+  font-size:.95rem;font-weight:500;
+  letter-spacing:.08em;
+  color:var(--white);
+}
+
+.menu-trigger{
+  font-size:.8rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);
+  padding:8px 0;
+  position:relative;
+}
+.menu-trigger::after{
+  content:'';position:absolute;bottom:6px;left:0;
+  width:100%;height:1px;
+  background:var(--white);
+  transform:scaleX(0);transform-origin:right;
+  transition:transform .35s var(--transition);
+}
+.menu-trigger:hover::after{
+  transform:scaleX(1);transform-origin:left;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAV PANEL — slides from right (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.nav-panel{
+  position:fixed;top:0;right:0;z-index:200;
+  width:min(480px,100vw);height:100vh;
+  background:var(--bg-panel);
+  padding:32px var(--gutter) 40px;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .5s var(--transition);
+}
+.nav-panel.open{transform:translateX(0)}
+
+.nav-backdrop{
+  position:fixed;inset:0;z-index:199;
+  background:rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;
+  transition:opacity .4s,visibility .4s;
+}
+.nav-backdrop.open{opacity:1;visibility:visible}
+
+.nav-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:60px;
+}
+.nav-top .site-logo-text{font-size:.95rem;font-weight:500;letter-spacing:.08em}
+.nav-close{
+  font-size:.8rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+
+.nav-links{flex:1}
+.nav-links a{
+  display:block;
+  font-size:clamp(1.1rem,2.5vw,1.35rem);
+  font-weight:400;
+  padding:14px 0;
+  color:var(--text);
+  transition:color .25s;
+  letter-spacing:.02em;
+}
+.nav-links a:hover{color:var(--text-muted)}
+
+.nav-talk{
+  margin-top:auto;
+  padding-top:40px;
+  border-top:1px solid var(--border);
+}
+.nav-talk h4{
+  font-size:.75rem;font-weight:500;
+  letter-spacing:.06em;
+  margin-bottom:10px;color:var(--text);
+}
+.nav-talk p{
+  font-size:.82rem;font-weight:300;
+  color:var(--text-muted);line-height:1.6;
+  margin-bottom:14px;
+}
+.nav-talk a.talk-link{
+  font-size:.8rem;font-weight:500;
+  letter-spacing:.06em;
+  color:var(--text);
+  border-bottom:1px solid var(--text);
+  padding-bottom:2px;
+  transition:opacity .25s;
+}
+.nav-talk a.talk-link:hover{opacity:.6}
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE HEADER — "PROJECTS WE ARE PROUD OF" (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.page-header{
+  padding:160px var(--gutter) 0;
+}
+.page-title{
+  font-size:clamp(1.6rem,3.5vw,2.6rem);
+  font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  line-height:1.2;
+  color:var(--text);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FILTER TABS (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.filter-tabs{
+  padding:36px var(--gutter) 48px;
+  display:flex;gap:24px;
+  flex-wrap:wrap;
+}
+.filter-tab{
+  font-size:.8rem;font-weight:400;
+  letter-spacing:.04em;
+  color:var(--text-muted);
+  padding:6px 0;
+  border-bottom:1.5px solid transparent;
+  transition:color .25s,border-color .25s;
+  cursor:pointer;
+}
+.filter-tab.active{
+  color:var(--text);
+  border-bottom-color:var(--text);
+}
+.filter-tab:hover{color:var(--text)}
+
+/* ═══════════════════════════════════════════════════════════
+   PROJECT GRID — image + title/location below (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.projects-grid{
+  padding:0 var(--gutter);
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:clamp(16px,2.5vw,32px);
+  max-width:1600px;
+}
+
+.project-card{
+  display:block;
+  margin-bottom:clamp(16px,3vw,40px);
+}
+.project-card .card-img{
+  position:relative;
+  overflow:hidden;
+  aspect-ratio:1/0.88;
+  background:var(--bg-panel);
+}
+.project-card .card-img img{
+  width:100%;height:100%;
+  object-fit:cover;
+  transition:transform .8s cubic-bezier(.4,0,.2,1);
+}
+.project-card:hover .card-img img{
+  transform:scale(1.03);
+}
+
+.project-card .card-text{
+  padding-top:clamp(14px,1.8vw,22px);
+}
+.project-card .card-text h3{
+  font-size:clamp(.95rem,1.5vw,1.2rem);
+  font-weight:400;
+  line-height:1.35;
+  color:var(--text);
+  letter-spacing:.01em;
+  margin-bottom:4px;
+}
+.project-card .card-text .location{
+  font-size:clamp(.72rem,1vw,.82rem);
+  font-weight:300;
+  color:var(--text-muted);
+  letter-spacing:.03em;
+}
+
+/* first card spans full width for hero treatment */
+.project-card.featured{
+  grid-column:1/-1;
+}
+.project-card.featured .card-img{
+  aspect-ratio:16/9;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOAD MORE BUTTON (Format pattern)
+   ═══════════════════════════════════════════════════════════ */
+.load-more-wrap{
+  padding:20px var(--gutter) 80px;
+  text-align:center;
+}
+.load-more{
+  font-size:.8rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text);
+  padding:14px 40px;
+  border:1px solid var(--border);
+  background:transparent;
+  transition:border-color .3s,background .3s;
+}
+.load-more:hover{
+  border-color:rgba(255,255,255,.25);
+  background:rgba(255,255,255,.04);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CO-CREATE SECTION (Format pattern — image BG + overlay text)
+   ═══════════════════════════════════════════════════════════ */
+.cocreate{
+  position:relative;
+  margin:40px var(--gutter);
+  overflow:hidden;
+}
+.cocreate-img{
+  width:100%;
+  aspect-ratio:16/7;
+  object-fit:cover;
+  display:block;
+}
+.cocreate-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(12,12,12,.15) 0%,rgba(12,12,12,.7) 100%);
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:clamp(28px,5vw,64px);
+}
+.cocreate-overlay .appt-btn{
+  display:inline-block;
+  font-size:.7rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--white);
+  padding:10px 28px;
+  border:1px solid rgba(255,255,255,.4);
+  margin-bottom:28px;
+  align-self:flex-start;
+  transition:background .3s,border-color .3s;
+}
+.cocreate-overlay .appt-btn:hover{
+  background:rgba(255,255,255,.1);
+  border-color:rgba(255,255,255,.6);
+}
+.cocreate-overlay h2{
+  font-size:clamp(1.4rem,3vw,2.2rem);
+  font-weight:500;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--white);
+  margin-bottom:16px;
+}
+.cocreate-overlay p{
+  font-size:clamp(.8rem,1.2vw,.92rem);
+  font-weight:300;
+  color:rgba(255,255,255,.7);
+  line-height:1.7;
+  max-width:520px;
+  margin-bottom:20px;
+}
+.cocreate-overlay .talk-cta{
+  font-size:.78rem;font-weight:500;
+  letter-spacing:.06em;
+  color:var(--white);
+  border-bottom:1px solid var(--white);
+  padding-bottom:2px;
+  align-self:flex-start;
+  transition:opacity .25s;
+}
+.cocreate-overlay .talk-cta:hover{opacity:.6}
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER (Format pattern — giant tagline, social, address)
+   ═══════════════════════════════════════════════════════════ */
+.site-footer{
+  padding:clamp(80px,10vw,140px) var(--gutter) 40px;
+  position:relative;
+}
+
+.footer-tagline{
+  font-size:clamp(2rem,6vw,5.5rem);
+  font-weight:500;
+  letter-spacing:.03em;
+  text-transform:uppercase;
+  line-height:1.05;
+  color:var(--text);
+  margin-bottom:clamp(48px,6vw,80px);
+}
+
+.footer-body{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:clamp(24px,4vw,60px);
+  padding-bottom:60px;
+  border-bottom:1px solid var(--border);
+}
+
+.footer-socials{
+  display:flex;flex-direction:column;gap:8px;
+}
+.footer-socials a{
+  font-size:.75rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text);
+  transition:opacity .25s;
+}
+.footer-socials a:hover{opacity:.5}
+
+.footer-address p{
+  font-size:.82rem;font-weight:300;
+  color:var(--text-muted);
+  line-height:1.7;
+}
+
+.footer-contact a{
+  display:block;
+  font-size:.82rem;font-weight:300;
+  color:var(--text-muted);
+  padding:3px 0;
+  transition:color .25s;
+}
+.footer-contact a:hover{color:var(--text)}
+
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:28px;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-links{display:flex;gap:20px}
+.footer-links a{
+  font-size:.72rem;font-weight:400;
+  color:var(--text-dim);
+  transition:color .25s;
+}
+.footer-links a:hover{color:var(--text-muted)}
+
+.footer-lang{display:flex;gap:12px}
+.footer-lang a{
+  font-size:.72rem;font-weight:400;
+  color:var(--text-dim);transition:color .25s;
+}
+.footer-lang a.active{color:var(--text)}
+
+.footer-logo{
+  text-align:center;
+  padding:60px 0 20px;
+}
+.footer-logo svg{height:16px;fill:var(--text);margin:0 auto;display:block}
+.footer-logo-text{
+  font-size:.9rem;font-weight:500;
+  letter-spacing:.08em;
+  color:var(--text-dim);
+}
+.footer-copy{
+  text-align:center;
+  font-size:.7rem;font-weight:300;
+  color:var(--text-dim);
+  padding-bottom:20px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FLOATING "Let's talk" CTA (Format pattern — right edge)
+   ═══════════════════════════════════════════════════════════ */
+.floating-cta{
+  position:fixed;
+  right:0;top:50%;
+  transform:translateY(-50%) rotate(-90deg) translateX(50%);
+  transform-origin:center;
+  z-index:90;
+  font-size:.7rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--text);
+  background:var(--bg-panel);
+  padding:10px 20px;
+  border:1px solid var(--border);
+  transition:background .3s,border-color .3s;
+}
+.floating-cta:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.2);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════════════ */
+.reveal{
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .7s var(--transition),transform .7s var(--transition);
+}
+.reveal.vis{opacity:1;transform:none}
+.reveal-d1{transition-delay:.08s}
+.reveal-d2{transition-delay:.16s}
+.reveal-d3{transition-delay:.24s}
+.reveal-d4{transition-delay:.32s}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .projects-grid{grid-template-columns:1fr}
+  .project-card.featured .card-img{aspect-ratio:4/3}
+  .footer-body{grid-template-columns:1fr;gap:32px}
+  .cocreate-img{aspect-ratio:4/3}
+}
+@media(max-width:600px){
+  .site-header{padding:20px var(--gutter)}
+  .page-header{padding-top:120px}
+  .floating-cta{display:none}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .nav-panel{width:100vw}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ FLOATING CTA ═══════ -->
+<a href="mailto:info@studiosw.in?subject=Let's talk" class="floating-cta">Let's talk</a>
+
+<!-- ═══════ HEADER ═══════ -->
+<header class="site-header">
+  <a href="#" class="site-logo">
+    <span class="site-logo-text">StudioSW</span>
+  </a>
+  <button class="menu-trigger" id="menuOpen">Menu</button>
+</header>
+
+<!-- ═══════ NAV BACKDROP ═══════ -->
+<div class="nav-backdrop" id="navBackdrop"></div>
+
+<!-- ═══════ NAV PANEL ═══════ -->
+<aside class="nav-panel" id="navPanel">
+  <div class="nav-top">
+    <span class="site-logo-text">StudioSW</span>
+    <button class="nav-close" id="navClose">Close</button>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#">Projects</a></li>
+    <li><a href="#">About us</a></li>
+    <li><a href="#">Our process</a></li>
+    <li><a href="#">Awards</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+
+  <div class="nav-talk">
+    <h4>Let's talk</h4>
+    <p>Curious about what we can do for your space?</p>
+    <a href="mailto:info@studiosw.in?subject=Let's talk" class="talk-link">Drop us a line</a>
+  </div>
+</aside>
+
+<!-- ═══════ PAGE HEADER ═══════ -->
+<section class="page-header reveal">
+  <h1 class="page-title">Projects we are proud of</h1>
+</section>
+
+<!-- ═══════ FILTER TABS ═══════ -->
+<div class="filter-tabs reveal reveal-d1">
+  <button class="filter-tab" data-filter="all">All projects</button>
+  <button class="filter-tab active" data-filter="realised">Realised</button>
+  <button class="filter-tab" data-filter="ongoing">Ongoing</button>
+</div>
+
+<!-- ═══════ PROJECTS GRID ═══════ -->
+<div class="projects-grid">
+
+  <!-- Featured card — full width -->
+  <a href="#" class="project-card featured reveal">
+    <div class="card-img">
+      <img src="images/IMG_7716.jpg" alt="Luxury living room with crystal chandeliers and bespoke paneling">
+    </div>
+    <div class="card-text">
+      <h3>Art Connoisseur's Penthouse</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <!-- Regular cards — 2-col -->
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_7701.jpg" alt="Grand entryway with geometric mirror">
+    </div>
+    <div class="card-text">
+      <h3>Marble & Mirror Duplex</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d2">
+    <div class="card-img">
+      <img src="images/IMG_7906.jpg" alt="Formal dining with crystal chandelier">
+    </div>
+    <div class="card-text">
+      <h3>Seaside Grand Residence</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal">
+    <div class="card-img">
+      <img src="images/IMG_8060.jpg" alt="Hallway with antique chair and chevron marble">
+    </div>
+    <div class="card-text">
+      <h3>The Heritage Corridor</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_8121.jpg" alt="Elegant master bedroom with city view">
+    </div>
+    <div class="card-text">
+      <h3>Penthouse Sky Bedroom</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal">
+    <div class="card-img">
+      <img src="images/1.png" alt="Contemporary bedroom with warm tones">
+    </div>
+    <div class="card-text">
+      <h3>Warm Family Retreat</h3>
+      <span class="location">Pune</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_8141.jpg" alt="Luxury bathroom with black marble">
+    </div>
+    <div class="card-text">
+      <h3>Opulent Bath Suite</h3>
+      <span class="location">Lonavala</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal">
+    <div class="card-img">
+      <img src="images/3.png" alt="Modern marble kitchen">
+    </div>
+    <div class="card-text">
+      <h3>Calacatta Dream Kitchen</h3>
+      <span class="location">Pune</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_8080.jpg" alt="Library with arched niche and curated objects">
+    </div>
+    <div class="card-text">
+      <h3>The Collector's Library</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- ═══════ HIDDEN CARDS (revealed on "Load another") ═══════ -->
+<div class="projects-grid" id="hiddenGrid" style="display:none">
+
+  <a href="#" class="project-card reveal">
+    <div class="card-img">
+      <img src="images/IMG_8056.jpg" alt="Gilded powder room">
+    </div>
+    <div class="card-text">
+      <h3>Gilded Powder Room</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_8193.jpg" alt="Ornate chandelier ceiling detail">
+    </div>
+    <div class="card-text">
+      <h3>Chandelier Ceiling Detail</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal">
+    <div class="card-img">
+      <img src="images/2.png" alt="Bedroom with garden view">
+    </div>
+    <div class="card-text">
+      <h3>Garden View Suite</h3>
+      <span class="location">Pune</span>
+    </div>
+  </a>
+
+  <a href="#" class="project-card reveal reveal-d1">
+    <div class="card-img">
+      <img src="images/IMG_7728.jpg" alt="Interior detail">
+    </div>
+    <div class="card-text">
+      <h3>Bespoke Living Quarters</h3>
+      <span class="location">Mumbai</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- ═══════ LOAD MORE ═══════ -->
+<div class="load-more-wrap" id="loadMoreWrap">
+  <button class="load-more" id="loadMore">Load another</button>
+</div>
+
+<!-- ═══════ CO-CREATE SECTION ═══════ -->
+<section class="cocreate reveal">
+  <img class="cocreate-img" src="images/IMG_7735.jpg" alt="StudioSW workspace">
+  <div class="cocreate-overlay">
+    <a href="mailto:info@studiosw.in?subject=Let's talk and co-create" class="appt-btn">Make an appointment</a>
+    <h2>Co-create with us</h2>
+    <p>Bring your ideas, needs, and interior design desires to the StudioSW studio. We will co-create with you and explore possibilities and materials.</p>
+    <a href="mailto:info@studiosw.in?subject=Let's talk" class="talk-cta">Let's talk</a>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="site-footer">
+
+  <h2 class="footer-tagline reveal">Smart bespoke interiors.</h2>
+
+  <div class="footer-body reveal">
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/studiosw_in" target="_blank">Instagram</a>
+      <a href="https://in.linkedin.com/company/studiosw" target="_blank">LinkedIn</a>
+      <a href="https://www.facebook.com/studioSW/" target="_blank">Facebook</a>
+    </div>
+
+    <div class="footer-address">
+      <p>
+        208 Hammersmith Industrial Estate<br>
+        Narayan Pathare Marg, Mahim (W)<br>
+        Mumbai 400016, India
+      </p>
+    </div>
+
+    <div class="footer-contact">
+      <a href="mailto:info@studiosw.in">info@studiosw.in</a>
+      <a href="tel:+919920111487">+91 992 011 1487</a>
+      <a href="#" style="margin-top:12px">Contact</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Portfolio</a>
+    </div>
+    <div class="footer-lang">
+      <a href="#" class="active">English</a>
+      <a href="#">हिन्दी</a>
+    </div>
+  </div>
+
+  <div class="footer-logo">
+    <span class="footer-logo-text">StudioSW</span>
+  </div>
+  <p class="footer-copy">&copy;StudioSW 2026 | All rights reserved</p>
+
+</footer>
+
+<!-- ═══════ SCRIPTS ═══════ -->
+<script>
+(function(){
+
+  /* ── NAV PANEL ── */
+  const panel = document.getElementById('navPanel');
+  const backdrop = document.getElementById('navBackdrop');
+
+  document.getElementById('menuOpen').addEventListener('click',()=>{
+    panel.classList.add('open');
+    backdrop.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+
+  function closeNav(){
+    panel.classList.remove('open');
+    backdrop.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.getElementById('navClose').addEventListener('click',closeNav);
+  backdrop.addEventListener('click',closeNav);
+
+  /* ── FILTER TABS ── */
+  document.querySelectorAll('.filter-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  /* ── LOAD MORE ── */
+  const hiddenGrid = document.getElementById('hiddenGrid');
+  const loadMoreBtn = document.getElementById('loadMore');
+  const loadMoreWrap = document.getElementById('loadMoreWrap');
+  let loaded = false;
+
+  loadMoreBtn.addEventListener('click',()=>{
+    if(loaded) return;
+    loaded = true;
+    loadMoreBtn.textContent = 'Loading';
+
+    setTimeout(()=>{
+      hiddenGrid.style.display = 'grid';
+      loadMoreWrap.style.display = 'none';
+
+      // trigger reveal on newly visible cards
+      hiddenGrid.querySelectorAll('.reveal').forEach(el=>{
+        revealObs.observe(el);
+      });
+    },600);
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const revealObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('vis');
+      }
+    });
+  },{threshold:.08});
+
+  document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+})();
+</script>
+</body>
+</html>
