@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Nexus — The Digital Marketing Ecosystem | CS Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
+<style>
+:root{
+  --base:#04090c; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76;
+  --muted:#7c8b90; --card:#0a1418; --line:rgba(0,229,255,.18);
+  --head:'Montserrat',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{width:100%;min-height:100%;background:var(--base);color:var(--text);font-family:var(--body);}
+body{overflow-x:hidden;}
+
+/* backdrop */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 18% 14%, color-mix(in srgb,var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(58% 50% at 86% 92%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 62%);}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.05) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(circle at 50% 45%,#000,transparent 78%);
+  mask-image:radial-gradient(circle at 50% 45%,#000,transparent 78%);}
+
+/* top bar */
+header{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,4vw,52px);pointer-events:none;}
+.brand{display:flex;flex-direction:column;gap:4px;pointer-events:auto;}
+.brand .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--accent);text-transform:uppercase;}
+.brand .sub{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.04em;color:var(--muted);}
+.back{pointer-events:auto;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text);text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 6%,transparent);transition:.25s;}
+.back:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px color-mix(in srgb,var(--accent) 22%,transparent);}
+
+/* nexus stage */
+#stage{position:relative;z-index:5;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:96px 20px 120px;}
+#core{position:relative;text-align:center;padding:26px 42px;border-radius:22px;
+  background:linear-gradient(160deg,#08161b,#04090c);border:2px solid var(--accent);
+  box-shadow:0 0 70px color-mix(in srgb,var(--accent) 30%,transparent), inset 0 1px 0 rgba(255,255,255,.06);
+  margin-bottom:14px;}
+#core .k{font-family:var(--mono);font-size:12px;letter-spacing:.36em;color:var(--accent);margin-bottom:10px;}
+#core .t{font-family:var(--head);font-weight:900;font-size:clamp(2rem,5vw,3rem);line-height:.94;letter-spacing:.01em;color:#fff;text-transform:uppercase;}
+.lead{font-family:var(--body);font-size:15px;color:var(--muted);max-width:560px;text-align:center;margin-bottom:40px;}
+
+/* branch grid */
+.branches{width:100%;max-width:1180px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:880px){.branches{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.branches{grid-template-columns:1fr;}}
+.branch{position:relative;border:1.5px solid var(--line);border-radius:16px;background:linear-gradient(160deg,#0a1418,#060d10);padding:20px;cursor:pointer;transition:.28s;overflow:hidden;}
+.branch:hover{border-color:var(--accent);box-shadow:0 0 34px color-mix(in srgb,var(--accent) 18%,transparent);transform:translateY(-2px);}
+.branch .row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+.branch .num{font-family:var(--mono);font-size:12px;color:var(--accent);opacity:.8;}
+.branch .name{font-family:var(--head);font-weight:800;font-size:21px;line-height:1;letter-spacing:.01em;text-transform:uppercase;color:#fff;}
+.branch .desc{font-family:var(--body);font-size:14px;line-height:1.5;color:#b9c6cb;margin:6px 0 14px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{font-family:var(--mono);font-size:12px;letter-spacing:.01em;color:#dceef2;padding:6px 12px;border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);background:color-mix(in srgb,var(--accent) 7%,transparent);
+  cursor:pointer;transition:.22s;}
+.chip:hover{color:#fff;background:color-mix(in srgb,var(--accent) 22%,transparent);border-color:color-mix(in srgb,var(--accent) 70%,transparent);}
+.chip.active{color:#04090c;background:var(--accent);border-color:var(--accent);font-weight:700;}
+
+/* detail panel */
+#panel{position:fixed;z-index:50;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+  width:min(680px,calc(100% - 40px));opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;}
+#panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.panel-card{position:relative;padding:22px 26px 24px;border-radius:18px;
+  background:linear-gradient(160deg,#0a1620,#04090c);border:1.5px solid color-mix(in srgb,var(--accent) 72%,transparent);
+  box-shadow:0 0 48px color-mix(in srgb,var(--accent) 24%,transparent), inset 0 1px 0 rgba(255,255,255,.05);}
+.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.panel-head .pn{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:var(--accent);}
+.panel-head .hr{flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,transparent),transparent);}
+.panel-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
+.panel-head .close{cursor:pointer;font-family:var(--mono);font-size:16px;color:var(--muted);line-height:1;padding:2px 6px;border-radius:6px;transition:.2s;}
+.panel-head .close:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);}
+#panel .pt{font-family:var(--head);font-weight:800;font-size:26px;line-height:1.04;letter-spacing:.006em;color:#fff;}
+#panel .pd{margin-top:12px;font-family:var(--body);font-weight:400;font-size:16px;line-height:1.55;color:#cdd9de;}
+
+footer{position:relative;z-index:5;text-align:center;padding:30px 20px 40px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+footer a{color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="grid"></div>
+
+<header>
+  <div class="brand">
+    <span class="eyebrow">Education&nbsp;Hub</span>
+    <span class="sub">Knowledge Nexus · The Digital Marketing Ecosystem</span>
+  </div>
+  <a class="back" href="index.html#page3">← Back to CS Media</a>
+</header>
+
+<main id="stage">
+  <div id="core">
+    <div class="k">KNOWLEDGE NEXUS</div>
+    <div class="t">Digital<br>Marketing</div>
+  </div>
+  <p class="lead">Six disciplines power a modern growth system. Tap any branch to read what it does, then tap a label to go deeper.</p>
+
+  <div class="branches" id="branches"></div>
+</main>
+
+<div id="panel">
+  <div class="panel-card">
+    <div class="panel-head">
+      <span class="pn" id="pn">01</span>
+      <span class="hr"></span>
+      <span class="tag" id="ptag">DISCIPLINE</span>
+      <span class="close" id="pclose" title="Close">✕</span>
+    </div>
+    <div class="pt" id="pt">SEO</div>
+    <div class="pd" id="pd">Tap a branch to begin.</div>
+  </div>
+</div>
+
+<footer>
+  © 2026 CS Media &amp; Production · <a href="index.html">csmediaandproduction.in</a>
+</footer>
+
+<script>
+const DATA = [
+  { id:'seo', name:'SEO', desc:'Earning visibility in unpaid search results so the right people find you on Google before they ever find a competitor.',
+    subs:['On-Page SEO','Off-Page SEO','Technical SEO','Local SEO','Tools'],
+    leaf:[
+      'Optimising website content, headings, keywords, images and internal links so search engines can understand and rank each page better.',
+      'Building trust and authority through backlinks, guest posts, mentions and other signals coming from outside your website.',
+      'Improving website speed, mobile performance, indexing, crawlability and technical structure so search engines can access it properly.',
+      'Helping nearby customers find your business through Google Business Profile, local listings, reviews and location-based searches.',
+      'Platforms such as Google Search Console, Ahrefs and SEMrush help track rankings, keywords, backlinks and technical problems.'
+    ]},
+  { id:'ppc', name:'PPC', desc:'Buying targeted traffic and paying only when someone actually clicks — measurable, scalable performance you control to the cent.',
+    subs:['Google Ads','Social Media Ads','Keyword Research','Audience Targeting','Performance Tracking'],
+    leaf:[
+      'Paid campaigns that place your business across Google Search, Display, Shopping and YouTube to reach people actively looking for relevant products or services.',
+      'Targeted advertisements on platforms such as Instagram, Facebook, LinkedIn and TikTok, designed to reach specific audiences based on interests and behaviour.',
+      'Identifying the search terms potential customers use, helping campaigns attract more relevant traffic and reduce wasted advertising spend.',
+      'Selecting the right users based on location, age, interests, profession, online behaviour or previous interaction with the brand.',
+      'Measuring clicks, conversions, cost per lead and return on ad spend to understand results and continuously improve campaign performance.'
+    ]},
+  { id:'smm', name:'SMM', desc:'Building brand, community and demand on the social platforms where your customers already spend their time.',
+    subs:['Organic Marketing','Paid Advertising','Platform Strategy','Tools','Analytics'],
+    leaf:[
+      'Growing visibility through unpaid posts, reels, stories, community interaction and consistent social-media activity.',
+      'Using sponsored campaigns to reach larger or more precisely targeted audiences beyond your existing followers.',
+      'Creating a different content and communication approach for each platform based on its audience and behaviour.',
+      'Tools such as Meta Business Suite, Buffer and Hootsuite help plan, publish and manage social-media activity.',
+      'Tracking reach, engagement, saves, shares, follower growth and audience behaviour to understand what content performs best.'
+    ]},
+  { id:'content', name:'Content Marketing', desc:'Earning attention and trust by publishing genuinely useful content instead of interrupting people with ads.',
+    subs:['Content Types','Content Planning','Copywriting','Content Distribution','Tools'],
+    leaf:[
+      'The different formats used to communicate with audiences, including blogs, videos, reels, carousels, infographics, guides and case studies.',
+      'Organising topics, publishing schedules and campaign goals so every piece of content supports a clear marketing objective.',
+      'Writing headlines, captions, website text and calls to action that capture attention, explain value and encourage people to respond.',
+      'Publishing and promoting content through websites, search engines, email, social media and partner platforms to maximise reach.',
+      'Software used to research, design, write, edit, schedule and manage content more efficiently across multiple channels.'
+    ]},
+  { id:'email', name:'Email Marketing', desc:'The highest-ROI channel in marketing — a direct line to an audience you actually own, not one you rent from a platform.',
+    subs:['Newsletter Strategy','List Building','Segmentation','Automation','Platforms'],
+    leaf:[
+      'Sending useful and consistent email updates that educate subscribers, maintain interest and strengthen brand relationships.',
+      'Growing a database of interested subscribers through forms, lead magnets, website sign-ups and campaign offers.',
+      'Dividing subscribers into groups based on interests, behaviour or customer stage so each person receives more relevant messages.',
+      'Sending emails automatically after actions such as signing up, purchasing, abandoning a cart or becoming inactive.',
+      'Tools such as Mailchimp, Brevo and ConvertKit help create, schedule, automate and measure email campaigns.'
+    ]},
+  { id:'analytics', name:'Analytics & Tracking', desc:'Measuring behaviour and results so every marketing decision is backed by hard evidence, not opinion.',
+    subs:['Google Analytics','Google Tag Manager','UTM Parameters','Heatmaps','KPI Metrics'],
+    leaf:[
+      'Shows how visitors discover your website, which pages they view and what actions they complete during their journey.',
+      'Allows tracking codes and marketing tags to be added and managed without repeatedly editing the website’s main source code.',
+      'Tracking labels added to links to identify which campaign, advertisement, email or social platform generated the traffic.',
+      'Visual reports showing where users click, scroll and stop engaging, helping identify design, usability and conversion problems.',
+      'The key measurements used to evaluate performance, including traffic, engagement, leads, conversion rate, acquisition cost and sales.'
+    ]}
+];
+
+const wrap = document.getElementById('branches');
+DATA.forEach((d,i)=>{
+  const el = document.createElement('div');
+  el.className = 'branch';
+  el.dataset.idx = i;
+  el.innerHTML =
+    '<div class="row"><span class="num">'+('0'+(i+1)).slice(-2)+'</span>'+
+    '<span class="name">'+d.name+'</span></div>'+
+    '<div class="desc">'+d.desc+'</div>'+
+    '<div class="chips">'+d.subs.map((s,j)=>'<span class="chip" data-i="'+i+'" data-j="'+j+'">'+s+'</span>').join('')+'</div>';
+  // clicking the card (not a chip) shows the discipline overview
+  el.addEventListener('click',(e)=>{
+    if(e.target.classList.contains('chip')) return;
+    showDiscipline(i);
+  });
+  wrap.appendChild(el);
+});
+
+// chip clicks
+wrap.querySelectorAll('.chip').forEach(ch=>{
+  ch.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    const i = +ch.dataset.i, j = +ch.dataset.j;
+    document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+    ch.classList.add('active');
+    showLeaf(i,j);
+  });
+});
+
+const panel = document.getElementById('panel');
+const pn = document.getElementById('pn'), ptag = document.getElementById('ptag'),
+      pt = document.getElementById('pt'), pd = document.getElementById('pd');
+
+function showDiscipline(i){
+  const d = DATA[i];
+  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+  pn.textContent = ('0'+(i+1)).slice(-2);
+  ptag.textContent = 'DISCIPLINE';
+  pt.textContent = d.name;
+  pd.textContent = d.desc;
+  panel.classList.add('show');
+}
+function showLeaf(i,j){
+  const d = DATA[i];
+  pn.textContent = ('0'+(i+1)).slice(-2)+'·'+('0'+(j+1)).slice(-2);
+  ptag.textContent = d.name;
+  pt.textContent = d.subs[j];
+  pd.textContent = d.leaf[j];
+  panel.classList.add('show');
+}
+document.getElementById('pclose').addEventListener('click',()=>{
+  panel.classList.remove('show');
+  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+});
+</script>
+</body></html>
