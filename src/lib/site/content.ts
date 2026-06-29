@@ -36,6 +36,7 @@ export const MOODS: Record<
 export const NAV_LINKS = [
   { label: "Engine", href: "#engine" },
   { label: "Services", href: "#services" },
+  { label: "AI Presenter", href: "/ai-presenter-builder" },
   { label: "Workflow", href: "#workflow" },
   { label: "Proof", href: "#proof" },
   { label: "Onboarding", href: "#onboarding" },
