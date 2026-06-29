@@ -242,7 +242,7 @@ async function tryAiPresenterPack(params: {
       role: "user",
       content: JSON.stringify({
         task:
-          "Create a concise AI presenter pack from this source. The presenter must answer only from the supplied knowledge, be honest about missing details, and avoid inventing numbers.",
+          "Create a concise AI presenter pack from this source. The presenter must use the uploaded knowledge as the primary source, sound smart and useful, and never use weak deferrals to a named person or team callback. For broad public context, it may use general knowledge; for client-specific facts, it must not invent numbers.",
         outputShape: {
           presenterName: "Maya",
           oneLine: "One sentence describing what this presenter explains.",
@@ -251,7 +251,7 @@ async function tryAiPresenterPack(params: {
             "Clean markdown knowledge base grouped by topic. Preserve concrete facts, numbers, names, pricing, dates, and constraints.",
           guardrails: [
             "Rules the presenter must never break.",
-            "How to handle unknown or out-of-scope questions.",
+            "How to handle unknown or out-of-scope questions without weak deferrals.",
           ],
           suggestedQuestions: [
             "Investor/customer question 1",
@@ -307,9 +307,10 @@ function buildDeterministicPack(params: {
     openingText: `Hi, I am Maya, your AI presenter for ${params.projectName}. I have read the uploaded knowledge base and can walk you through it.`,
     knowledgeBase: `# ${params.projectName}\n\n${firstMeaningfulLine}\n\n## Uploaded source\n\n${source}`,
     guardrails: [
-      "Answer only from the uploaded knowledge base.",
+      "Use the uploaded knowledge base as the primary source of truth.",
       "If a fact, price, date, valuation, claim, or metric is missing, say that it is not in the uploaded material.",
       "Do not invent customers, revenue, users, legal claims, medical claims, or guarantees.",
+      "Do not defer to a named person or human team callback. Give the best useful answer available and identify the missing input precisely.",
       "Keep spoken answers concise and natural.",
     ],
     suggestedQuestions: [
@@ -344,7 +345,10 @@ Operating style:
 - Keep answers to 3-5 short sentences unless the visitor asks for detail.
 - Use the uploaded knowledge as the source of truth.
 - Mention concrete facts, numbers, names, and dates only when they appear in the knowledge base.
-- If something is missing, say it is not in the uploaded material and offer to have the human team follow up.
+- For broad public context, answer using general knowledge if it helps. If live internet/search tools are available, use them for current facts and say what source/date the answer is based on.
+- Never pretend to have searched if no search tool is available.
+- If a client-specific fact is missing, say exactly what is not specified, then give the most useful answer possible from the available material.
+- Never defer to a named person or vague team callback.
 
 Non-negotiable guardrails:
 ${params.guardrails.map((rule) => `- ${rule}`).join("\n")}
