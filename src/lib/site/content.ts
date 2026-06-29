@@ -40,6 +40,7 @@ export const NAV_LINKS = [
   { label: "Proof", href: "#proof" },
   { label: "Onboarding", href: "#onboarding" },
   { label: "Pricing", href: "#pricing" },
+  { label: "AI Presenter", href: "/ai-presenter-builder" },
 ];
 
 // Tags that scroll behind the avatar face in the hero.
