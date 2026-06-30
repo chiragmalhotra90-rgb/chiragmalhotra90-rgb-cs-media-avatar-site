@@ -313,11 +313,19 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   <div class="prog"><i id="progbar"></i></div>
 </div>
 
+<!-- Voiceover — one clip per beat, triggered at the beat's start so sync is
+     exact regardless of the TTS's word timing. Drop files at vo/beat1..4.mp3
+     (see scripts/make-vo.mjs). Absent = music + captions still play. -->
+<audio id="vo1" preload="auto" crossorigin="anonymous" src="vo/beat1.mp3"></audio>
+<audio id="vo2" preload="auto" crossorigin="anonymous" src="vo/beat2.mp3"></audio>
+<audio id="vo3" preload="auto" crossorigin="anonymous" src="vo/beat3.mp3"></audio>
+<audio id="vo4" preload="auto" crossorigin="anonymous" src="vo/beat4.mp3"></audio>
+
 <!-- ===================== CONTROLS ===================== -->
 <div id="controls">
   <div class="ctl primary" id="playBtn">▶ Play</div>
   <div class="ctl" id="restartBtn">↺ Restart</div>
-  <div class="ctl" id="soundBtn">🔇 Sound off</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
   <div class="seg" id="aspectSeg">
     <button data-ar="vertical" class="active">9:16</button>
     <button data-ar="square">1:1</button>
@@ -326,6 +334,7 @@ body.recording #stage{box-shadow:none;border-radius:0;}
 </div>
 <div class="hint">
   Deterministic 60s timeline — screen-record the stage to export. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
+  Music plays from the first Play (record with tab/system audio on). Voiceover auto-syncs when <code>vo/intro-vo.mp3</code> is present.<br>
   Captions are burned in for muted-first viewing. Toggle 9:16 (presenter gate / Reels) or 1:1 (LinkedIn / IG feed).
 </div>
 
@@ -441,7 +450,7 @@ body.recording #stage{box-shadow:none;border-radius:0;}
     $("tc").textContent=fmt(t)+" / 01:00";
     $("beadge").textContent=beadgeFor(t);
     $("sweep").style.opacity=(t>30000&&t<50000)?String(0.4+0.3*Math.sin(t/220)):"0";
-    score(t);
+    score(t); voScheduler(t,false);
     if(elapsed>=DUR){ stop(true); return; }
     raf=requestAnimationFrame(frame);
   }
@@ -450,11 +459,11 @@ body.recording #stage{box-shadow:none;border-radius:0;}
     if(playing) return;
     if(elapsed>=DUR){ hardRestart(); }
     playing=true; startTs=null; $("playBtn").textContent="⏸ Pause";
-    audioResume(); raf=requestAnimationFrame(frame);
+    audioResume(); voPlay(); raf=requestAnimationFrame(frame);
   }
-  function pause(){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent="▶ Play"; audioSuspend(); }
-  function stop(ended){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent= ended?"↺ Replay":"▶ Play"; if(ended) audioStop(); }
-  function hardRestart(){ elapsed=0; startTs=null; resetVisuals(); audioStop(); }
+  function pause(){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent="▶ Play"; audioSuspend(); voPause(); }
+  function stop(ended){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent= ended?"↺ Replay":"▶ Play"; if(ended){ audioStop(); voPause(); } }
+  function hardRestart(){ elapsed=0; startTs=null; resetVisuals(); audioStop(); voReset(); }
   function toggle(){ playing?pause():play(); }
 
   // ---------- aspect toggle ----------
@@ -480,47 +489,98 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   });
 
   // ============================================================
-  //  OPTIONAL WEBAUDIO SCORE — sub-bass drone + a single rising
-  //  motif that lands on the CTA. No external assets.
+  //  WEBAUDIO SCORE (on by default) — a layered modern-tech bed:
+  //  sub-bass + drone, a slow chord pad that opens at the Shift,
+  //  a rising arpeggio through the Loop, resolving on the CTA.
+  //  No external assets. Music ducks under the voiceover track.
   // ============================================================
-  let actx=null, master=null, droneOsc=null, droneGain=null, subOsc=null, soundOn=false, scoreState={riser:false,land:false};
+  let actx=null, master=null, musicBus=null, droneGain=null, padGain=null, padFilter=null,
+      soundOn=true, scoreState={shift:false,riser:false,land:false};
   function ensureAudio(){
     if(actx) return;
     const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
-    actx=new AC(); master=actx.createGain(); master.gain.value=0.0; master.connect(actx.destination);
-    // low drone
-    droneOsc=actx.createOscillator(); droneOsc.type="sine"; droneOsc.frequency.value=55;
+    actx=new AC();
+    master=actx.createGain(); master.gain.value=0.0; master.connect(actx.destination);
+    // music sits on its own bus so it can duck under VO
+    musicBus=actx.createGain(); musicBus.gain.value=0.62; musicBus.connect(master);
+    // low drone + sub octave
+    const drone=actx.createOscillator(); drone.type="sine"; drone.frequency.value=55;
     droneGain=actx.createGain(); droneGain.gain.value=0.12;
     const lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=320;
-    droneOsc.connect(droneGain); droneGain.connect(lp); lp.connect(master); droneOsc.start();
-    // sub octave
-    subOsc=actx.createOscillator(); subOsc.type="sine"; subOsc.frequency.value=41;
-    const sg=actx.createGain(); sg.gain.value=0.08; subOsc.connect(sg); sg.connect(master); subOsc.start();
+    drone.connect(droneGain); droneGain.connect(lp); lp.connect(musicBus); drone.start();
+    const sub=actx.createOscillator(); sub.type="sine"; sub.frequency.value=41;
+    const sg=actx.createGain(); sg.gain.value=0.08; sub.connect(sg); sg.connect(musicBus); sub.start();
+    // chord pad (A minor-ish: A2 E3 A3 C4) — opens at the Shift
+    padFilter=actx.createBiquadFilter(); padFilter.type="lowpass"; padFilter.frequency.value=420; padFilter.Q.value=0.7;
+    padGain=actx.createGain(); padGain.gain.value=0.0; padFilter.connect(padGain); padGain.connect(musicBus);
+    [110,164.81,220,261.63].forEach((f,i)=>{
+      const o=actx.createOscillator(); o.type= i%2?"triangle":"sine"; o.frequency.value=f;
+      o.detune.value=(i-1.5)*4; const g=actx.createGain(); g.gain.value=0.25;
+      o.connect(g); g.connect(padFilter); o.start();
+    });
+    // slow LFO opens the pad filter for movement
+    const lfo=actx.createOscillator(); lfo.type="sine"; lfo.frequency.value=0.06;
+    const lfoG=actx.createGain(); lfoG.gain.value=260; lfo.connect(lfoG); lfoG.connect(padFilter.frequency); lfo.start();
   }
-  function blip(freq,when,dur,gain){
+  function blip(freq,when,dur,gain,type){
     if(!actx) return; const o=actx.createOscillator(), g=actx.createGain();
-    o.type="triangle"; o.frequency.value=freq; o.connect(g); g.connect(master);
+    o.type=type||"triangle"; o.frequency.value=freq; o.connect(g); g.connect(musicBus);
     g.gain.setValueAtTime(0,when); g.gain.linearRampToValueAtTime(gain,when+0.02);
     g.gain.exponentialRampToValueAtTime(0.0001,when+dur); o.start(when); o.stop(when+dur+0.05);
   }
   function score(t){
     if(!soundOn||!actx) return; const now=actx.currentTime;
-    // rising motif during the loop → resolve on CTA
-    if(t>30000 && !scoreState.riser){ scoreState.riser=true;
-      [0,1,2,3,4].forEach((i)=>blip(220*Math.pow(1.12,i), now+i*3.6, 0.9, 0.10)); }
+    // Shift: the pad blooms as the orb ignites
+    if(t>=11000 && !scoreState.shift){ scoreState.shift=true;
+      if(padGain) padGain.gain.linearRampToValueAtTime(0.16, now+2.2);
+      blip(880,now,1.4,0.05,"sine"); }
+    // Loop: a rising arpeggio, one step per VO beat
+    if(t>=30000 && !scoreState.riser){ scoreState.riser=true;
+      [0,1,2,3,4,5].forEach((i)=>blip(220*Math.pow(1.122,i), now+i*3.2, 1.0, 0.085, "triangle")); }
+    // CTA: resolve chord + pad swell
     if(t>=51800 && !scoreState.land){ scoreState.land=true;
-      blip(330,now,1.6,0.16); blip(440,now+0.02,1.6,0.13); blip(660,now+0.04,1.8,0.10);
-      if(droneGain) droneGain.gain.linearRampToValueAtTime(0.18,now+1.2); }
+      blip(329.63,now,1.8,0.14,"sine"); blip(440,now+0.02,1.8,0.11,"triangle"); blip(659.25,now+0.04,2.0,0.08,"sine");
+      if(droneGain) droneGain.gain.linearRampToValueAtTime(0.18,now+1.2);
+      if(padGain) padGain.gain.linearRampToValueAtTime(0.22,now+1.2); }
   }
-  function audioResume(){ if(soundOn&&actx&&actx.state==="suspended") actx.resume(); if(soundOn&&master) master.gain.linearRampToValueAtTime(0.9,(actx?actx.currentTime:0)+0.4); }
+  function audioResume(){ if(!soundOn) return; if(actx&&actx.state==="suspended") actx.resume(); if(master) master.gain.linearRampToValueAtTime(0.9,(actx?actx.currentTime:0)+0.4); }
   function audioSuspend(){ if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.2); }
-  function audioStop(){ scoreState={riser:false,land:false}; if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.3); if(droneGain&&actx) droneGain.gain.setValueAtTime(0.12,actx.currentTime); }
+  function audioStop(){ scoreState={shift:false,riser:false,land:false};
+    if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.3);
+    if(droneGain&&actx) droneGain.gain.setValueAtTime(0.12,actx.currentTime);
+    if(padGain&&actx) padGain.gain.setValueAtTime(0.0,actx.currentTime); }
+
+  // ---------- voiceover scheduler (one clip per beat) ----------
+  // each segment plays its clip starting at `start` ms on the timeline.
+  const VOSEG=[{el:$("vo1"),start:600},{el:$("vo2"),start:10800},{el:$("vo3"),start:30500},{el:$("vo4"),start:50500}];
+  let voActive=-1;
+  function segAt(t){ let idx=-1; for(let i=0;i<VOSEG.length;i++){ if(t>=VOSEG[i].start) idx=i; } return idx; }
+  function voPlay(){ // (re)sync to current time and start the right clip
+    if(!soundOn){ return; } voScheduler(Math.min(elapsed,DUR), true);
+  }
+  function voPause(){ VOSEG.forEach(s=>{ if(s.el){ try{s.el.pause();}catch(e){} } }); }
+  function voReset(){ voActive=-1; VOSEG.forEach(s=>{ if(s.el){ try{s.el.pause(); s.el.currentTime=0;}catch(e){} } }); }
+  function voScheduler(t, force){
+    if(!soundOn||!playing) return;
+    const idx=segAt(t);
+    if(idx<0){ if(voActive>=0){ voPause(); voActive=-1; } return; }
+    if(idx!==voActive || force){
+      // pause any other clip, start the active one at the right offset
+      VOSEG.forEach((s,i)=>{ if(i!==idx && s.el){ try{s.el.pause();}catch(e){} } });
+      const seg=VOSEG[idx], off=Math.max(0,(t-seg.start)/1000);
+      if(seg.el){ try{ seg.el.muted=false;
+        if(Math.abs((seg.el.currentTime||0)-off)>0.25) seg.el.currentTime=off;
+        const p=seg.el.play(); if(p&&p.catch)p.catch(()=>{}); }catch(e){} }
+      voActive=idx;
+    }
+  }
+
   $("soundBtn").addEventListener("click",()=>{
     soundOn=!soundOn; ensureAudio();
     $("soundBtn").textContent= soundOn?"🔊 Sound on":"🔇 Sound off";
     $("soundBtn").classList.toggle("active",soundOn);
-    if(soundOn){ if(actx&&actx.state==="suspended")actx.resume(); if(playing)audioResume(); }
-    else audioSuspend();
+    if(soundOn){ if(actx&&actx.state==="suspended")actx.resume(); if(playing){audioResume(); voPlay();} }
+    else { audioSuspend(); voPause(); }
   });
 
   // ---------- boot ----------
