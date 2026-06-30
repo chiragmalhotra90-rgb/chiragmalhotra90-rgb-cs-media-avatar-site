@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · 60s Intro (HyperFrame cut)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
+
+<style>
+:root{
+  --base:#04090c; --base2:#0b1622; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76;
+  --dim:rgba(234,253,255,0.55); --faint:rgba(234,253,255,0.28);
+  --font:'Inter',sans-serif; --disp:'Montserrat',sans-serif; --mono:'JetBrains Mono',monospace;
+  /* stage geometry — overridden by JS for aspect toggle */
+  --stage-w:clamp(280px, 56vh, 540px);
+  --stage-ar:9 / 16;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--text);font-family:var(--font);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;}
+
+/* ============================ STAGE ============================ */
+#stage{
+  position:relative;width:var(--stage-w);aspect-ratio:var(--stage-ar);max-height:92vh;
+  background:radial-gradient(ellipse at 50% 28%, #0b1622 0%, #04090c 58%, #04090c 100%);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,229,255,0.12), 0 40px 120px -30px rgba(0,229,255,0.18), 0 30px 90px rgba(0,0,0,0.7);
+}
+/* subtle film grain + vignette over everything */
+#stage::after{content:'';position:absolute;inset:0;z-index:60;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,0.42) 88%, rgba(0,0,0,0.78) 100%);}
+.grain{position:absolute;inset:-50%;z-index:59;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 0.5s steps(2) infinite;}
+@keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-3%,2%)}100%{transform:translate(2%,-2%)}}
+
+/* horizontal scan sweep that rides the music build */
+.sweep{position:absolute;inset:0;z-index:58;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,229,255,0.06) 50%,transparent 100%);}
+
+/* ============================ SCENES ============================ */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 9%;text-align:center;opacity:0;transition:opacity .9s ease;pointer-events:none;will-change:opacity;}
+.scene.on{opacity:1;}
+
+/* ---------- kinetic type primitives ---------- */
+.eyebrow{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.42em;text-transform:uppercase;color:var(--accent);
+  text-shadow:0 0 14px rgba(0,229,255,0.6);opacity:0;transform:translateY(6px);}
+.eyebrow.in{animation:rise .8s ease forwards;}
+.headline{font-family:var(--disp);font-weight:800;line-height:0.96;text-transform:uppercase;letter-spacing:0.005em;
+  font-size:clamp(1.7rem,7.2vw,2.9rem);
+  background:linear-gradient(180deg,#fff 0%,#dfe9ec 42%,#9fb6bb 72%,#5d7378 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 26px rgba(0,229,255,0.16));}
+.headline .cy{background:linear-gradient(180deg,#bdf6ff,#00E5FF 60%,#0b6b76);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.kline{display:block;overflow:hidden;}
+/* each kinetic-line span carries its OWN clipped background — a transformed
+   inline-block escapes the parent .headline's background-clip:text region,
+   so without this the white lines render with transparent fill (invisible). */
+.kline > span{display:inline-block;transform:translateY(108%);
+  background:linear-gradient(180deg,#fff 0%,#dfe9ec 42%,#9fb6bb 72%,#5d7378 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.kline > span.cy{background:linear-gradient(180deg,#bdf6ff,#00E5FF 60%,#0b6b76);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.kline.in > span{animation:klineup .85s cubic-bezier(.16,1,.3,1) forwards;}
+.sub{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.34em;text-transform:uppercase;color:var(--dim);margin-top:14px;}
+
+@keyframes rise{to{opacity:1;transform:none;}}
+@keyframes klineup{to{transform:none;}}
+
+/* ============================ BEAT 1 — THE PAIN ============================ */
+/* a phone glass with a dead read-receipt */
+.phone{position:relative;width:64%;max-width:230px;aspect-ratio:9/17;border-radius:26px;
+  background:linear-gradient(180deg,#0a1218,#060b0f);border:1px solid rgba(255,255,255,0.07);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.03), 0 30px 60px -20px rgba(0,0,0,0.8);
+  padding:16px 12px;display:flex;flex-direction:column;gap:8px;}
+.phone .notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:64px;height:5px;border-radius:99px;background:rgba(255,255,255,0.10);}
+.bubble{align-self:flex-end;max-width:78%;background:linear-gradient(135deg,#0b6b76,#063238);color:#eafdff;
+  border-radius:14px 14px 4px 14px;padding:9px 11px;font-size:0.62rem;line-height:1.4;text-align:left;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4);opacity:0;transform:translateY(8px) scale(.96);}
+.bubble.in{animation:bubblein .5s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes bubblein{to{opacity:1;transform:none;}}
+.bubble .file{display:flex;align-items:center;gap:8px;padding:7px;background:rgba(255,255,255,0.06);border-radius:9px;margin-top:6px;}
+.bubble .file svg{flex:0 0 auto;}
+.bubble .file b{font-weight:700;font-size:0.6rem;}
+.bubble .file small{display:block;color:rgba(234,253,255,0.5);font-size:0.5rem;font-family:var(--mono);}
+.receipt{align-self:flex-end;display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:0.5rem;color:var(--faint);margin-top:2px;}
+.receipt .tick{color:var(--faint);transition:color 1s;}
+.receipt.sent .tick{animation:tickpop .4s ease;}
+@keyframes tickpop{0%{transform:scale(0);}60%{transform:scale(1.3);}100%{transform:scale(1);}}
+/* the dead-air timer that never turns blue */
+.deadtimer{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.2em;color:var(--faint);margin-top:18px;opacity:0;}
+.deadtimer.in{animation:rise 1.2s ease forwards;}
+.b1-cap{position:absolute;bottom:13%;left:0;right:0;}
+
+/* ============================ BEAT 2 — THE SHIFT ============================ */
+/* document shards that reassemble into the orb */
+.shift-wrap{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;}
+.shards{position:absolute;inset:0;}
+.shard{position:absolute;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);border-radius:3px;
+  opacity:0;transform:translate(var(--sx),var(--sy)) rotate(var(--sr));will-change:transform,opacity;}
+.shift-wrap.go .shard{animation:shardpull 1.4s cubic-bezier(.7,0,.2,1) forwards;animation-delay:var(--sd);}
+@keyframes shardpull{
+  0%{opacity:0;}
+  18%{opacity:0.9;transform:translate(var(--sx),var(--sy)) rotate(var(--sr)) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(0) scale(0.15);left:50%;top:50%;}
+}
+
+/* ============================ THE ORB (shared, beats 2 & 4) ============================ */
+.orbwrap{position:relative;width:150px;height:150px;}
+.orb{position:absolute;inset:0;border-radius:50%;opacity:0;transform:scale(0.2);will-change:transform,opacity;}
+.orb.lit{animation:orbignite 1.5s cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes orbignite{0%{opacity:0;transform:scale(0.2);}55%{opacity:1;}100%{opacity:1;transform:scale(1);}}
+.orb-core{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, #00E5FF, #0b6b76, #7df9ff, #063238, #00E5FF);
+  filter:blur(9px);animation:orbrot 8s linear infinite, orbbreathe 3.4s ease-in-out infinite;
+  box-shadow:0 0 70px var(--accent),0 0 140px rgba(0,229,255,0.5);}
+.orb-core::after{content:'';position:absolute;inset:9%;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.30) 0%, var(--base) 42%, var(--base) 100%);}
+@keyframes orbrot{to{transform:rotate(360deg);}}
+@keyframes orbbreathe{0%,100%{filter:blur(9px) brightness(1);}50%{filter:blur(13px) brightness(1.32);}}
+.orb-ring{position:absolute;inset:-12px;border-radius:50%;border:1.5px solid var(--accent);opacity:0;animation:ringpulse 3s ease-out infinite;}
+.orb-ring.r2{animation-delay:1s;}.orb-ring.r3{animation-delay:2s;}
+@keyframes ringpulse{0%{opacity:0.6;transform:scale(1);}100%{opacity:0;transform:scale(1.9);}}
+.orb-spark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.6rem;color:#bdf6ff;
+  filter:drop-shadow(0 0 12px var(--accent));z-index:3;}
+
+/* ============================ BEAT 3 — THE LOOP ============================ */
+.loop{position:relative;width:78%;max-width:300px;display:flex;flex-direction:column;gap:11px;}
+.loop-card{background:rgba(255,255,255,0.04);border:1px solid rgba(0,229,255,0.16);border-radius:13px;padding:11px 13px;
+  text-align:left;opacity:0;transform:translateY(14px) scale(.97);box-shadow:0 14px 36px -20px rgba(0,229,255,0.25);}
+.loop-card.in{animation:bubblein .55s cubic-bezier(.16,1,.3,1) forwards;}
+.loop-card .lc-eyebrow{font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);opacity:0.85;margin-bottom:7px;display:block;}
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font-family:var(--mono);font-size:0.55rem;padding:5px 10px;border-radius:99px;border:1px solid rgba(0,229,255,0.25);
+  color:var(--dim);white-space:nowrap;transition:all .3s;}
+.chip.hot{background:var(--accent);color:#04090c;border-color:var(--accent);box-shadow:0 0 16px rgba(0,229,255,0.6);transform:scale(1.06);}
+/* typing line */
+.typing{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:0.6rem;color:var(--text);}
+.typing .qt::after{content:'';display:inline-block;width:6px;height:0.85em;background:var(--accent);margin-left:1px;vertical-align:-1px;animation:caret .8s steps(1) infinite;}
+@keyframes caret{50%{opacity:0;}}
+/* waveform speaking */
+.wave{display:flex;align-items:center;gap:3px;height:26px;}
+.wave i{width:3px;border-radius:99px;background:var(--accent);box-shadow:0 0 8px rgba(0,229,255,0.5);height:30%;animation:wv 1s ease-in-out infinite;}
+@keyframes wv{0%,100%{height:22%;}50%{height:100%;}}
+/* analytics bars */
+.bars{display:flex;align-items:flex-end;gap:7px;height:46px;}
+.bars i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,var(--accent),#0b6b76);height:8%;transition:height 1s cubic-bezier(.16,1,.3,1);box-shadow:0 0 12px rgba(0,229,255,0.3);}
+.bars.grow i:nth-child(1){height:38%;transition-delay:.05s}
+.bars.grow i:nth-child(2){height:64%;transition-delay:.12s}
+.bars.grow i:nth-child(3){height:48%;transition-delay:.19s}
+.bars.grow i:nth-child(4){height:88%;transition-delay:.26s}
+.bars.grow i:nth-child(5){height:72%;transition-delay:.33s}
+.bars.grow i:nth-child(6){height:100%;transition-delay:.40s}
+.b3-cap{position:absolute;bottom:8%;left:0;right:0;}
+
+/* ============================ BEAT 4 — HANDOFF ============================ */
+.cta-btn{margin-top:26px;display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:99px;
+  background:linear-gradient(135deg,#00E5FF,#0b6b76);color:#04090c;font-family:var(--mono);font-weight:700;
+  font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;opacity:0;transform:translateY(10px);
+  box-shadow:0 6px 28px rgba(0,229,255,0.45);}
+.cta-btn.in{animation:rise .8s ease forwards, ctapulse 1.8s ease-in-out 1s infinite;}
+@keyframes ctapulse{0%,100%{box-shadow:0 6px 28px rgba(0,229,255,0.45);}50%{box-shadow:0 6px 40px rgba(0,229,255,0.85);}}
+
+/* end card */
+.endcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:radial-gradient(ellipse at center,#0b1622 0%,#04090c 70%);opacity:0;transition:opacity 1s ease;pointer-events:none;}
+.endcard.on{opacity:1;}
+.wordmark{font-family:var(--disp);font-weight:900;font-size:clamp(1.6rem,6vw,2.4rem);letter-spacing:0.04em;text-transform:uppercase;
+  text-shadow:0 0 24px rgba(0,229,255,0.35);}
+.wordmark span{color:var(--accent);}
+.endcard .rule{width:54px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 14px var(--accent);}
+.tagline{font-family:var(--font);font-weight:500;font-size:clamp(0.78rem,2.6vw,1rem);color:var(--text);max-width:80%;line-height:1.5;}
+.tagline b{color:var(--accent);font-weight:700;}
+
+/* ============================ CAPTION TRACK (burned-in) ============================ */
+.caption{position:absolute;left:7%;right:7%;bottom:6.5%;z-index:40;text-align:center;
+  font-family:var(--font);font-weight:500;font-size:clamp(0.74rem,2.7vw,0.98rem);line-height:1.45;color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,0.9), 0 0 26px rgba(0,0,0,0.7);opacity:0;transition:opacity .35s;pointer-events:none;}
+.caption.on{opacity:1;}
+
+/* progress + timecode */
+.prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:55;background:rgba(255,255,255,0.08);}
+.prog > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0b6b76,#00E5FF);box-shadow:0 0 12px var(--accent);}
+.tc{position:absolute;top:11px;right:13px;z-index:55;font-family:var(--mono);font-size:0.52rem;letter-spacing:0.16em;color:var(--faint);}
+.beadge{position:absolute;top:11px;left:13px;z-index:55;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);opacity:0.7;}
+
+/* ============================ CONTROLS (outside the recordable stage) ============================ */
+#controls{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:all .2s;}
+.ctl:hover{border-color:var(--accent);box-shadow:0 0 18px rgba(0,229,255,0.25);}
+.ctl.primary{background:var(--accent);color:#04090c;border-color:var(--accent);box-shadow:0 0 20px rgba(0,229,255,0.4);}
+.ctl.active{border-color:var(--accent);color:var(--accent);}
+.seg{display:inline-flex;padding:3px;border-radius:99px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);}
+.seg button{padding:6px 12px;border:none;background:transparent;color:var(--dim);font-family:var(--mono);font-size:0.58rem;
+  font-weight:600;letter-spacing:0.06em;border-radius:99px;cursor:pointer;transition:all .2s;}
+.seg button.active{background:var(--accent);color:#04090c;}
+.hint{margin-top:12px;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--faint);text-align:center;max-width:540px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 6px;color:var(--text);}
+
+@media(max-width:520px){#controls{gap:7px;}.ctl{padding:8px 11px;font-size:0.56rem;}}
+
+/* hide all chrome for clean screen-recording */
+body.recording #controls,body.recording .hint,body.recording .prog,body.recording .tc,body.recording .beadge{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="grain"></div>
+  <div class="sweep" id="sweep"></div>
+
+  <span class="beadge" id="beadge">CS MEDIA</span>
+  <span class="tc" id="tc">00:00 / 01:00</span>
+
+  <!-- ===================== BEAT 1 — THE PAIN ===================== -->
+  <section class="scene" id="s1">
+    <div class="phone">
+      <span class="notch"></span>
+      <div class="bubble" id="b1bubble">
+        Here's the proposal — would love your thoughts.
+        <div class="file">
+          <svg width="18" height="22" viewBox="0 0 18 22"><rect width="18" height="22" rx="3" fill="rgba(0,229,255,.18)"/><path d="M4 6h10M4 10h10M4 14h7" stroke="#00E5FF" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <div><b>Pitch_Deck_v7.pdf</b><small>4.2 MB · PDF</small></div>
+        </div>
+      </div>
+      <div class="receipt" id="b1receipt"><span class="tick" id="b1tick">✓✓</span><span id="b1status">Delivered</span></div>
+    </div>
+    <div class="deadtimer" id="b1timer">— DELIVERED 9:14 PM · STILL UNREAD —</div>
+  </section>
+
+  <!-- ===================== BEAT 2 — THE SHIFT ===================== -->
+  <section class="scene" id="s2">
+    <div class="shift-wrap" id="shiftwrap">
+      <div class="shards" id="shards"></div>
+      <div class="orbwrap"><div class="orb" id="orb2">
+        <div class="orb-core"></div>
+        <div class="orb-ring"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div>
+        <div class="orb-spark">✦</div>
+      </div></div>
+    </div>
+    <div style="margin-top:30px">
+      <div class="eyebrow" id="s2eye">THE SHIFT</div>
+      <h1 class="headline" style="margin-top:12px">
+        <span class="kline" id="s2l1"><span>What if it could</span></span>
+        <span class="kline" id="s2l2"><span class="cy">present itself?</span></span>
+      </h1>
+    </div>
+  </section>
+
+  <!-- ===================== BEAT 3 — THE LOOP ===================== -->
+  <section class="scene" id="s3">
+    <div class="loop">
+      <div class="loop-card" id="lc1">
+        <span class="lc-eyebrow">// One link, dropped in</span>
+        <div class="typing" style="color:var(--dim)"><span>WhatsApp · Aanya</span></div>
+        <div style="margin-top:7px;display:flex;align-items:center;gap:7px;font-size:0.6rem;color:var(--accent);font-family:var(--mono)">🔗 cs.media/present/nova ↗</div>
+      </div>
+      <div class="loop-card" id="lc2">
+        <span class="lc-eyebrow">// They explore on their time</span>
+        <div class="chips">
+          <span class="chip">Pricing</span><span class="chip" id="chiphot">ROI & traction</span>
+          <span class="chip">Team</span><span class="chip">Timeline</span>
+        </div>
+      </div>
+      <div class="loop-card" id="lc3">
+        <span class="lc-eyebrow">// Ask anything</span>
+        <div class="typing"><span class="qt" id="qtype"></span></div>
+      </div>
+      <div class="loop-card" id="lc4">
+        <span class="lc-eyebrow">// Answered instantly — in your voice</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="wave"><i style="animation-delay:0s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.2s"></i></div>
+          <span style="font-family:var(--mono);font-size:0.55rem;color:var(--dim)">Nova speaking…</span>
+        </div>
+      </div>
+      <div class="loop-card" id="lc5">
+        <span class="lc-eyebrow">// And you see exactly who's interested</span>
+        <div class="bars" id="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div style="margin-top:7px;font-family:var(--mono);font-size:0.5rem;color:var(--dim)">3 viewers · avg 4m12s · 11 questions</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BEAT 4 — HANDOFF ===================== -->
+  <section class="scene" id="s4">
+    <div class="orbwrap"><div class="orb lit" id="orb4">
+      <div class="orb-core"></div>
+      <div class="orb-ring"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div>
+      <div class="orb-spark">✦</div>
+    </div></div>
+    <div class="eyebrow in" style="margin-top:34px">THE AHA</div>
+    <h1 class="headline" style="margin-top:12px;font-size:clamp(1.5rem,6vw,2.4rem)">This is <span class="cy">one.</span><br>Talk to it.</h1>
+    <div class="cta-btn" id="cta">▶ Talk to Nova</div>
+  </section>
+
+  <!-- ===================== END CARD ===================== -->
+  <div class="endcard" id="endcard">
+    <div class="wordmark">CS<span>·</span>MEDIA</div>
+    <div class="rule"></div>
+    <div class="tagline">Don't send a deck.<br><b>Send a conversation.</b></div>
+  </div>
+
+  <!-- caption track -->
+  <div class="caption" id="caption"></div>
+  <div class="prog"><i id="progbar"></i></div>
+</div>
+
+<!-- ===================== CONTROLS ===================== -->
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl" id="soundBtn">🔇 Sound off</div>
+  <div class="seg" id="aspectSeg">
+    <button data-ar="vertical" class="active">9:16</button>
+    <button data-ar="square">1:1</button>
+  </div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  Deterministic 60s timeline — screen-record the stage to export. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
+  Captions are burned in for muted-first viewing. Toggle 9:16 (presenter gate / Reels) or 1:1 (LinkedIn / IG feed).
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const DUR = 60000; // 60s
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- build shards for beat 2 (document → orb) ----------
+  (function buildShards(){
+    const host = $("shards"); if(!host) return;
+    const COLS=5, ROWS=7, W=150, H=190, gx=(240-W)/2, gy=(240-H)/2;
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      const s=document.createElement("div"); s.className="shard";
+      const w=W/COLS-3, h=H/ROWS-3;
+      s.style.width=w+"px"; s.style.height=h+"px";
+      s.style.left=(gx+c*(W/COLS))+"px"; s.style.top=(gy+r*(H/ROWS))+"px";
+      // start offsets — exploded grid
+      s.style.setProperty("--sx",((c-COLS/2)*4)+"px");
+      s.style.setProperty("--sy",((r-ROWS/2)*4)+"px");
+      s.style.setProperty("--sr",((c+r)%2?6:-6)+"deg");
+      s.style.setProperty("--sd",((r*COLS+c)*16)+"ms");
+      host.appendChild(s);
+    }
+  })();
+
+  // ---------- caption track (synced to VO) ----------
+  const CAPS = [
+    [600, 4200,  "You spent weeks on the perfect pitch."],
+    [4400,7600,  "You hit send… and then — silence."],
+    [7800,9900,  "No idea if they even opened it."],
+    [10800,16500,"What if your pitch could present itself —"],
+    [16700,21500,"and answer every question — the moment they're ready?"],
+    [21700,26000,"Even at midnight. Even across the world."],
+    [30500,34500,"Send one link. They explore on their time,"],
+    [34700,39500,"ask anything, and get answers instantly — in your voice."],
+    [39700,44500,"And you see exactly who's interested."],
+    [50500,55000,"Don't take our word for it — this entire pitch is an AI presenter."],
+    [55200,58800,"Go ahead. Ask it anything."],
+  ];
+
+  // ---------- timeline cues (visual, time-keyed once per pass) ----------
+  // each cue: {t, once, fn}
+  const cues = [
+    // BEAT 1
+    {t:300,  fn:()=>{ $("s1").classList.add("on"); }},
+    {t:700,  fn:()=>{ $("b1bubble").classList.add("in"); }},
+    {t:1700, fn:()=>{ $("b1receipt").classList.add("sent"); $("b1status").textContent="Sent ✓"; }},
+    {t:3600, fn:()=>{ $("b1timer").classList.add("in"); }},
+    {t:9200, fn:()=>{ $("s1").classList.remove("on"); }},
+    // BEAT 2
+    {t:10200, fn:()=>{ $("s2").classList.add("on"); }},
+    {t:10500, fn:()=>{ $("shiftwrap").classList.add("go"); }},
+    {t:11700, fn:()=>{ $("orb2").classList.add("lit"); }},
+    {t:13200, fn:()=>{ $("s2eye").classList.add("in"); }},
+    {t:13600, fn:()=>{ $("s2l1").classList.add("in"); }},
+    {t:13900, fn:()=>{ $("s2l2").classList.add("in"); }},
+    {t:29000, fn:()=>{ $("s2").classList.remove("on"); }},
+    // BEAT 3 — one card per VO beat, tighter rhythm
+    {t:30000, fn:()=>{ $("s3").classList.add("on"); }},
+    {t:30400, fn:()=>{ $("lc1").classList.add("in"); }},
+    {t:33000, fn:()=>{ $("lc2").classList.add("in"); }},
+    {t:34600, fn:()=>{ $("chiphot").classList.add("hot"); }},
+    {t:36200, fn:()=>{ $("lc3").classList.add("in"); typeQuestion(); }},
+    {t:41000, fn:()=>{ $("lc4").classList.add("in"); }},
+    {t:44600, fn:()=>{ $("lc5").classList.add("in"); }},
+    {t:45200, fn:()=>{ $("bars").classList.add("grow"); }},
+    {t:49400, fn:()=>{ $("s3").classList.remove("on"); }},
+    // BEAT 4 + end card
+    {t:50300, fn:()=>{ $("s4").classList.add("on"); $("orb4").classList.add("lit"); }},
+    {t:52000, fn:()=>{ $("cta").classList.add("in"); }},
+    {t:56200, fn:()=>{ $("endcard").classList.add("on"); }},
+  ];
+
+  function typeQuestion(){
+    const el=$("qtype"); if(!el) return; el.textContent="";
+    const q="How fast can we go live?"; let i=0;
+    (function step(){ if(i<=q.length){ el.textContent=q.slice(0,i++); setTimeout(step,55);} })();
+  }
+
+  // ---------- director ----------
+  let raf=null, startTs=null, elapsed=0, playing=false, fired=new Set();
+  const beadgeFor=(t)=> t<10000?"BEAT 1 · THE PAIN": t<30000?"BEAT 2 · THE SHIFT": t<50000?"BEAT 3 · THE LOOP":"BEAT 4 · THE AHA";
+
+  function resetVisuals(){
+    fired.clear();
+    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("on"));
+    ["b1bubble","b1receipt","b1timer","shiftwrap","orb2","s2eye","s2l1","s2l2",
+     "lc1","lc2","lc3","lc4","lc5","chiphot","bars","s4","orb4","cta","endcard"]
+     .forEach(id=>{const e=$(id); if(e){e.classList.remove("in","on","sent","go","lit","hot","grow");}});
+    $("b1status").textContent="Delivered";
+    $("caption").classList.remove("on");
+    $("progbar").style.width="0%";
+  }
+
+  function applyCaption(t){
+    const cap=$("caption"); let active=null;
+    for(const c of CAPS){ if(t>=c[0] && t<c[1]){ active=c; break; } }
+    if(active){ if(cap.textContent!==active[2]) cap.textContent=active[2]; cap.classList.add("on"); }
+    else cap.classList.remove("on");
+  }
+
+  function fmt(ms){const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+
+  function frame(ts){
+    if(startTs===null) startTs=ts-elapsed;
+    elapsed=ts-startTs;
+    const t=Math.min(elapsed,DUR);
+    for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.fn();}catch(e){} } }
+    applyCaption(t);
+    $("progbar").style.width=(t/DUR*100)+"%";
+    $("tc").textContent=fmt(t)+" / 01:00";
+    $("beadge").textContent=beadgeFor(t);
+    $("sweep").style.opacity=(t>30000&&t<50000)?String(0.4+0.3*Math.sin(t/220)):"0";
+    score(t);
+    if(elapsed>=DUR){ stop(true); return; }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function play(){
+    if(playing) return;
+    if(elapsed>=DUR){ hardRestart(); }
+    playing=true; startTs=null; $("playBtn").textContent="⏸ Pause";
+    audioResume(); raf=requestAnimationFrame(frame);
+  }
+  function pause(){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent="▶ Play"; audioSuspend(); }
+  function stop(ended){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent= ended?"↺ Replay":"▶ Play"; if(ended) audioStop(); }
+  function hardRestart(){ elapsed=0; startTs=null; resetVisuals(); audioStop(); }
+  function toggle(){ playing?pause():play(); }
+
+  // ---------- aspect toggle ----------
+  $("aspectSeg").addEventListener("click",(e)=>{
+    const b=e.target.closest("button"); if(!b) return;
+    [...$("aspectSeg").children].forEach(x=>x.classList.remove("active")); b.classList.add("active");
+    const ar=b.dataset.ar;
+    if(ar==="square"){ document.documentElement.style.setProperty("--stage-ar","1 / 1"); document.documentElement.style.setProperty("--stage-w","min(86vh, 86vw, 620px)"); }
+    else { document.documentElement.style.setProperty("--stage-ar","9 / 16"); document.documentElement.style.setProperty("--stage-w","clamp(280px, 56vh, 540px)"); }
+  });
+
+  // ---------- clean (recording) mode ----------
+  $("recBtn").addEventListener("click",()=>{ document.body.classList.toggle("recording"); $("recBtn").classList.toggle("active"); });
+
+  // ---------- buttons / keys ----------
+  $("playBtn").addEventListener("click",toggle);
+  $("restartBtn").addEventListener("click",()=>{ pause(); hardRestart(); play(); });
+  document.addEventListener("keydown",(e)=>{
+    if(e.code==="Space"){ e.preventDefault(); toggle(); }
+    else if(e.key==="r"||e.key==="R"){ pause(); hardRestart(); play(); }
+    else if(e.key==="c"||e.key==="C"){ $("recBtn").click(); }
+    else if(e.key==="s"||e.key==="S"){ $("soundBtn").click(); }
+  });
+
+  // ============================================================
+  //  OPTIONAL WEBAUDIO SCORE — sub-bass drone + a single rising
+  //  motif that lands on the CTA. No external assets.
+  // ============================================================
+  let actx=null, master=null, droneOsc=null, droneGain=null, subOsc=null, soundOn=false, scoreState={riser:false,land:false};
+  function ensureAudio(){
+    if(actx) return;
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    actx=new AC(); master=actx.createGain(); master.gain.value=0.0; master.connect(actx.destination);
+    // low drone
+    droneOsc=actx.createOscillator(); droneOsc.type="sine"; droneOsc.frequency.value=55;
+    droneGain=actx.createGain(); droneGain.gain.value=0.12;
+    const lp=actx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=320;
+    droneOsc.connect(droneGain); droneGain.connect(lp); lp.connect(master); droneOsc.start();
+    // sub octave
+    subOsc=actx.createOscillator(); subOsc.type="sine"; subOsc.frequency.value=41;
+    const sg=actx.createGain(); sg.gain.value=0.08; subOsc.connect(sg); sg.connect(master); subOsc.start();
+  }
+  function blip(freq,when,dur,gain){
+    if(!actx) return; const o=actx.createOscillator(), g=actx.createGain();
+    o.type="triangle"; o.frequency.value=freq; o.connect(g); g.connect(master);
+    g.gain.setValueAtTime(0,when); g.gain.linearRampToValueAtTime(gain,when+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,when+dur); o.start(when); o.stop(when+dur+0.05);
+  }
+  function score(t){
+    if(!soundOn||!actx) return; const now=actx.currentTime;
+    // rising motif during the loop → resolve on CTA
+    if(t>30000 && !scoreState.riser){ scoreState.riser=true;
+      [0,1,2,3,4].forEach((i)=>blip(220*Math.pow(1.12,i), now+i*3.6, 0.9, 0.10)); }
+    if(t>=51800 && !scoreState.land){ scoreState.land=true;
+      blip(330,now,1.6,0.16); blip(440,now+0.02,1.6,0.13); blip(660,now+0.04,1.8,0.10);
+      if(droneGain) droneGain.gain.linearRampToValueAtTime(0.18,now+1.2); }
+  }
+  function audioResume(){ if(soundOn&&actx&&actx.state==="suspended") actx.resume(); if(soundOn&&master) master.gain.linearRampToValueAtTime(0.9,(actx?actx.currentTime:0)+0.4); }
+  function audioSuspend(){ if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.2); }
+  function audioStop(){ scoreState={riser:false,land:false}; if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.3); if(droneGain&&actx) droneGain.gain.setValueAtTime(0.12,actx.currentTime); }
+  $("soundBtn").addEventListener("click",()=>{
+    soundOn=!soundOn; ensureAudio();
+    $("soundBtn").textContent= soundOn?"🔊 Sound on":"🔇 Sound off";
+    $("soundBtn").classList.toggle("active",soundOn);
+    if(soundOn){ if(actx&&actx.state==="suspended")actx.resume(); if(playing)audioResume(); }
+    else audioSuspend();
+  });
+
+  // ---------- boot ----------
+  resetVisuals();
+  // show first frame poster (beat 1 visible, paused)
+  $("s1").classList.add("on"); $("b1bubble").classList.add("in");
+})();
+</script>
+</body></html>
