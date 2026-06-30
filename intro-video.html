@@ -67,6 +67,8 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
 .kline.in > span{animation:klineup .85s cubic-bezier(.16,1,.3,1) forwards;}
 .sub{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.34em;text-transform:uppercase;color:var(--dim);margin-top:14px;}
+#s2sub{opacity:0;transform:translateY(8px);}
+#s2sub.in{opacity:1;transform:none;transition:opacity .8s ease, transform .8s ease;}
 
 @keyframes rise{to{opacity:1;transform:none;}}
 @keyframes klineup{to{transform:none;}}
@@ -218,7 +220,7 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   <div class="sweep" id="sweep"></div>
 
   <span class="beadge" id="beadge">CS MEDIA</span>
-  <span class="tc" id="tc">00:00 / 01:00</span>
+  <span class="tc" id="tc">00:00 / 00:46</span>
 
   <!-- ===================== BEAT 1 — THE PAIN ===================== -->
   <section class="scene" id="s1">
@@ -252,6 +254,7 @@ body.recording #stage{box-shadow:none;border-radius:0;}
         <span class="kline" id="s2l1"><span>What if it could</span></span>
         <span class="kline" id="s2l2"><span class="cy">present itself?</span></span>
       </h1>
+      <div class="sub" id="s2sub">Even at midnight · even across the world</div>
     </div>
   </section>
 
@@ -333,15 +336,15 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   <div class="ctl" id="recBtn">⦿ Clean mode</div>
 </div>
 <div class="hint">
-  Deterministic 60s timeline — screen-record the stage to export. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
-  Music plays from the first Play (record with tab/system audio on). Voiceover auto-syncs when <code>vo/intro-vo.mp3</code> is present.<br>
+  Deterministic 46s timeline — screen-record the stage to export. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
+  Music plays from the first Play (record with tab/system audio on). Optional voiceover auto-syncs when <code>vo/beat1..4.mp3</code> exist.<br>
   Captions are burned in for muted-first viewing. Toggle 9:16 (presenter gate / Reels) or 1:1 (LinkedIn / IG feed).
 </div>
 
 <script>
 (() => {
   "use strict";
-  const DUR = 60000; // 60s
+  const DUR = 46000; // 46s — tightened so there are no dead holds
   const $ = (id) => document.getElementById(id);
 
   // ---------- build shards for beat 2 (document → orb) ----------
@@ -362,53 +365,58 @@ body.recording #stage{box-shadow:none;border-radius:0;}
     }
   })();
 
-  // ---------- caption track (synced to VO) ----------
+  // ---------- caption track (continuous — no blank gaps) ----------
   const CAPS = [
-    [600, 4200,  "You spent weeks on the perfect pitch."],
-    [4400,7600,  "You hit send… and then — silence."],
-    [7800,9900,  "No idea if they even opened it."],
-    [10800,16500,"What if your pitch could present itself —"],
-    [16700,21500,"and answer every question — the moment they're ready?"],
-    [21700,26000,"Even at midnight. Even across the world."],
-    [30500,34500,"Send one link. They explore on their time,"],
-    [34700,39500,"ask anything, and get answers instantly — in your voice."],
-    [39700,44500,"And you see exactly who's interested."],
-    [50500,55000,"Don't take our word for it — this entire pitch is an AI presenter."],
-    [55200,58800,"Go ahead. Ask it anything."],
+    [300, 3900,  "You spent weeks on the perfect pitch."],
+    [3950,7300,  "You hit send… then silence — did they even open it?"],
+    [7600,13400, "What if it could present itself —"],
+    [13450,18700,"and answer every question, the moment they're ready?"],
+    [19000,23400,"Send one link. They explore on their time,"],
+    [23450,29400,"ask anything, get answers instantly — in your voice."],
+    [29450,36400,"And you see exactly who's interested."],
+    [36900,41200,"This entire pitch is an AI presenter."],
+    [41250,45800,"Go ahead — ask it anything."],
   ];
 
   // ---------- timeline cues (visual, time-keyed once per pass) ----------
   // each cue: {t, once, fn}
   const cues = [
-    // BEAT 1
-    {t:300,  fn:()=>{ $("s1").classList.add("on"); }},
-    {t:700,  fn:()=>{ $("b1bubble").classList.add("in"); }},
-    {t:1700, fn:()=>{ $("b1receipt").classList.add("sent"); $("b1status").textContent="Sent ✓"; }},
-    {t:3600, fn:()=>{ $("b1timer").classList.add("in"); }},
-    {t:9200, fn:()=>{ $("s1").classList.remove("on"); }},
-    // BEAT 2
-    {t:10200, fn:()=>{ $("s2").classList.add("on"); }},
-    {t:10500, fn:()=>{ $("shiftwrap").classList.add("go"); }},
-    {t:11700, fn:()=>{ $("orb2").classList.add("lit"); }},
-    {t:13200, fn:()=>{ $("s2eye").classList.add("in"); }},
-    {t:13600, fn:()=>{ $("s2l1").classList.add("in"); }},
-    {t:13900, fn:()=>{ $("s2l2").classList.add("in"); }},
-    {t:29000, fn:()=>{ $("s2").classList.remove("on"); }},
-    // BEAT 3 — one card per VO beat, tighter rhythm
-    {t:30000, fn:()=>{ $("s3").classList.add("on"); }},
-    {t:30400, fn:()=>{ $("lc1").classList.add("in"); }},
-    {t:33000, fn:()=>{ $("lc2").classList.add("in"); }},
-    {t:34600, fn:()=>{ $("chiphot").classList.add("hot"); }},
-    {t:36200, fn:()=>{ $("lc3").classList.add("in"); typeQuestion(); }},
-    {t:41000, fn:()=>{ $("lc4").classList.add("in"); }},
-    {t:44600, fn:()=>{ $("lc5").classList.add("in"); }},
-    {t:45200, fn:()=>{ $("bars").classList.add("grow"); }},
-    {t:49400, fn:()=>{ $("s3").classList.remove("on"); }},
-    // BEAT 4 + end card
-    {t:50300, fn:()=>{ $("s4").classList.add("on"); $("orb4").classList.add("lit"); }},
-    {t:52000, fn:()=>{ $("cta").classList.add("in"); }},
-    {t:56200, fn:()=>{ $("endcard").classList.add("on"); }},
+    // BEAT 1 — Pain (0–7.4s): kept short, with the receipt "time passing" so it never just sits
+    {t:200,  fn:()=>{ $("s1").classList.add("on"); }},
+    {t:600,  fn:()=>{ $("b1bubble").classList.add("in"); }},
+    {t:1500, fn:()=>{ $("b1receipt").classList.add("sent"); $("b1status").textContent="Sent ✓"; }},
+    {t:2400, fn:()=>{ $("b1timer").classList.add("in"); }},
+    {t:4200, fn:()=>{ pulseTimer("— STILL UNREAD · 11:47 PM —"); }},
+    {t:6000, fn:()=>{ pulseTimer("— STILL UNREAD · 2 DAYS LATER —"); }},
+    {t:7400, fn:()=>{ $("s1").classList.remove("on"); }},
+    // BEAT 2 — Shift (7.6–18.6s): text builds (eyebrow → 2 lines → sub) so it isn't a static hold
+    {t:7600,  fn:()=>{ $("s2").classList.add("on"); }},
+    {t:7900,  fn:()=>{ $("shiftwrap").classList.add("go"); }},
+    {t:8900,  fn:()=>{ $("orb2").classList.add("lit"); }},
+    {t:10200, fn:()=>{ $("s2eye").classList.add("in"); }},
+    {t:10600, fn:()=>{ $("s2l1").classList.add("in"); }},
+    {t:10900, fn:()=>{ $("s2l2").classList.add("in"); }},
+    {t:14200, fn:()=>{ $("s2sub").classList.add("in"); }},
+    {t:18600, fn:()=>{ $("s2").classList.remove("on"); }},
+    // BEAT 3 — Loop (19–36.4s): tight rhythm, one card per beat, no hold once full
+    {t:19000, fn:()=>{ $("s3").classList.add("on"); }},
+    {t:19300, fn:()=>{ $("lc1").classList.add("in"); }},
+    {t:21200, fn:()=>{ $("lc2").classList.add("in"); }},
+    {t:22500, fn:()=>{ $("chiphot").classList.add("hot"); }},
+    {t:24000, fn:()=>{ $("lc3").classList.add("in"); typeQuestion(); }},
+    {t:27400, fn:()=>{ $("lc4").classList.add("in"); }},
+    {t:30400, fn:()=>{ $("lc5").classList.add("in"); }},
+    {t:31000, fn:()=>{ $("bars").classList.add("grow"); }},
+    {t:36400, fn:()=>{ $("s3").classList.remove("on"); }},
+    // BEAT 4 — Aha (37–46s)
+    {t:37000, fn:()=>{ $("s4").classList.add("on"); $("orb4").classList.add("lit"); }},
+    {t:38800, fn:()=>{ $("cta").classList.add("in"); }},
+    {t:41500, fn:()=>{ $("endcard").classList.add("on"); }},
   ];
+
+  // re-triggerable fade for the Beat 1 "time passing" line
+  function pulseTimer(text){ const el=$("b1timer"); if(!el) return;
+    el.classList.remove("in"); void el.offsetWidth; el.textContent=text; el.classList.add("in"); }
 
   function typeQuestion(){
     const el=$("qtype"); if(!el) return; el.textContent="";
@@ -418,15 +426,16 @@ body.recording #stage{box-shadow:none;border-radius:0;}
 
   // ---------- director ----------
   let raf=null, startTs=null, elapsed=0, playing=false, fired=new Set();
-  const beadgeFor=(t)=> t<10000?"BEAT 1 · THE PAIN": t<30000?"BEAT 2 · THE SHIFT": t<50000?"BEAT 3 · THE LOOP":"BEAT 4 · THE AHA";
+  const beadgeFor=(t)=> t<7400?"BEAT 1 · THE PAIN": t<19000?"BEAT 2 · THE SHIFT": t<37000?"BEAT 3 · THE LOOP":"BEAT 4 · THE AHA";
 
   function resetVisuals(){
     fired.clear();
     document.querySelectorAll(".scene").forEach(s=>s.classList.remove("on"));
-    ["b1bubble","b1receipt","b1timer","shiftwrap","orb2","s2eye","s2l1","s2l2",
+    ["b1bubble","b1receipt","b1timer","shiftwrap","orb2","s2eye","s2l1","s2l2","s2sub",
      "lc1","lc2","lc3","lc4","lc5","chiphot","bars","s4","orb4","cta","endcard"]
      .forEach(id=>{const e=$(id); if(e){e.classList.remove("in","on","sent","go","lit","hot","grow");}});
     $("b1status").textContent="Delivered";
+    $("b1timer").textContent="— DELIVERED 9:14 PM · STILL UNREAD —";
     $("caption").classList.remove("on");
     $("progbar").style.width="0%";
   }
@@ -447,9 +456,9 @@ body.recording #stage{box-shadow:none;border-radius:0;}
     for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.fn();}catch(e){} } }
     applyCaption(t);
     $("progbar").style.width=(t/DUR*100)+"%";
-    $("tc").textContent=fmt(t)+" / 01:00";
+    $("tc").textContent=fmt(t)+" / "+fmt(DUR);
     $("beadge").textContent=beadgeFor(t);
-    $("sweep").style.opacity=(t>30000&&t<50000)?String(0.4+0.3*Math.sin(t/220)):"0";
+    $("sweep").style.opacity=(t>19000&&t<37000)?String(0.4+0.3*Math.sin(t/220)):"0";
     score(t); voScheduler(t,false);
     if(elapsed>=DUR){ stop(true); return; }
     raf=requestAnimationFrame(frame);
@@ -531,14 +540,14 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   function score(t){
     if(!soundOn||!actx) return; const now=actx.currentTime;
     // Shift: the pad blooms as the orb ignites
-    if(t>=11000 && !scoreState.shift){ scoreState.shift=true;
+    if(t>=8500 && !scoreState.shift){ scoreState.shift=true;
       if(padGain) padGain.gain.linearRampToValueAtTime(0.16, now+2.2);
       blip(880,now,1.4,0.05,"sine"); }
-    // Loop: a rising arpeggio, one step per VO beat
-    if(t>=30000 && !scoreState.riser){ scoreState.riser=true;
-      [0,1,2,3,4,5].forEach((i)=>blip(220*Math.pow(1.122,i), now+i*3.2, 1.0, 0.085, "triangle")); }
+    // Loop: a rising arpeggio, one step per card
+    if(t>=19000 && !scoreState.riser){ scoreState.riser=true;
+      [0,1,2,3,4,5].forEach((i)=>blip(220*Math.pow(1.122,i), now+i*2.6, 1.0, 0.085, "triangle")); }
     // CTA: resolve chord + pad swell
-    if(t>=51800 && !scoreState.land){ scoreState.land=true;
+    if(t>=38500 && !scoreState.land){ scoreState.land=true;
       blip(329.63,now,1.8,0.14,"sine"); blip(440,now+0.02,1.8,0.11,"triangle"); blip(659.25,now+0.04,2.0,0.08,"sine");
       if(droneGain) droneGain.gain.linearRampToValueAtTime(0.18,now+1.2);
       if(padGain) padGain.gain.linearRampToValueAtTime(0.22,now+1.2); }
@@ -552,7 +561,7 @@ body.recording #stage{box-shadow:none;border-radius:0;}
 
   // ---------- voiceover scheduler (one clip per beat) ----------
   // each segment plays its clip starting at `start` ms on the timeline.
-  const VOSEG=[{el:$("vo1"),start:600},{el:$("vo2"),start:10800},{el:$("vo3"),start:30500},{el:$("vo4"),start:50500}];
+  const VOSEG=[{el:$("vo1"),start:400},{el:$("vo2"),start:7800},{el:$("vo3"),start:19200},{el:$("vo4"),start:37200}];
   let voActive=-1;
   function segAt(t){ let idx=-1; for(let i=0;i<VOSEG.length;i++){ if(t>=VOSEG[i].start) idx=i; } return idx; }
   function voPlay(){ // (re)sync to current time and start the right clip
