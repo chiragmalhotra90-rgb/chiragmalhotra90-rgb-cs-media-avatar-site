@@ -110,6 +110,30 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 @keyframes ring{0%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}
 .maya .name{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.24em;color:var(--accent);text-transform:uppercase;}
 .maya .role{font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;color:var(--faint);text-transform:uppercase;margin-top:-6px;}
+/* --- "tap Talk to Maya → she joins live" interaction --- */
+.avatar .cspin{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(0,229,255,0.18);border-top-color:var(--accent);opacity:0;}
+.avatar.connecting .cspin{opacity:1;animation:spin .8s linear infinite;}
+.avatar.connecting .spark,.avatar.photoOn .spark{opacity:0;transition:opacity .3s;}
+.avatar.live{border-color:rgba(57,240,142,0.55);}
+.avatar.talking{animation:talkpulse .5s ease-in-out infinite;}
+@keyframes talkpulse{0%,100%{box-shadow:0 0 30px rgba(0,229,255,0.18)}50%{box-shadow:0 0 48px rgba(57,240,142,0.45)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-badge{position:absolute;top:2px;left:50%;transform:translateX(-50%) scale(.8);display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:#8affc4;
+  background:rgba(4,20,12,0.72);border:1px solid rgba(57,240,142,0.4);border-radius:99px;padding:4px 11px;opacity:0;z-index:16;}
+.live-badge.on{animation:pop .4s cubic-bezier(.2,1.3,.35,1) forwards;}
+.live-badge .d{width:6px;height:6px;border-radius:50%;background:#39f08e;box-shadow:0 0 8px #39f08e;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:.3}}
+.talk-btn.pressed{transform:scale(.93);filter:brightness(.88);}
+.talk-btn.connecting{background:rgba(0,229,255,0.14);color:var(--accent);box-shadow:none;}
+.talk-btn.live{background:linear-gradient(135deg,#39f08e,#0b6b76);}
+.tap-cursor{position:absolute;left:60%;top:80%;width:30px;height:30px;z-index:30;pointer-events:none;opacity:0;transform:translate(-50%,-50%);}
+.tap-cursor::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid #eafdff;background:rgba(234,253,255,0.18);box-shadow:0 0 14px rgba(0,229,255,0.6);}
+.tap-cursor.go{animation:tapmove 1.05s cubic-bezier(.5,0,.2,1) forwards;}
+@keyframes tapmove{0%{opacity:0;left:62%;top:82%}18%{opacity:1}70%{opacity:1;left:50%;top:40.5%;transform:translate(-50%,-50%) scale(1)}82%{transform:translate(-50%,-50%) scale(.62)}100%{opacity:0;left:50%;top:40.5%;transform:translate(-50%,-50%) scale(1)}}
+.tap-ripple{position:absolute;left:50%;top:40.5%;width:22px;height:22px;border-radius:50%;border:2px solid var(--accent);transform:translate(-50%,-50%);opacity:0;z-index:29;pointer-events:none;}
+.tap-ripple.go{animation:ripple .6s ease-out;}
+@keyframes ripple{0%{opacity:.9;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(3.4)}}
 .talk-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;
   background:linear-gradient(135deg,#00E5FF,#0b6b76);color:#04090c;font-family:var(--mono);font-weight:700;
   font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;box-shadow:0 6px 24px rgba(0,229,255,0.4);
@@ -199,14 +223,18 @@ body.recording #stage{box-shadow:none;border-radius:0;}
 
   <!-- MAYA panel -->
   <div class="maya" id="maya">
-    <div class="avatar">
+    <div class="live-badge" id="liveBadge"><span class="d"></span>Live Session</div>
+    <div class="avatar" id="avatar">
       <div class="ring"></div><div class="ring" style="animation-delay:1.5s"></div>
+      <div class="cspin"></div>
       <div class="photo" id="mayaPhoto" style="background-image:url('assets/maya.jpg')"></div>
       <div class="spark">✦</div>
     </div>
-    <div class="name">MAYA</div>
-    <div class="role">AI Investor Analyst</div>
+    <div class="name" id="mayaName">MAYA</div>
+    <div class="role" id="mayaRole">AI Investor Analyst</div>
     <div class="talk-btn" id="talkBtn">▶ Talk to Maya</div>
+    <div class="tap-cursor" id="tapCursor"></div>
+    <div class="tap-ripple" id="tapRipple"></div>
     <div class="bubble" id="mayaBubble">
       <div class="who">Maya</div>
       <p>Hi, I'm Maya. You're not reading a deck — you're talking to one. Tap a topic, ask anything, or press Talk to speak live.</p>
@@ -306,15 +334,16 @@ body.recording #stage{box-shadow:none;border-radius:0;}
     {t:11.22,f:()=>{ pill('p3'); pill('p6'); }},
     {t:12.07,f:()=>{ pill('p5'); pill('p7'); }},
     {t:12.93,f:()=>{ pillHot('p6'); cap("Pricing. Proof. Process — all live."); }},
-    // BREAKDOWN → Maya slides in
-    {t:14.65,f:()=>{ $('orbWM').classList.remove('on'); pillsOff(); orbHide(); $('header').classList.remove('on'); $('maya').classList.add('on'); cap("Meet Maya — your AI analyst."); }},
-    {t:16.37,f:()=>{ $('talkBtn').classList.add('in'); }},
-    {t:17.23,f:()=>{ $('mayaBubble').classList.add('in'); }},
-    // CHAT
-    {t:18.92,f:()=>{ $('inputBar').classList.add('in'); }},
-    {t:19.78,f:()=>{ typeQuestion(); cap("Ask anything. Any time."); }},
+    // MEET MAYA — teach the interaction: tap "Talk to Maya" → she joins live
+    {t:14.65,f:()=>{ $('orbWM').classList.remove('on'); pillsOff(); orbHide(); $('header').classList.remove('on'); $('maya').classList.add('on'); cap("One button starts a live session."); }},
+    {t:16.37,f:()=>{ $('talkBtn').classList.add('in'); tapCursor(); cap("Just tap “Talk to Maya”…"); }},
+    {t:17.23,f:()=>{ tapPress(); }},
+    {t:17.67,f:()=>{ connecting(); cap("…connecting you, live…"); }},
+    {t:18.92,f:()=>{ goLive(); cap("…and Maya joins the call."); }},
+    // CHAT — now live
+    {t:19.78,f:()=>{ $('inputBar').classList.add('in'); typeQuestion(); cap("Ask her anything, any time."); }},
     {t:22.36,f:()=>{ answerBubble(); }},
-    {t:23.22,f:()=>{ cap("Answered instantly — in your voice."); }},
+    {t:23.22,f:()=>{ cap("Answered live — in your voice."); }},
     // CTA
     {t:24.94,f:()=>{ $('maya').classList.remove('on'); orbSmall(); orbShow(); show('sCTA'); $('ctaEye').classList.add('in'); $('ctaH').classList.add('in'); cap(""); }},
     {t:25.80,f:()=>{ /* hold */ }},
@@ -339,11 +368,24 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   function typeQuestion(){ const el=$('typedQ'), ph=$('phText'), car=$('caret'); ph.style.display='none'; car.style.display='inline-block';
     const q="How fast can we go live?"; let i=0; (function s(){ if(i<=q.length){ el.textContent=q.slice(0,i++); setTimeout(s,60);} })(); }
   function answerBubble(){ const b=$('mayaBubble'); b.querySelector('.who').textContent='Maya'; b.querySelector('p').textContent='Most clients are live in under a week — I can walk you through it right now.'; b.classList.remove('in'); void b.offsetWidth; b.classList.add('in'); }
+  // --- "tap Talk to Maya → live" interaction helpers ---
+  let mayaLoaded=false;
+  function tapCursor(){ const c=$('tapCursor'); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); }
+  function tapPress(){ const b=$('talkBtn'); b.classList.add('pressed'); const r=$('tapRipple'); r.classList.remove('go'); void r.offsetWidth; r.classList.add('go'); setTimeout(()=>b.classList.remove('pressed'),190); }
+  function connecting(){ const b=$('talkBtn'); b.classList.add('connecting'); b.textContent='● Connecting…'; $('avatar').classList.add('connecting'); }
+  function goLive(){ const a=$('avatar'); a.classList.remove('connecting'); a.classList.add('live','talking');
+    if(mayaLoaded){ a.classList.add('photoOn'); $('mayaPhoto').classList.add('has'); }
+    $('liveBadge').classList.add('on'); const b=$('talkBtn'); b.classList.remove('connecting'); b.classList.add('live'); b.textContent='● Live · End';
+    $('mayaBubble').classList.add('in'); }
 
   function resetAll(){
     fired.clear(); lastBeat=-1;
     document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
     ['hookEye','hookL1','hookL2','hookSub','revealSub','proofH','ctaEye','ctaH','talkBtn','mayaBubble','inputBar'].forEach(id=>$(id).classList.remove('in'));
+    // reset Maya live-session interaction
+    $('avatar').classList.remove('connecting','live','talking','photoOn'); $('mayaPhoto').classList.remove('has');
+    $('liveBadge').classList.remove('on'); $('tapCursor').classList.remove('go'); $('tapRipple').classList.remove('go');
+    const tb=$('talkBtn'); tb.classList.remove('connecting','live','pressed','beat'); tb.textContent='▶ Talk to Maya';
     pillsOff(); $('maya').classList.remove('on'); $('header').classList.remove('on'); $('orbWM').classList.remove('on');
     $('orb').classList.remove('show','small'); $('cap').classList.remove('on');
     $('typedQ').textContent=''; $('phText').style.display='inline'; $('caret').style.display='none';
@@ -406,8 +448,8 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   $('recBtn').addEventListener('click',()=>{ document.body.classList.toggle('recording'); $('recBtn').classList.toggle('active'); });
   document.addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault();toggle();} else if(e.key==='r'||e.key==='R'){pause();hardRestart();play();} else if(e.key==='c'||e.key==='C'){$('recBtn').click();} else if(e.key==='s'||e.key==='S'){$('soundBtn').click();} });
 
-  // detect if the Maya photo actually exists → mark avatar
-  const probe=new Image(); probe.onload=()=>$('mayaPhoto').classList.add('has'); probe.src='assets/maya.jpg';
+  // detect if the Maya photo exists → she'll "join" (fill the avatar) at goLive()
+  const probe=new Image(); probe.onload=()=>{ mayaLoaded=true; if($('avatar').classList.contains('live')){ $('avatar').classList.add('photoOn'); $('mayaPhoto').classList.add('has'); } }; probe.src='assets/maya.jpg';
 
   resetAll();
 })();
