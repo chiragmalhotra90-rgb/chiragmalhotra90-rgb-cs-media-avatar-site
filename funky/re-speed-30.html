@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · RE 30s · Mumbai Is Fast (wet-emblem palette)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONCEPT 7 — "Mumbai Is Fast. Your Follow-Up Should Be Faster."
+   Palette/texture: wet-black glossy macro (emblem look) —
+   crimson #E02840 + steel navy #1E3D6B/#7FA8E0 on deep gloss black.
+   Architecture: sequential full-screen beats, fully deterministic
+   timeline (window.__seek) so it can be frame-rendered to MP4.
+   ============================================================ */
+:root{
+  --ink:#05070b; --red:#E02840; --red2:#8f1226; --navy:#1E3D6B; --steel:#7FA8E0;
+  --white:#F4F7FA; --sub:#c7d2e2;
+  --disp:'Archivo',Impact,'Arial Narrow','Liberation Sans',sans-serif;
+  --body:'Inter',Arial,'Liberation Sans',sans-serif;
+  --mono:'JetBrains Mono','Liberation Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--white);font-family:var(--body);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;padding:10px;}
+
+#stage{position:relative;width:min(430px,calc((100vh - 120px) * 0.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;
+  container-type:inline-size;background:var(--ink);
+  box-shadow:0 0 0 1px rgba(224,40,64,0.18), 0 40px 120px -28px rgba(224,40,64,0.20), 0 30px 90px rgba(0,0,0,0.7);}
+body.render{padding:0;gap:0;}
+body.render #stage{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;box-shadow:none;}
+body.render #controls,body.render .hint,body.render #chrome{display:none!important;}
+body.recording #controls,body.recording .hint,body.recording #chrome{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+
+.layer{position:absolute;inset:0;}
+
+/* ---- WET-BLACK EMBLEM TEXTURE (hook/sub/det beats) ---- */
+#texBg{background:
+  radial-gradient(30% 18% at 22% 12%, rgba(200,220,255,0.055), transparent 70%),
+  radial-gradient(38% 22% at 76% 30%, rgba(190,215,250,0.045), transparent 70%),
+  radial-gradient(26% 16% at 60% 74%, rgba(200,220,255,0.05), transparent 70%),
+  radial-gradient(58% 42% at 30% 68%, rgba(224,40,64,0.13), transparent 72%),
+  radial-gradient(55% 40% at 74% 22%, rgba(30,61,107,0.34), transparent 72%),
+  linear-gradient(155deg, #0a0e15 0%, #05070b 46%, #030407 100%);}
+#texBg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(118deg, transparent 34%, rgba(210,228,255,0.05) 46%, rgba(210,228,255,0.09) 50%, rgba(210,228,255,0.05) 54%, transparent 66%);}
+/* droplet speckle: two offset dotted radial fields */
+#drops{opacity:.5;background-image:
+  radial-gradient(circle at 50% 50%, rgba(215,232,255,0.16) 0 .35cqi, transparent .6cqi),
+  radial-gradient(circle at 50% 50%, rgba(215,232,255,0.10) 0 .28cqi, transparent .5cqi);
+  background-size:11cqi 13cqi, 7cqi 9cqi;background-position:0 0, 3.5cqi 5cqi;}
+
+/* ---- LOGO-MATCHED FULL-SCREEN BACKGROUNDS (fix: logo bg = scene bg) ---- */
+#orbBg{opacity:0;background:
+  radial-gradient(60% 45% at 50% 44%, rgba(0,160,255,0.16), transparent 70%),
+  radial-gradient(50% 40% at 42% 58%, rgba(57,240,142,0.12), transparent 70%), #000;}
+#csBg{opacity:0;background:
+  radial-gradient(55% 42% at 50% 42%, rgba(64,200,255,0.15), transparent 70%),
+  radial-gradient(45% 38% at 62% 58%, rgba(255,122,0,0.11), transparent 70%), #000;}
+
+/* ---- SAFE AREA + BEATS (sequential, one message at a time) ---- */
+.safe{position:absolute;left:6%;right:6%;top:13%;bottom:13%;}
+.beat{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;will-change:opacity,transform;}
+
+.hook{font-family:var(--disp);font-weight:900;text-transform:uppercase;line-height:1.04;letter-spacing:-0.01em;
+  color:var(--white);text-align:center;font-size:13cqi;text-shadow:0 1.4cqi 5cqi rgba(0,0,0,.6);}
+.hook .rd{background:linear-gradient(100deg,#ff5d75,var(--red) 55%,var(--red2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 3.4cqi rgba(224,40,64,.4));}
+.hook .nv{color:var(--steel);}
+.rule{width:16cqi;height:.9cqi;border-radius:99px;margin:3.4cqi auto 0;background:linear-gradient(90deg,var(--red),var(--red2));
+  box-shadow:0 0 3cqi rgba(224,40,64,.55);}
+.sub{font-family:var(--body);font-weight:600;font-size:6cqi;line-height:1.32;color:var(--sub);text-align:center;max-width:88cqi;}
+.sub b{color:var(--white);font-weight:700;}
+.det{font-family:var(--body);font-weight:600;font-size:4.4cqi;line-height:1.55;color:var(--white);text-align:center;max-width:86cqi;letter-spacing:.01em;}
+.det b{background:linear-gradient(100deg,#ff5d75,var(--red));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;}
+.tag{font-family:var(--mono);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--steel);font-size:2.7cqi;text-align:center;}
+
+/* ---- PRODUCT (orb = AI Presenter logo) ---- */
+.prodWrap{display:flex;flex-direction:column;align-items:center;gap:2.6cqi;}
+.prodVid{position:relative;width:58cqi;aspect-ratio:1;display:flex;align-items:center;justify-content:center;}
+.prodVid video,.prodVid img{width:118%;height:118%;object-fit:contain;mix-blend-mode:screen;filter:saturate(1.15) brightness(1.05);
+  -webkit-mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);
+  mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);}
+.prodVid .halo{position:absolute;inset:-4%;border-radius:50%;pointer-events:none;
+  box-shadow:0 0 16cqi rgba(0,190,255,0.25), inset 0 0 10cqi rgba(57,240,142,0.13);}
+.wm{font-family:var(--disp);font-weight:600;font-size:6.4cqi;letter-spacing:-0.01em;display:flex;gap:.14em;align-items:baseline;
+  text-shadow:0 .6cqi 3.6cqi rgba(0,0,0,.9);}
+.wm .ai{font-weight:900;background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.wm .pr{font-weight:400;color:#f4feff;}
+
+/* ---- CTA (CS Media graffiti logo + line + footer) ---- */
+.ctaWrap{display:flex;flex-direction:column;align-items:center;gap:2.2cqi;}
+.ctaLogo{width:60cqi;overflow:visible;}
+.ctaLogo video,.ctaLogo img{width:100%;display:block;mix-blend-mode:screen;filter:saturate(1.1) brightness(1.04);
+  -webkit-mask:radial-gradient(ellipse 72% 68% at 50% 47%, #000 60%, transparent 100%);
+  mask:radial-gradient(ellipse 72% 68% at 50% 47%, #000 60%, transparent 100%);}
+.cline{font-family:var(--disp);font-weight:900;text-transform:uppercase;font-size:6cqi;color:var(--white);text-align:center;letter-spacing:-0.005em;
+  text-shadow:0 1cqi 4cqi rgba(0,0,0,.6);}
+.cline b{background:linear-gradient(100deg,#ff5d75,var(--red));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.footer{margin-top:1cqi;text-align:center;font-family:var(--mono);color:#dfe8f5;font-size:2.6cqi;line-height:1.95;letter-spacing:.02em;}
+.footer .name{color:var(--steel);font-weight:700;font-size:2.9cqi;}
+
+/* ---- overlays ---- */
+#flash{background:#f2f6ff;opacity:0;pointer-events:none;mix-blend-mode:screen;}
+#grain{pointer-events:none;opacity:.055;mix-blend-mode:overlay;inset:-40%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+#vig{pointer-events:none;background:radial-gradient(120% 100% at 50% 45%, transparent 48%, rgba(0,0,0,.5) 88%, rgba(0,0,0,.8) 100%);}
+
+/* ---- chrome + controls (interactive mode only) ---- */
+#chrome{z-index:55;pointer-events:none;}
+#tc{position:absolute;top:3.5%;right:5%;font-family:var(--mono);font-size:2.1cqi;letter-spacing:.14em;color:rgba(244,247,250,.4);}
+#beadge{position:absolute;top:3.5%;left:5%;font-family:var(--mono);font-size:2.1cqi;letter-spacing:.2em;text-transform:uppercase;color:var(--red);opacity:.75;}
+#prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.08);}
+#prog>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--red));box-shadow:0 0 12px rgba(224,40,64,.6);}
+#controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:99px;cursor:pointer;user-select:none;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--white);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:.2s;}
+.ctl:hover{border-color:var(--red);box-shadow:0 0 16px rgba(224,40,64,0.3);}
+.ctl.primary{background:var(--red);color:#fff;border-color:var(--red);}
+.ctl.active{border-color:var(--red);color:#ff8296;}
+.hint{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.08em;color:rgba(244,247,250,.35);text-align:center;max-width:480px;line-height:1.7;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 5px;color:var(--white);}
+</style>
+</head>
+<body>
+
+<div id="stage" data-duration="30">
+  <div class="layer" id="texBg"></div>
+  <div class="layer" id="drops"></div>
+  <div class="layer" id="orbBg"></div>
+  <div class="layer" id="csBg"></div>
+
+  <div class="safe">
+    <!-- BEAT 1 · HOOK -->
+    <div class="beat" id="bHook">
+      <div class="hook">MUMBAI<br>IS <span class="rd">FAST.</span></div>
+      <div class="rule"></div>
+    </div>
+    <!-- BEAT 2 · PAYOFF (lands on the 5.22s drop) -->
+    <div class="beat" id="bSub">
+      <div class="hook" style="font-size:10.4cqi">YOUR FOLLOW-UP<br>SHOULD BE <span class="rd">FASTER.</span></div>
+    </div>
+    <!-- BEAT 3 · DETAIL -->
+    <div class="beat" id="bDet">
+      <div class="det">Respond instantly — before buyer interest cools.<br><br>Every enquiry answered. <b>Zero missed leads.</b></div>
+    </div>
+    <!-- BEAT 4 · PRODUCT (orb = AI Presenter logo, matched black bg) -->
+    <div class="beat" id="bProd">
+      <div class="prodWrap">
+        <div class="prodVid">
+          <div class="halo"></div>
+          <video id="orbVid" poster="assets/orb-poster.jpg" muted loop playsinline preload="auto"><source src="assets/orb.webm" type="video/webm"><source src="assets/orb.mp4" type="video/mp4"></video>
+          <img id="orbImg" alt="" style="display:none;position:absolute;inset:-9%;">
+        </div>
+        <div class="wm"><span class="ai">AI</span><span class="pr">Presenter</span></div>
+        <div class="tag">ANSWERS EVERY QUESTION · 24/7</div>
+      </div>
+    </div>
+    <!-- BEAT 5 · CTA (CS Media logo, matched black bg, static hold) -->
+    <div class="beat" id="bCta">
+      <div class="ctaWrap">
+        <div class="ctaLogo">
+          <video id="csVid" poster="assets/cs-logo-poster.jpg" muted loop playsinline preload="auto"><source src="assets/cs-logo.webm" type="video/webm"><source src="assets/cs-logo.mp4" type="video/mp4"></video>
+          <img id="csImg" alt="" style="display:none;">
+        </div>
+        <div class="cline">GET YOUR <b>AI PRESENTER</b> →</div>
+        <div class="footer">
+          <div class="name">AI Presenter</div>
+          <div>📞 7755883886</div>
+          <div>✉️ info@csmediaandproduction.in</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer" id="flash"></div>
+  <div class="layer" id="vig"></div>
+  <div class="layer" id="grain"></div>
+
+  <div class="layer" id="chrome">
+    <span id="beadge">HOOK</span><span id="tc">0:00 / 0:30</span>
+    <div id="prog"><i id="progbar"></i></div>
+  </div>
+</div>
+
+<audio id="music" src="assets/track.mp3" preload="auto"></audio>
+
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  30s spot · Concept 7 "Mumbai Is Fast" · wet-emblem palette (crimson/steel on gloss black) · beat-locked to your track (drop at 5.22s).<br>
+  <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>S</kbd> sound · <kbd>C</kbd> clean. Fully deterministic — supports frame-exact MP4 rendering via <code>?render=1</code>.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $=(id)=>document.getElementById(id);
+  const DUR=30;
+  const RENDER = new URLSearchParams(location.search).has('render');
+  if(RENDER) document.body.classList.add('render');
+
+  // real detected beats of the client track (post-2:00 trim); downbeats every 4th
+  const BEATS=[0.116,0.534,0.952,1.37,1.788,2.229,2.647,3.065,3.506,3.947,4.365,4.807,5.224,5.642,6.06,6.502,6.92,7.361,7.779,8.22,8.638,9.079,9.497,9.938,10.356,10.797,11.215,11.656,12.074,12.516,12.934,13.351,13.793,14.234,14.652,15.07,15.511,15.952,16.37,16.788,17.229,17.67,18.088,18.506,18.924,19.365,19.783,20.225,20.643,21.084,21.502,21.943,22.361,22.802,23.22,23.661,24.079,24.52,24.938,25.379,25.797,26.215,26.657,27.098,27.492,27.934,28.352,28.793,29.211,29.652];
+
+  // sequential beats on the downbeat grid — every hold >= 3.4s (read-time rule)
+  const SEQ=[
+    {id:'bHook', t0:0.12,  t1:5.22 },
+    {id:'bSub',  t0:5.22,  t1:8.64 },
+    {id:'bDet',  t0:8.64,  t1:13.79},
+    {id:'bProd', t0:13.79, t1:20.64},
+    {id:'bCta',  t0:20.64, t1:30.01},
+  ];
+  const FLASHES=[{t:5.22,p:.62},{t:13.79,p:.5},{t:20.64,p:.4}];
+  const IN=0.36, OUT=0.30, RISE=16;
+
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const easeOut=(x)=>1-Math.pow(1-x,3);
+  const easeIn=(x)=>x*x;
+
+  // ---------- deterministic evaluator: everything derives from t ----------
+  function apply(t){
+    for(const s of SEQ){
+      const el=$(s.id);
+      let op=0, ty=RISE;
+      if(t>=s.t0 && t<s.t1){
+        const ain=easeOut(clamp((t-s.t0)/IN,0,1));
+        const aout=(s.t1>=DUR)?1:clamp((s.t1-t)/OUT,0,1); // final beat: no fade-out (static CTA hold)
+        op=Math.min(ain,aout);
+        ty=(1-ain)*RISE - (1-aout)*RISE*0.5;
+      }
+      el.style.opacity=op;
+      el.style.transform='translateY('+ty+'px)';
+    }
+    // logo-matched backgrounds crossfade with their scenes
+    $('orbBg').style.opacity = clamp((t-13.55)/0.6,0,1) - clamp((t-20.4)/0.6,0,1);
+    $('csBg').style.opacity  = clamp((t-20.4)/0.6,0,1);
+    const baseHide = clamp((t-13.55)/0.6,0,1);
+    $('texBg').style.opacity = 1-baseHide;
+    $('drops').style.opacity = 0.5*(1-baseHide);
+    // flashes
+    let f=0;
+    for(const fl of FLASHES){ if(t>=fl.t) f=Math.max(f, fl.p*Math.max(0,1-(t-fl.t)/0.5)); }
+    $('flash').style.opacity=f;
+    // beat pulse on the orb while visible
+    if(t>=13.79 && t<20.64){
+      let nearest=0; for(const b of BEATS){ if(b<=t) nearest=b; else break; }
+      const k=Math.max(0,1-(t-nearest)/0.22);
+      const sc=1+0.045*k;
+      document.querySelector('.prodVid').style.transform='scale('+sc+')';
+    }
+    // chrome
+    $('progbar').style.width=clamp(t/DUR*100,0,100)+'%';
+    $('tc').textContent='0:'+String(Math.floor(clamp(t,0,DUR))).padStart(2,'0')+' / 0:30';
+    $('beadge').textContent= t<5.22?'HOOK': t<8.64?'THE DROP': t<13.79?'WHY IT MATTERS': t<20.64?'THE PRODUCT':'CTA';
+  }
+
+  // ---------- media helpers ----------
+  const music=$('music'), orbVid=$('orbVid'), csVid=$('csVid');
+  function syncMediaInteractive(t){
+    if(t>=13.5 && t<20.9){ if(orbVid.paused) orbVid.play().catch(()=>{}); } else if(!orbVid.paused) orbVid.pause();
+    if(t>=20.3){ if(csVid.paused) csVid.play().catch(()=>{}); } else if(!csVid.paused){ csVid.pause(); try{csVid.currentTime=0;}catch(e){} }
+    if(music && t>DUR-0.7) music.volume=Math.max(0,(DUR-t)/0.7);
+  }
+
+  // ---------- RENDER MODE: window.__seek(t) drives everything ----------
+  // If window.__FRAMEBASE={orb:'...',cs:'...',orbFrames:N,csFrames:N,fps:30} is set
+  // before load (or via ?render=1 + assignment), video elements are swapped for
+  // frame <img>s — video.currentTime seeking is unreliable in headless Chromium.
+  function frameSrc(dir,count,fps,localT){
+    let idx=Math.round(((localT%(count/fps))+ (count/fps))%(count/fps) * fps)+1;
+    idx=Math.max(1,Math.min(count,idx));
+    return dir+'/f'+String(idx).padStart(5,'0')+'.jpg';
+  }
+  window.__duration=DUR;
+  window.__seek=(t)=>{
+    t=clamp(t,0,DUR-0.001);
+    apply(t);
+    const FB=window.__FRAMEBASE;
+    if(FB){
+      orbVid.style.display='none'; csVid.style.display='none';
+      const oi=$('orbImg'), ci=$('csImg');
+      if(t>=13.3 && t<20.9){ oi.style.display='block'; oi.src=frameSrc(FB.orb,FB.orbFrames,FB.fps||30,t-13.79+((t<13.79)?0:0)); } else oi.style.display='none';
+      if(t>=20.1){ ci.style.display='block'; ci.src=frameSrc(FB.cs,FB.csFrames,FB.fps||30,Math.max(0,t-20.64)); } else ci.style.display='none';
+    }
+  };
+  window.__ready=true;
+
+  // ---------- INTERACTIVE MODE (audio clock) ----------
+  let raf=null, playing=false, perfStart=0, usePerf=false, soundOn=true;
+  function clock(){ if(!usePerf && music && music.readyState>=1 && !music.paused) return music.currentTime;
+    return (performance.now()-perfStart)/1000; }
+  function frame(){ const t=clock(); apply(t); syncMediaInteractive(t);
+    if(t>=DUR){ stop(true); return; } raf=requestAnimationFrame(frame); }
+  function play(){ if(playing||RENDER) return; playing=true; $('playBtn').textContent='⏸ Pause';
+    if(clock()>=DUR-0.01) hardRestart();
+    perfStart=performance.now()-clock()*1000;
+    if(music){ music.muted=!soundOn; const p=music.play(); if(p&&p.catch)p.catch(()=>{usePerf=true;}); }
+    raf=requestAnimationFrame(frame); }
+  function pause(){ playing=false; $('playBtn').textContent='▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null;
+    if(music)music.pause(); orbVid.pause(); csVid.pause(); }
+  function stop(ended){ playing=false; $('playBtn').textContent=ended?'↺ Replay':'▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); }
+  function hardRestart(){ if(music){ try{music.currentTime=0; music.volume=1;}catch(e){} } try{orbVid.currentTime=0;}catch(e){} try{csVid.currentTime=0;}catch(e){} perfStart=performance.now(); apply(0); }
+  function toggle(){ playing?pause():play(); }
+
+  $('playBtn').addEventListener('click',toggle);
+  $('restartBtn').addEventListener('click',()=>{ pause(); hardRestart(); play(); });
+  $('soundBtn').addEventListener('click',()=>{ soundOn=!soundOn; if(music)music.muted=!soundOn;
+    $('soundBtn').textContent=soundOn?'🔊 Sound on':'🔇 Muted'; $('soundBtn').classList.toggle('active',soundOn); });
+  $('recBtn').addEventListener('click',()=>{ document.body.classList.toggle('recording'); $('recBtn').classList.toggle('active'); });
+  document.addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault();toggle();}
+    else if(e.key==='r'||e.key==='R'){pause();hardRestart();play();}
+    else if(e.key==='c'||e.key==='C'){$('recBtn').click();}
+    else if(e.key==='s'||e.key==='S'){$('soundBtn').click();} });
+
+  apply(0);
+})();
+</script>
+</body></html>

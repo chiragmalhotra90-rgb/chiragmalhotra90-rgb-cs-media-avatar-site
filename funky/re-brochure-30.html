@@ -198,12 +198,27 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 
 body.recording #controls,body.recording .hint,body.recording #chrome{display:none!important;}
 body.recording #stage{box-shadow:none;border-radius:0;}
+
+/* full-screen logo-matched backgrounds — the orb clip and the CS graffiti clip both
+   sit on pure black, so during those scenes the whole stage goes black with a soft
+   glow sampled from the logo's own palette; the video box edge disappears entirely */
+#matchBg{opacity:0;transition:opacity .7s ease;background:#000;}
+#matchBg.on{opacity:1;}
+#matchBg.orbbg{background:
+  radial-gradient(60% 45% at 50% 44%, rgba(0,160,255,0.16), transparent 70%),
+  radial-gradient(50% 40% at 42% 58%, rgba(57,240,142,0.12), transparent 70%),
+  #000;}
+#matchBg.csbg{background:
+  radial-gradient(55% 42% at 50% 42%, rgba(64,200,255,0.15), transparent 70%),
+  radial-gradient(45% 38% at 62% 58%, rgba(255,122,0,0.11), transparent 70%),
+  #000;}
 </style>
 </head>
 <body>
 
 <div id="stage">
   <!-- background flash for beat hits -->
+  <div class="layer" id="matchBg"></div>
   <div class="layer" id="bgFlash"></div>
 
   <!-- BROCHURE MOTIF (goes dim on the hook, replaced by the orb at the drop) -->
@@ -355,13 +370,13 @@ body.recording #stage{box-shadow:none;border-radius:0;}
   function hide(id){ $(id).classList.remove('on'); }
   function cap(txt){ const c=$('cap'); if(!txt){ c.classList.remove('on'); return;} c.textContent=txt; c.classList.add('on'); }
   function flash(a){ const f=$('bgFlash'); f.style.transition='none'; f.style.opacity=a; requestAnimationFrame(()=>{ f.style.transition='opacity .5s ease'; f.style.opacity=0; }); }
-  function orbShow(){ $('orb').classList.add('show'); const v=$('orbVid'); if(v&&v.paused) v.play().catch(()=>{}); }
-  function orbHide(){ $('orb').classList.remove('show'); }
+  function orbShow(){ $('matchBg').className='layer on orbbg'; $('orb').classList.add('show'); const v=$('orbVid'); if(v&&v.paused) v.play().catch(()=>{}); }
+  function orbHide(){ if($('matchBg').classList.contains('orbbg')) $('matchBg').className='layer'; $('orb').classList.remove('show'); }
   function chip(id){ $(id).classList.add('in'); }
-  function csShow(){ $('csWrap').classList.add('show'); const v=$('csVid'); if(v&&v.paused) v.play().catch(()=>{}); }
+  function csShow(){ $('matchBg').className='layer on csbg'; $('csWrap').classList.add('show'); const v=$('csVid'); if(v&&v.paused) v.play().catch(()=>{}); }
 
   function resetAll(){
-    fired.clear(); lastBeat=-1;
+    fired.clear(); lastBeat=-1; $('matchBg').className='layer';
     document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
     ['eyeb','hk1','hk2','rev','c1','c2','c3','b1','b2','sum','cta1','cta2'].forEach(id=>$(id).classList.remove('in'));
     $('sHook').classList.remove('dimmed');
