@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · Teaser: Talk to Maya, live (9s)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --base:#04090c; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76; --green:#39f08e;
+  --dim:rgba(234,253,255,0.6); --faint:rgba(234,253,255,0.3); --line:rgba(150,190,205,0.22);
+  --disp:'Montserrat',Impact,'Arial Narrow',sans-serif; --body:'Inter',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--text);font-family:var(--body);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;padding:10px;}
+
+/* ---------------- STAGE (vertical 9:16) ---------------- */
+#stage{position:relative;width:min(430px,calc((100vh - 120px) * 0.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 82% 8%, rgba(26,96,150,0.42), transparent 55%),
+    radial-gradient(120% 85% at 6% 96%, rgba(40,190,110,0.34), transparent 52%),
+    radial-gradient(ellipse at 50% 40%, #0b1622 0%, #050b10 62%, #04090c 100%);
+  box-shadow:0 0 0 1px rgba(0,229,255,0.14), 0 40px 120px -28px rgba(0,229,255,0.22), 0 30px 90px rgba(0,0,0,0.7);}
+
+/* layers */
+.layer{position:absolute;inset:0;}
+#bgFlash{z-index:2;background:#eafdff;opacity:0;pointer-events:none;mix-blend-mode:screen;}
+#orbLayer{z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+#hubLayer{z-index:10;}
+#mayaLayer{z-index:12;}
+.scene{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 9%;text-align:center;
+  opacity:0;transition:opacity .3s ease;pointer-events:none;}
+.scene.on{opacity:1;}
+/* reveal text sits ABOVE the big orb; CTA text sits BELOW the small orb — never overlapping */
+#sReveal{justify-content:flex-start;padding-top:12%;}
+#sCTA{justify-content:flex-end;padding-bottom:15%;}
+#capLayer{z-index:45;}
+#chrome{z-index:55;}
+#grain{z-index:60;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;inset:-40%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .5s steps(2) infinite;}
+@keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-2%,1%)}100%{transform:translate(1%,-2%)}}
+#vig{z-index:59;pointer-events:none;background:radial-gradient(ellipse at center,transparent 46%,rgba(0,0,0,0.4) 88%,rgba(0,0,0,0.72) 100%);}
+
+/* ---------------- ORB (real video) ---------------- */
+#orb{position:relative;width:66%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.6);transition:opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1);will-change:transform,opacity;}
+#orb.show{opacity:1;transform:scale(1);}
+#orb.small{width:40%;}
+#orb video{width:118%;height:118%;object-fit:contain;mix-blend-mode:screen;filter:saturate(1.15) brightness(1.05);
+  -webkit-mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);
+  mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);}
+/* small "AI Presenter" wordmark that sits under the orb in the hub (matches the product) */
+.orbstack{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
+.orbwm{font-family:var(--disp);font-weight:600;font-size:1.15rem;letter-spacing:-0.01em;display:flex;gap:.14em;align-items:baseline;
+  opacity:0;transform:translateY(6px);transition:opacity .4s ease, transform .4s ease;margin-top:-2%;
+  text-shadow:0 2px 16px rgba(4,9,12,0.9);}
+.orbwm.on{opacity:1;transform:none;}
+.orbwm .ai{font-weight:900;background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.orbwm .pr{font-weight:400;color:#f4feff;}
+#orb .halo{position:absolute;inset:-6%;border-radius:50%;pointer-events:none;
+  box-shadow:0 0 60px rgba(0,229,255,0.28), inset 0 0 40px rgba(57,240,142,0.15);}
+.orb-pulse{animation:orbpulse .3s ease;}
+@keyframes orbpulse{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+/* ---------------- KINETIC TEXT (never plain white; always above props) ---------------- */
+.eyebrow{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.36em;text-transform:uppercase;color:var(--accent);
+  text-shadow:0 0 14px rgba(0,229,255,0.6);}
+.big{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:0.98;letter-spacing:0.01em;
+  font-size:clamp(1.7rem,8vw,2.7rem);}
+.big .cy{background:linear-gradient(120deg,#7df9ff,#00E5FF 45%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.big .wh{color:#f4feff;text-shadow:0 2px 22px rgba(0,229,255,0.25);}
+.pop{opacity:0;transform:translateY(14px) scale(.94);}
+.pop.in{animation:pop .42s cubic-bezier(.2,1.3,.35,1) forwards;}
+@keyframes pop{to{opacity:1;transform:none;}}
+.sub{font-family:var(--body);font-weight:500;font-size:0.9rem;color:var(--dim);margin-top:12px;max-width:80%;line-height:1.45;}
+
+/* "AI Presenter" wordmark — matches the product */
+.wordmark{font-family:var(--disp);font-weight:600;font-size:clamp(1.9rem,9vw,3rem);letter-spacing:-0.01em;display:flex;gap:.16em;align-items:baseline;}
+.wordmark .ai{font-weight:900;background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.wordmark .pr{font-weight:400;color:#f4feff;}
+
+/* ---------------- HEADER + TOPIC PILLS (product hub) ---------------- */
+.header{position:absolute;top:5%;left:7%;right:7%;display:flex;align-items:center;gap:8px;font-family:var(--disp);
+  font-weight:800;font-size:0.72rem;letter-spacing:0.02em;text-transform:uppercase;opacity:0;transition:opacity .5s;}
+.header.on{opacity:1;}
+.header .div{width:1px;height:12px;background:var(--line);}
+.header .ap{font-family:var(--mono);font-weight:500;font-size:0.56rem;letter-spacing:0.28em;color:var(--accent);}
+.pill{position:absolute;font-family:var(--mono);font-size:0.56rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:rgba(224,244,249,0.86);background:rgba(255,255,255,0.035);border:1px solid var(--line);border-radius:99px;
+  padding:8px 13px;white-space:nowrap;backdrop-filter:blur(4px);opacity:0;transform:scale(.8);
+  box-shadow:inset 0 0 12px rgba(0,229,255,0.05), 0 6px 20px rgba(0,0,0,0.3);}
+.pill.in{animation:pillin .4s cubic-bezier(.2,1.3,.35,1) forwards;}
+.pill.hot{color:#04090c;background:var(--accent);border-color:var(--accent);box-shadow:0 0 18px rgba(0,229,255,0.6);}
+@keyframes pillin{to{opacity:1;transform:scale(1);}}
+
+/* ---------------- MAYA PANEL (product chat) ---------------- */
+.maya{position:absolute;left:7%;right:7%;top:8%;bottom:8%;display:flex;flex-direction:column;align-items:center;gap:12px;
+  opacity:0;transform:translateY(20px);transition:opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1);pointer-events:none;}
+.maya.on{opacity:1;transform:none;}
+.maya .avatar{position:relative;width:132px;height:132px;border-radius:50%;flex-shrink:0;margin-top:6px;
+  border:1px solid rgba(0,229,255,0.3);background:radial-gradient(circle at 50% 40%, rgba(11,107,118,0.35), rgba(4,9,12,0.95) 72%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 34px rgba(0,229,255,0.18);}
+.maya .avatar .photo{position:absolute;inset:0;background-size:cover;background-position:center top;opacity:0;transition:opacity .4s;}
+.maya .avatar .photo.has{opacity:1;}
+.maya .avatar .spark{font-size:1.8rem;color:#bdf6ff;filter:drop-shadow(0 0 12px var(--accent));}
+.maya .avatar .ring{position:absolute;inset:-9px;border-radius:50%;border:1px solid rgba(0,229,255,0.22);animation:ring 3s ease-out infinite;}
+@keyframes ring{0%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}
+.maya .name{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.24em;color:var(--accent);text-transform:uppercase;}
+.maya .role{font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;color:var(--faint);text-transform:uppercase;margin-top:-6px;}
+/* --- "tap Talk to Maya → she joins live" interaction --- */
+.avatar .cspin{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(0,229,255,0.18);border-top-color:var(--accent);opacity:0;}
+.avatar.connecting .cspin{opacity:1;animation:spin .8s linear infinite;}
+.avatar.connecting .spark,.avatar.photoOn .spark{opacity:0;transition:opacity .3s;}
+.avatar.live{border-color:rgba(57,240,142,0.55);}
+.avatar.talking{animation:talkpulse .5s ease-in-out infinite;}
+@keyframes talkpulse{0%,100%{box-shadow:0 0 30px rgba(0,229,255,0.18)}50%{box-shadow:0 0 48px rgba(57,240,142,0.45)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live-badge{position:absolute;top:2px;left:50%;transform:translateX(-50%) scale(.8);display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;color:#8affc4;
+  background:rgba(4,20,12,0.72);border:1px solid rgba(57,240,142,0.4);border-radius:99px;padding:4px 11px;opacity:0;z-index:16;}
+.live-badge.on{animation:pop .4s cubic-bezier(.2,1.3,.35,1) forwards;}
+.live-badge .d{width:6px;height:6px;border-radius:50%;background:#39f08e;box-shadow:0 0 8px #39f08e;animation:blink 1s infinite;}
+@keyframes blink{50%{opacity:.3}}
+.talk-btn.pressed{transform:scale(.93);filter:brightness(.88);}
+.talk-btn.connecting{background:rgba(0,229,255,0.14);color:var(--accent);box-shadow:none;}
+.talk-btn.live{background:linear-gradient(135deg,#39f08e,#0b6b76);}
+.tap-cursor{position:absolute;left:60%;top:80%;width:30px;height:30px;z-index:30;pointer-events:none;opacity:0;transform:translate(-50%,-50%);}
+.tap-cursor::before{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid #eafdff;background:rgba(234,253,255,0.18);box-shadow:0 0 14px rgba(0,229,255,0.6);}
+.tap-cursor.go{animation:tapmove 1.05s cubic-bezier(.5,0,.2,1) forwards;}
+@keyframes tapmove{0%{opacity:0;left:62%;top:82%}18%{opacity:1}70%{opacity:1;left:50%;top:40.5%;transform:translate(-50%,-50%) scale(1)}82%{transform:translate(-50%,-50%) scale(.62)}100%{opacity:0;left:50%;top:40.5%;transform:translate(-50%,-50%) scale(1)}}
+.tap-ripple{position:absolute;left:50%;top:40.5%;width:22px;height:22px;border-radius:50%;border:2px solid var(--accent);transform:translate(-50%,-50%);opacity:0;z-index:29;pointer-events:none;}
+.tap-ripple.go{animation:ripple .6s ease-out;}
+@keyframes ripple{0%{opacity:.9;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(-50%,-50%) scale(3.4)}}
+.talk-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;
+  background:linear-gradient(135deg,#00E5FF,#0b6b76);color:#04090c;font-family:var(--mono);font-weight:700;
+  font-size:0.66rem;letter-spacing:0.12em;text-transform:uppercase;box-shadow:0 6px 24px rgba(0,229,255,0.4);
+  opacity:0;transform:scale(.9);transition:opacity .4s cubic-bezier(.2,1.3,.35,1),transform .4s cubic-bezier(.2,1.3,.35,1);}
+.talk-btn.in{opacity:1;transform:none;} /* transition-based so a beat pulse can't reset it to invisible */
+.talk-btn.beat{animation:tbbeat .3s ease;}
+@keyframes tbbeat{0%,100%{box-shadow:0 6px 24px rgba(0,229,255,0.4)}45%{box-shadow:0 6px 40px rgba(0,229,255,0.95)}}
+.bubble{align-self:stretch;background:rgba(255,255,255,0.04);border:1px solid rgba(0,229,255,0.16);border-radius:14px;
+  padding:12px 14px;text-align:left;opacity:0;transform:translateY(10px);}
+.bubble.in{animation:pop .45s cubic-bezier(.2,1,.3,1) forwards;}
+.bubble .who{font-family:var(--mono);font-size:0.52rem;letter-spacing:0.2em;color:var(--accent);text-transform:uppercase;margin-bottom:5px;}
+.bubble p{font-size:0.76rem;line-height:1.5;color:rgba(234,253,255,0.9);}
+.inputbar{align-self:stretch;display:flex;align-items:center;gap:8px;margin-top:auto;background:rgba(255,255,255,0.04);
+  border:1px solid var(--line);border-radius:99px;padding:6px 6px 6px 8px;opacity:0;transform:translateY(10px);}
+.inputbar.in{animation:pop .45s cubic-bezier(.2,1,.3,1) forwards;}
+.inputbar .mic{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--dim);flex-shrink:0;}
+.inputbar .field{flex:1;font-family:var(--body);font-size:0.72rem;color:var(--text);white-space:nowrap;overflow:hidden;}
+.inputbar .field .ph{color:var(--faint);}
+.inputbar .field .caret{display:inline-block;width:2px;height:0.9em;background:var(--accent);vertical-align:-1px;margin-left:1px;animation:caret .8s steps(1) infinite;}
+@keyframes caret{50%{opacity:0}}
+.inputbar .send{padding:7px 13px;border-radius:99px;background:rgba(0,229,255,0.16);color:var(--accent);font-family:var(--mono);font-size:0.56rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;}
+
+/* ---------------- END BUG (CS·MEDIA lockup, sits BELOW Maya — never overlaps) ---------------- */
+#endBug{position:absolute;left:0;right:0;bottom:15%;z-index:22;display:flex;align-items:baseline;justify-content:center;gap:.14em;
+  font-family:var(--disp);opacity:0;transform:translateY(10px) scale(.96);pointer-events:none;
+  filter:drop-shadow(0 2px 12px rgba(0,0,0,0.8));}
+#endBug.in{animation:pop .5s cubic-bezier(.2,1.3,.35,1) forwards;}
+#endBug .cs{font-weight:900;font-size:1.5rem;background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#endBug .dot{font-weight:900;font-size:1.5rem;color:#00E5FF;text-shadow:0 0 12px var(--accent);}
+#endBug .mm{font-weight:800;font-size:1.5rem;letter-spacing:.02em;color:#f4feff;}
+
+/* ---------------- CAPTIONS ---------------- */
+#cap{position:absolute;left:8%;right:8%;bottom:6%;text-align:center;font-family:var(--body);font-weight:600;
+  font-size:clamp(0.8rem,3vw,1rem);line-height:1.4;opacity:0;transition:opacity .25s;
+  background:linear-gradient(100deg,#7df9ff,#eafdff 40%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,0.8));}
+#cap.on{opacity:1;}
+
+/* ---------------- CHROME ---------------- */
+#tc{position:absolute;top:3.5%;right:5%;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.14em;color:var(--faint);}
+#beadge{position:absolute;top:3.5%;left:5%;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);opacity:0.7;}
+#prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,0.08);}
+#prog>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0b6b76,#00E5FF,#39f08e);box-shadow:0 0 12px var(--accent);}
+#beatdot{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--accent);opacity:0.25;}
+#beatdot.hit{animation:bd .18s ease;}
+@keyframes bd{0%{opacity:1;transform:translateX(-50%) scale(1.9)}100%{opacity:0.25;transform:translateX(-50%) scale(1)}}
+
+/* ---------------- CONTROLS ---------------- */
+#controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:99px;cursor:pointer;user-select:none;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:.2s;}
+.ctl:hover{border-color:var(--accent);box-shadow:0 0 16px rgba(0,229,255,0.25);}
+.ctl.primary{background:var(--accent);color:#04090c;border-color:var(--accent);}
+.ctl.active{border-color:var(--accent);color:var(--accent);}
+.hint{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.08em;color:var(--faint);text-align:center;max-width:460px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 5px;color:var(--text);}
+
+body.recording #controls,body.recording .hint,body.recording #chrome{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <!-- background flash for beat hits -->
+  <div class="layer" id="bgFlash"></div>
+
+  <!-- ORB (real video) — kept in the engine; this teaser stays on Maya, orb held dark -->
+  <div class="layer" id="orbLayer">
+    <div class="orbstack">
+      <div id="orb">
+        <div class="halo"></div>
+        <video id="orbVid" poster="assets/orb-poster.jpg" muted loop playsinline preload="auto"><source src="assets/orb.webm" type="video/webm"><source src="assets/orb.mp4" type="video/mp4"></video>
+      </div>
+      <div class="orbwm" id="orbWM"><span class="ai">AI</span><span class="pr">Presenter</span></div>
+    </div>
+  </div>
+
+  <!-- product header — doubles as the persistent CS Media brand bug -->
+  <div class="header" id="header">
+    <span>CS MEDIA &amp; PRODUCTION</span><span class="div"></span><span class="ap">AI Presenter</span>
+  </div>
+
+  <!-- TOPIC PILLS (kept in the engine; unused in this cut) -->
+  <div class="layer" id="hubLayer">
+    <div class="pill" id="p1" style="top:20%;left:8%">The Problem</div>
+    <div class="pill" id="p2" style="top:15%;right:9%">How it Works</div>
+    <div class="pill" id="p3" style="top:34%;left:6%">Why Now</div>
+    <div class="pill" id="p4" style="top:30%;right:6%">Use Cases</div>
+    <div class="pill" id="p5" style="bottom:34%;left:9%">What You Get</div>
+    <div class="pill" id="p6" style="bottom:30%;right:8%">Proof</div>
+    <div class="pill" id="p7" style="bottom:19%;left:50%;transform:translateX(-50%)">Our Process</div>
+    <div class="pill" id="p8" style="top:24%;left:50%;transform:translateX(-50%)">Pricing</div>
+  </div>
+
+  <!-- MAYA panel — the whole point of this teaser: tap → live -->
+  <div class="maya" id="maya">
+    <div class="live-badge" id="liveBadge"><span class="d"></span>Live Session</div>
+    <div class="avatar" id="avatar">
+      <div class="ring"></div><div class="ring" style="animation-delay:1.5s"></div>
+      <div class="cspin"></div>
+      <div class="photo" id="mayaPhoto" style="background-image:url('assets/maya.jpg')"></div>
+      <div class="spark">✦</div>
+    </div>
+    <div class="name" id="mayaName">MEET MAYA</div>
+    <div class="role" id="mayaRole">AI Investor Analyst</div>
+    <div class="talk-btn" id="talkBtn">▶ Talk to Maya</div>
+    <div class="tap-cursor" id="tapCursor"></div>
+    <div class="tap-ripple" id="tapRipple"></div>
+    <div class="bubble" id="mayaBubble">
+      <div class="who">Maya</div>
+      <p>Hi, I'm Maya. Press Talk and I'll join you — live.</p>
+    </div>
+    <div class="inputbar" id="inputBar">
+      <div class="mic">🎙</div>
+      <div class="field"><span id="typedQ"></span><span class="ph" id="phText">Ask Maya about AI Presenter…</span><span class="caret" id="caret" style="display:none"></span></div>
+      <div class="send">Send</div>
+    </div>
+  </div>
+
+  <!-- SCENES (kept in the engine so resetAll / helpers stay verbatim; unused in this cut) -->
+  <section class="scene" id="sHook">
+    <div class="eyebrow pop" id="hookEye">CS Media · AI Presenter</div>
+    <h1 class="big" style="margin-top:14px">
+      <span class="pop" id="hookL1" style="display:block"><span class="wh">You sent</span></span>
+      <span class="pop" id="hookL2" style="display:block"><span class="cy">the deck.</span></span>
+    </h1>
+    <div class="sub pop" id="hookSub">…then nothing. No idea if they even opened it.</div>
+  </section>
+
+  <section class="scene" id="sReveal">
+    <div class="wordmark" id="wm"><span class="ai">AI</span><span class="pr">Presenter</span></div>
+    <div class="sub pop" id="revealSub" style="margin-top:18px">It doesn't just sit there.<br>It presents itself.</div>
+  </section>
+
+  <section class="scene" id="sProof">
+    <h1 class="big pop" id="proofH"><span class="wh">Every question,</span><br><span class="cy">one tap away.</span></h1>
+  </section>
+
+  <section class="scene" id="sCTA">
+    <div class="eyebrow pop" id="ctaEye">Don't take our word for it</div>
+    <h1 class="big pop" id="ctaH" style="margin-top:14px"><span class="wh">Talk to</span> <span class="cy">it.</span></h1>
+  </section>
+
+  <section class="scene" id="sEnd">
+    <div class="wordmark" style="font-size:clamp(1.6rem,7vw,2.3rem)"><span class="ai" style="font-weight:900">CS</span><span class="pr" style="color:#00E5FF;font-weight:900">·</span><span class="pr" style="font-weight:800;color:#f4feff">MEDIA</span></div>
+    <div style="width:52px;height:2px;margin:14px 0;background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 12px var(--accent)"></div>
+    <div class="sub" id="endTag" style="font-weight:600;color:#eafdff">Don't send a deck.<br><b style="color:var(--accent)">Send a conversation.</b></div>
+  </section>
+
+  <!-- END BUG (CS·MEDIA lockup, below Maya) -->
+  <div id="endBug"><span class="cs">CS</span><span class="dot">·</span><span class="mm">MEDIA</span></div>
+
+  <!-- caption track -->
+  <div class="layer" id="capLayer"><div id="cap"></div></div>
+
+  <!-- chrome -->
+  <div class="layer" id="chrome">
+    <span id="beadge">MEET MAYA</span>
+    <span id="tc">0:00 / 0:09</span>
+    <div id="beatdot"></div>
+    <div id="prog"><i id="progbar"></i></div>
+  </div>
+
+  <div class="layer" id="grain"></div>
+  <div class="layer" id="vig"></div>
+</div>
+
+<!-- REAL music: your track — first ~9s -->
+<audio id="music" src="assets/track.mp3" preload="auto"></audio>
+
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  9-second teaser — first ~9s of your track, 143.6 BPM — every cut &amp; effect lands on a detected beat; on the drop at 5.22s Maya goes <b>live</b>. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean · <kbd>S</kbd> mute.<br>
+  Real orb clip · product-accurate type. Drop a photo at <code>funky/assets/maya.jpg</code> and it fills Maya's avatar the moment she joins.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const DUR = 9.0; // seconds (audio-clock authoritative) — only the first 9s of the track play
+
+  // ---- real detected beats (seconds) — same track, full list; we stop at DUR ----
+  const BEATS = [0.116,0.534,0.952,1.37,1.788,2.229,2.647,3.065,3.506,3.947,4.365,4.807,5.224,5.642,6.06,6.502,6.92,7.361,7.779,8.22,8.638,9.079,9.497,9.938,10.356,10.797,11.215,11.656,12.074,12.516,12.934,13.351,13.793,14.234,14.652,15.07,15.511,15.952,16.37,16.788,17.229,17.67,18.088,18.506,18.924,19.365,19.783,20.225,20.643,21.084,21.502,21.943,22.361,22.802,23.22,23.661,24.079,24.52,24.938,25.379,25.797,26.215,26.657,27.098,27.492,27.934,28.352,28.793,29.211,29.652,30.07];
+
+  // ---- content cues, snapped to real downbeats (every 4th beat) ----
+  // t in seconds. Fired once when the audio clock passes t. Downbeats 0-9s: 0.12,1.79,3.51,5.22,6.92,8.64
+  const cues = [
+    // 0–3.5s: set-up — Maya panel slides in with the avatar + MEET MAYA / AI Investor Analyst
+    {t:0.12, f:()=>{ $('maya').classList.add('on'); $('header').classList.add('on'); cap("One tap. A live presenter."); }},
+    {t:1.79, f:()=>{ $('talkBtn').classList.add('in'); cap("Meet Maya — your AI investor analyst."); }},
+    // ~3.5s: the cursor animates onto the button and taps
+    {t:3.51, f:()=>{ tapCursor(); cap("Just tap “Talk to Maya”…"); }},
+    {t:4.365,f:()=>{ tapPress(); }},
+    {t:4.807,f:()=>{ connecting(); cap("…connecting you, live…"); }},
+    // 5.22s — THE DROP: she joins the call. LIVE badge pops, button flips green, avatar talks
+    {t:5.224,f:()=>{ goLive(); flash(1); cap("…and Maya joins you — live."); }},
+    // 6.92s — CS·MEDIA bug + end-tag caption (Maya stays live below)
+    {t:6.92, f:()=>{ $('endBug').classList.add('in'); cap("Talk to your pitch."); }},
+    // 8.64s — final downbeat hit
+    {t:8.638,f:()=>{ flash(.55); }},
+  ];
+
+  // section badges by time
+  const badge = (t)=> t<3.51?'MEET MAYA' : t<5.22?'CONNECTING' : t<6.92?'● LIVE' : 'CS·MEDIA';
+
+  // ---- helpers ----
+  function show(id){ $(id).classList.add('on'); }
+  function hide(id){ $(id).classList.remove('on'); }
+  function cap(txt){ const c=$('cap'); if(!txt){ c.classList.remove('on'); return;} c.textContent=txt; c.classList.add('on'); }
+  function orbShow(){ $('orb').classList.add('show'); const v=$('orbVid'); if(v&&v.paused) v.play().catch(()=>{}); }
+  function orbSmall(){ $('orb').classList.add('small'); }
+  function orbHide(){ $('orb').classList.remove('show'); }
+  function pill(id){ $(id).classList.add('in'); }
+  function pillHot(id){ $(id).classList.add('hot'); }
+  function pillsOff(){ ['p1','p2','p3','p4','p5','p6','p7','p8'].forEach(id=>$(id).classList.remove('in','hot')); }
+  function flash(a){ const f=$('bgFlash'); f.style.transition='none'; f.style.opacity=a; requestAnimationFrame(()=>{ f.style.transition='opacity .5s ease'; f.style.opacity=0; }); }
+  function typeQuestion(){ const el=$('typedQ'), ph=$('phText'), car=$('caret'); ph.style.display='none'; car.style.display='inline-block';
+    const q="How fast can we go live?"; let i=0; (function s(){ if(i<=q.length){ el.textContent=q.slice(0,i++); setTimeout(s,60);} })(); }
+  function answerBubble(){ const b=$('mayaBubble'); b.querySelector('.who').textContent='Maya'; b.querySelector('p').textContent='Most clients are live in under a week — I can walk you through it right now.'; b.classList.remove('in'); void b.offsetWidth; b.classList.add('in'); }
+  // --- "tap Talk to Maya → live" interaction helpers (reused verbatim from the master engine) ---
+  let mayaLoaded=false;
+  function tapCursor(){ const c=$('tapCursor'); c.classList.remove('go'); void c.offsetWidth; c.classList.add('go'); }
+  function tapPress(){ const b=$('talkBtn'); b.classList.add('pressed'); const r=$('tapRipple'); r.classList.remove('go'); void r.offsetWidth; r.classList.add('go'); setTimeout(()=>b.classList.remove('pressed'),190); }
+  function connecting(){ const b=$('talkBtn'); b.classList.add('connecting'); b.textContent='● Connecting…'; $('avatar').classList.add('connecting'); }
+  function goLive(){ const a=$('avatar'); a.classList.remove('connecting'); a.classList.add('live','talking');
+    if(mayaLoaded){ a.classList.add('photoOn'); $('mayaPhoto').classList.add('has'); }
+    $('liveBadge').classList.add('on'); const b=$('talkBtn'); b.classList.remove('connecting'); b.classList.add('live'); b.textContent='● Live · End';
+    const bb=$('mayaBubble'); bb.querySelector('.who').textContent='Maya · Live'; bb.querySelector('p').textContent="Hey — great to meet you. Let's talk through your raise, right now.";
+    bb.classList.remove('in'); void bb.offsetWidth; bb.classList.add('in'); }
+
+  function resetAll(){
+    fired.clear(); lastBeat=-1;
+    document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
+    ['hookEye','hookL1','hookL2','hookSub','revealSub','proofH','ctaEye','ctaH','talkBtn','mayaBubble','inputBar'].forEach(id=>$(id).classList.remove('in'));
+    // reset Maya live-session interaction
+    $('avatar').classList.remove('connecting','live','talking','photoOn'); $('mayaPhoto').classList.remove('has');
+    $('liveBadge').classList.remove('on'); $('tapCursor').classList.remove('go'); $('tapRipple').classList.remove('go');
+    const tb=$('talkBtn'); tb.classList.remove('connecting','live','pressed','beat'); tb.textContent='▶ Talk to Maya';
+    pillsOff(); $('maya').classList.remove('on'); $('header').classList.remove('on'); $('orbWM').classList.remove('on');
+    $('orb').classList.remove('show','small'); $('cap').classList.remove('on'); $('endBug').classList.remove('in');
+    $('typedQ').textContent=''; $('phText').style.display='inline'; $('caret').style.display='none';
+    $('mayaBubble').querySelector('.who').textContent='Maya';
+    $('mayaBubble').querySelector('p').textContent="Hi, I'm Maya. Press Talk and I'll join you — live.";
+    $('progbar').style.width='0%';
+  }
+
+  // ---- clock: audio.currentTime is authoritative; perf fallback if muted/failed ----
+  let raf=null, playing=false, fired=new Set(), lastBeat=-1, perfStart=0, usePerf=false;
+  const music=$('music'), orbVid=$('orbVid');
+
+  function clock(){ // seconds
+    if(!usePerf && music && music.readyState>=1 && !music.paused) return music.currentTime;
+    return (performance.now()-perfStart)/1000;
+  }
+  function fmt(s){ s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+  function frame(){
+    const t=clock();
+    for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.f();}catch(e){} } }
+    // beat pulses
+    for(let i=lastBeat+1;i<BEATS.length;i++){ if(t>=BEATS[i]){ onBeat(i); lastBeat=i; } else break; }
+    $('progbar').style.width=Math.min(100,t/DUR*100)+'%';
+    $('tc').textContent=fmt(t)+' / 0:09';
+    $('beadge').textContent=badge(t);
+    if(music && t>DUR-0.7){ music.volume=Math.max(0,(DUR-t)/0.7); } // gentle fade-out on the last beat
+    if(t>=DUR){ stop(true); return; }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function onBeat(i){
+    const dot=$('beatdot'); dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
+    // orb throbs every beat once ignited (orb held dark in this cut)
+    const orb=$('orb'); if(orb.classList.contains('show')){ orb.classList.remove('orb-pulse'); void orb.offsetWidth; orb.classList.add('orb-pulse'); }
+    // downbeats (every 4th) = stronger accents on the live button
+    if(i%4===0){ if($('talkBtn').classList.contains('in') && $('maya').classList.contains('on')){ const b=$('talkBtn'); b.classList.remove('beat'); void b.offsetWidth; b.classList.add('beat'); } }
+  }
+
+  // ---- transport ----
+  function play(){
+    if(playing) return; playing=true; $('playBtn').textContent='⏸ Pause';
+    if(clock()>=DUR-0.01){ hardRestart(); }
+    perfStart=performance.now()-clock()*1000;
+    if(music){ music.muted=!soundOn; const p=music.play(); if(p&&p.catch)p.catch(()=>{usePerf=true;}); }
+    if(orbVid && $('orb').classList.contains('show')) orbVid.play().catch(()=>{});
+    raf=requestAnimationFrame(frame);
+  }
+  function pause(){ playing=false; $('playBtn').textContent='▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); if(orbVid)orbVid.pause(); }
+  function stop(ended){ playing=false; $('playBtn').textContent=ended?'↺ Replay':'▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); }
+  function hardRestart(){ if(music){ try{music.currentTime=0; music.volume=1;}catch(e){} } perfStart=performance.now(); resetAll(); }
+  function toggle(){ playing?pause():play(); }
+
+  let soundOn=true;
+  $('playBtn').addEventListener('click',toggle);
+  $('restartBtn').addEventListener('click',()=>{ pause(); hardRestart(); play(); });
+  $('soundBtn').addEventListener('click',()=>{ soundOn=!soundOn; if(music)music.muted=!soundOn; $('soundBtn').textContent=soundOn?'🔊 Sound on':'🔇 Muted'; $('soundBtn').classList.toggle('active',soundOn); });
+  $('recBtn').addEventListener('click',()=>{ document.body.classList.toggle('recording'); $('recBtn').classList.toggle('active'); });
+  document.addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault();toggle();} else if(e.key==='r'||e.key==='R'){pause();hardRestart();play();} else if(e.key==='c'||e.key==='C'){$('recBtn').click();} else if(e.key==='s'||e.key==='S'){$('soundBtn').click();} });
+
+  // detect if the Maya photo exists → she'll "join" (fill the avatar) at goLive()
+  const probe=new Image(); probe.onload=()=>{ mayaLoaded=true; if($('avatar').classList.contains('live')){ $('avatar').classList.add('photoOn'); $('mayaPhoto').classList.add('has'); } }; probe.src='assets/maya.jpg';
+
+  resetAll();
+})();
+</script>
+</body></html>

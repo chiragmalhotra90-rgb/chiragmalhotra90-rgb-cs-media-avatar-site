@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · Teaser: The Pain (Neon Glitch cut)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
+
+<style>
+:root{
+  --base:#04090c; --base2:#0b1622; --text:#eafdff;
+  --accent:#00E5FF; --accent2:#0b6b76;
+  --magenta:#FF2E9A; --lime:#E8FF00; --violet:#7B2FFF;
+  --dim:rgba(234,253,255,0.6); --faint:rgba(234,253,255,0.32);
+  --font:'Inter',sans-serif;
+  --disp:'Montserrat','Arial Narrow','Impact',sans-serif;
+  --mono:'JetBrains Mono','Consolas',monospace;
+  --stage-w:clamp(280px, 56vh, 540px);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--text);font-family:var(--font);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;}
+
+/* ============================ STAGE ============================ */
+#stage{
+  position:relative;width:var(--stage-w);aspect-ratio:9/16;max-height:92vh;
+  background:#04090c;border-radius:14px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,229,255,0.16), 0 0 80px -10px rgba(255,46,154,0.18), 0 30px 90px rgba(0,0,0,0.8);
+}
+#stage::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 20%, rgba(11,22,34,0.9) 0%, #04090c 62%, #04090c 100%);}
+/* grain + vignette over everything */
+#stage::after{content:'';position:absolute;inset:0;z-index:62;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 86%, rgba(0,0,0,0.74) 100%);}
+.grain{position:absolute;inset:-50%;z-index:61;pointer-events:none;opacity:0.06;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .5s steps(2) infinite;}
+@keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-3%,2%)}100%{transform:translate(2%,-2%)}}
+
+/* scanlines — constant subtle texture, flares brighter on glitch beats */
+.scan{position:absolute;inset:0;z-index:50;pointer-events:none;opacity:0.18;
+  background:repeating-linear-gradient(0deg, rgba(0,229,255,0.08) 0px, rgba(0,229,255,0.08) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode:screen;}
+.flash{position:absolute;inset:0;z-index:63;pointer-events:none;background:#fff;opacity:0;}
+.flash.go{animation:flashpop 140ms ease-out;}
+@keyframes flashpop{0%{opacity:0.85;}100%{opacity:0;}}
+
+/* color wash backdrop layers that snap on section/bar boundaries */
+.wash{position:absolute;inset:-10%;z-index:0;pointer-events:none;opacity:0;mix-blend-mode:screen;filter:blur(40px);
+  transition:opacity .2s;}
+#washMag{background:radial-gradient(circle at 30% 20%, var(--magenta), transparent 60%);}
+#washLime{background:radial-gradient(circle at 75% 80%, var(--lime), transparent 55%);}
+#washViolet{background:radial-gradient(circle at 50% 50%, var(--violet), transparent 60%);}
+#washCyan{background:radial-gradient(circle at 50% 100%, var(--accent), transparent 60%);}
+.wash.on{opacity:0.22;}
+
+/* ============================ GLITCH WIPE ============================ */
+.wipe{position:absolute;inset:0;z-index:55;pointer-events:none;background:linear-gradient(120deg,var(--magenta),var(--accent) 50%,var(--violet));
+  opacity:0;mix-blend-mode:screen;}
+.wipe.go{animation:wipeslice 280ms steps(5,end);}
+@keyframes wipeslice{
+  0%{opacity:0.9;clip-path:inset(0% 0% 92% 0%);transform:skewY(2deg);}
+  20%{opacity:0.7;clip-path:inset(20% 0% 60% 0%);transform:skewY(-2deg) translateX(3%);}
+  40%{opacity:0.8;clip-path:inset(55% 0% 20% 0%);transform:skewY(2deg) translateX(-2%);}
+  60%{opacity:0.5;clip-path:inset(10% 0% 70% 0%);transform:skewY(-1deg);}
+  80%{opacity:0.6;clip-path:inset(70% 0% 5% 0%);transform:skewY(1deg);}
+  100%{opacity:0;clip-path:inset(100% 0% 0% 0%);transform:skewY(0);}
+}
+
+/* camera shake punch on kicks */
+.shakehost{position:absolute;inset:0;z-index:5;}
+.shakehost.punch{animation:shakepunch 170ms cubic-bezier(.36,.07,.19,.97);}
+@keyframes shakepunch{
+  0%{transform:translate(0,0) scale(1);}
+  20%{transform:translate(-3px,2px) scale(1.018);}
+  40%{transform:translate(3px,-2px) scale(1.01);}
+  60%{transform:translate(-2px,-1px) scale(1.015);}
+  80%{transform:translate(2px,1px) scale(1.005);}
+  100%{transform:translate(0,0) scale(1);}
+}
+
+/* ============================ SCENES ============================ */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 8%;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform;z-index:10;}
+.scene.on{opacity:1;}
+
+/* ---------- funky text technique 1: RGB chromatic-aberration split stack ---------- */
+.glitchtext{position:relative;display:inline-block;}
+.glitchtext .gl{position:absolute;left:0;top:0;width:100%;white-space:nowrap;mix-blend-mode:screen;}
+.glitchtext .gl-c{color:var(--accent);transform:translate(-2px,0);}
+.glitchtext .gl-m{color:var(--magenta);transform:translate(2px,0);}
+.glitchtext .gl-base{position:relative;color:var(--lime);mix-blend-mode:screen;}
+.glitchtext.flick .gl-c{animation:glflickc 260ms steps(3,end) 1;}
+.glitchtext.flick .gl-m{animation:glflickm 260ms steps(3,end) 1;}
+.glitchtext.flick .gl-base{animation:glflickb 260ms steps(3,end) 1;}
+@keyframes glflickc{0%{transform:translate(-6px,1px);}30%{transform:translate(4px,-2px);}60%{transform:translate(-3px,0);}100%{transform:translate(-2px,0);}}
+@keyframes glflickm{0%{transform:translate(6px,-1px);}30%{transform:translate(-4px,2px);}60%{transform:translate(3px,0);}100%{transform:translate(2px,0);}}
+@keyframes glflickb{0%{transform:translate(0,2px) skewX(4deg);}30%{transform:translate(2px,-1px) skewX(-3deg);}60%{transform:translate(-1px,0) skewX(2deg);}100%{transform:translate(0,0) skewX(0);}}
+
+/* one-shot glitch flick layered on top of an element's own resting animation */
+@keyframes soloflick{
+  0%{clip-path:inset(0 0 40% 0);filter:brightness(1.6) saturate(1.4);}
+  35%{clip-path:inset(50% 0 0 0);filter:brightness(0.7);}
+  65%{clip-path:inset(20% 0 20% 0);filter:brightness(1.8) saturate(1.6);}
+  100%{clip-path:inset(0 0 0 0);filter:none;}
+}
+
+/* ---------- funky text technique 2: animated neon gradient fill ---------- */
+.neongrad{
+  background:linear-gradient(100deg,#00E5FF,#FF2E9A,#7B2FFF,#E8FF00,#00E5FF);
+  background-size:340% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradslide 2.6s linear infinite;filter:drop-shadow(0 0 18px rgba(0,229,255,0.35));
+}
+@keyframes gradslide{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
+
+/* shared headline sizing */
+.hline{font-family:var(--disp);font-weight:900;line-height:0.94;text-transform:uppercase;letter-spacing:0.01em;
+  font-size:clamp(1.9rem,9.4vw,3.4rem);}
+.hline.sm{font-size:clamp(1.4rem,6.8vw,2.3rem);}
+.eyebrow{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.36em;text-transform:uppercase;color:var(--lime);
+  text-shadow:0 0 14px rgba(232,255,0,0.6);}
+
+/* pop-in / pop-out punch (used for every hook/proof phrase — never a static hold) */
+.popcard{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;opacity:0;transform:scale(0.7) rotate(-3deg);pointer-events:none;}
+.popcard.go{animation:poppunch 560ms cubic-bezier(.18,1.4,.4,1) forwards;}
+.popcard.leave{animation:popleave 180ms ease-in forwards;}
+@keyframes poppunch{
+  0%{opacity:0;transform:scale(0.55) rotate(-6deg);}
+  55%{opacity:1;transform:scale(1.12) rotate(2deg);}
+  75%{opacity:1;transform:scale(0.96) rotate(-1deg);}
+  100%{opacity:1;transform:scale(1) rotate(0deg);}
+}
+@keyframes popleave{0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(1.3);filter:blur(6px);}}
+
+/* ============================ PAIN (phone/silence motif) ============================ */
+.phone{position:relative;width:54%;max-width:184px;aspect-ratio:9/17;border-radius:20px;
+  background:linear-gradient(180deg,#0c1620,#06090d);border:1px solid rgba(0,229,255,0.18);
+  box-shadow:0 0 0 1px rgba(255,46,154,0.08), 0 24px 60px -16px rgba(0,0,0,0.9), 0 0 40px -8px rgba(0,229,255,0.25);
+  padding:13px 9px;display:flex;flex-direction:column;gap:6px;}
+.phone .notch{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:48px;height:5px;border-radius:99px;background:rgba(255,255,255,0.12);}
+.bubble{align-self:flex-end;max-width:82%;background:linear-gradient(135deg,#0b6b76,#063238);color:#eafdff;
+  border-radius:12px 12px 3px 12px;padding:7px 9px;font-size:0.52rem;line-height:1.32;text-align:left;
+  box-shadow:0 6px 18px rgba(0,0,0,0.5);opacity:0;transform:translateY(8px) scale(.94);}
+.bubble.in{animation:bubblein 260ms cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes bubblein{to{opacity:1;transform:none;}}
+.receipt{align-self:flex-end;font-family:var(--mono);font-size:0.44rem;color:var(--faint);margin-top:1px;}
+
+/* glitch ticker "STILL UNREAD" stamp */
+.deadstamp{position:relative;margin-top:14px;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--magenta);opacity:0;text-shadow:0 0 10px rgba(255,46,154,0.7);}
+.deadstamp.in{animation:stampin 180ms steps(2,end) forwards;}
+@keyframes stampin{0%{opacity:0;transform:translate(-4px,0) skewX(8deg);}100%{opacity:1;transform:none;}}
+
+/* ============================ TEASE (orb ignition, unresolved) ============================ */
+.orbwrap{position:relative;width:124px;height:124px;}
+.orb{position:absolute;inset:0;border-radius:50%;opacity:0;transform:scale(0.2);}
+.orb.lit{animation:orbignite 420ms cubic-bezier(.16,1,.3,1) forwards;}
+@keyframes orbignite{0%{opacity:0;transform:scale(0.2);}60%{opacity:1;transform:scale(1.2);}100%{opacity:1;transform:scale(1);}}
+.orb-core{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, #00E5FF, #FF2E9A, #7B2FFF, #E8FF00, #00E5FF);
+  filter:blur(8px);animation:orbrot 2.2s linear infinite, orbbreathe 0.8s ease-in-out infinite;
+  box-shadow:0 0 60px var(--accent),0 0 130px rgba(255,46,154,0.45);}
+.orb-core::after{content:'';position:absolute;inset:9%;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.35) 0%, var(--base) 42%, var(--base) 100%);}
+@keyframes orbrot{to{transform:rotate(360deg);}}
+@keyframes orbbreathe{0%,100%{filter:blur(8px) brightness(1);}50%{filter:blur(13px) brightness(1.4);}}
+.orb-ring{position:absolute;inset:-10px;border-radius:50%;border:1.5px solid var(--accent);opacity:0;animation:ringpulse 0.86s ease-out infinite;}
+.orb-ring.r2{border-color:var(--magenta);animation-delay:.28s;}
+.orb-ring.r3{border-color:var(--violet);animation-delay:.56s;}
+@keyframes ringpulse{0%{opacity:0.8;transform:scale(1);}100%{opacity:0;transform:scale(2);}}
+.orb-spark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;color:#fff;
+  filter:drop-shadow(0 0 14px var(--accent));z-index:3;}
+
+.tease-eye{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.3em;color:var(--accent);opacity:0;text-shadow:0 0 12px rgba(0,229,255,0.7);}
+.tease-eye.in{animation:rise 280ms ease forwards;}
+@keyframes rise{to{opacity:1;transform:none;}}
+.tease-head{margin-top:16px;}
+
+/* ============================ CTA / END BUG ============================ */
+.cta-stack{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.wordmark{font-family:var(--disp);font-weight:900;font-size:clamp(1.7rem,7.6vw,2.6rem);letter-spacing:0.03em;text-transform:uppercase;
+  opacity:0;transform:scale(0.85);
+  background:linear-gradient(100deg,#00E5FF,#FF2E9A,#7B2FFF,#E8FF00,#00E5FF);background-size:340% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 22px rgba(0,229,255,0.4));animation:gradslide 2.6s linear infinite;}
+.wordmark.in{animation:wmpop 380ms cubic-bezier(.2,1.5,.4,1) forwards, gradslide 2.6s linear infinite;}
+@keyframes wmpop{0%{opacity:0;transform:scale(0.6) rotate(-2deg);}60%{opacity:1;transform:scale(1.08) rotate(1deg);}100%{opacity:1;transform:scale(1) rotate(0);}}
+.wordmark .dot{color:var(--lime);-webkit-text-fill-color:var(--lime);}
+
+.rule{width:46px;height:2px;background:linear-gradient(90deg,var(--magenta),var(--accent),var(--violet));
+  box-shadow:0 0 14px var(--accent);opacity:0;}
+.rule.in{animation:rise 220ms ease forwards;}
+
+.endtag{font-family:var(--disp);font-weight:800;text-transform:uppercase;letter-spacing:0.01em;
+  font-size:clamp(1rem,4.6vw,1.4rem);line-height:1.18;max-width:88%;opacity:0;transform:scale(0.85) skewX(-4deg);
+  background:linear-gradient(100deg,#00E5FF,#FF2E9A,#7B2FFF,#E8FF00,#00E5FF);background-size:340% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 16px rgba(255,46,154,0.4));animation:gradslide 2.6s linear infinite;}
+.endtag.in{animation:tagpop 360ms cubic-bezier(.2,1.5,.4,1) forwards, gradslide 2.6s linear infinite;}
+@keyframes tagpop{0%{opacity:0;transform:scale(0.6) skewX(-8deg);}55%{opacity:1;transform:scale(1.08) skewX(2deg);}100%{opacity:1;transform:scale(1) skewX(0deg);}}
+
+/* ============================ CAPTION TRACK ============================ */
+.caption{position:absolute;left:6%;right:6%;bottom:6%;z-index:40;text-align:center;
+  font-family:var(--disp);font-weight:800;text-transform:uppercase;letter-spacing:0.01em;
+  font-size:clamp(0.7rem,3.1vw,0.92rem);line-height:1.3;
+  background:linear-gradient(100deg,#00E5FF,#FF2E9A,#7B2FFF,#00E5FF);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:gradslide 2s linear infinite;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.9));opacity:0;transition:opacity .15s;pointer-events:none;}
+.caption.on{opacity:1;}
+
+/* progress + timecode + phase badge */
+.prog{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:65;background:rgba(255,255,255,0.08);}
+.prog > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--magenta),var(--accent),var(--violet));box-shadow:0 0 12px var(--accent);}
+.tc{position:absolute;top:11px;right:13px;z-index:65;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.14em;color:var(--faint);}
+.beadge{position:absolute;top:11px;left:13px;z-index:65;font-family:var(--mono);font-size:0.48rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--lime);opacity:0.85;}
+
+/* ============================ CONTROLS ============================ */
+#controls{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:all .2s;}
+.ctl:hover{border-color:var(--accent);box-shadow:0 0 18px rgba(0,229,255,0.25);}
+.ctl.primary{background:linear-gradient(135deg,#00E5FF,#FF2E9A);color:#04090c;border-color:transparent;box-shadow:0 0 20px rgba(255,46,154,0.4);}
+.ctl.active{border-color:var(--lime);color:var(--lime);}
+.hint{margin-top:12px;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--faint);text-align:center;max-width:540px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 6px;color:var(--text);}
+
+@media(max-width:520px){#controls{gap:7px;}.ctl{padding:8px 11px;font-size:0.56rem;}}
+
+/* hide all chrome for clean screen-recording */
+body.recording #controls,body.recording .hint,body.recording .prog,body.recording .tc,body.recording .beadge{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="shakehost" id="shakehost">
+    <div class="wash" id="washMag"></div>
+    <div class="wash" id="washLime"></div>
+    <div class="wash" id="washViolet"></div>
+    <div class="wash" id="washCyan"></div>
+    <div class="grain"></div>
+    <div class="scan"></div>
+
+    <span class="beadge" id="beadge">CS MEDIA</span>
+    <span class="tc" id="tc">00:00 / 00:09</span>
+
+    <!-- ===================== 0-4000ms — THE PAIN ===================== -->
+    <section class="scene" id="sPain">
+      <div class="phone" id="phone">
+        <span class="notch"></span>
+        <div class="bubble" id="pbubble">
+          Here's the pitch — would love your thoughts!
+        </div>
+        <div class="receipt" id="preceipt">Delivered ✓✓</div>
+      </div>
+      <div class="deadstamp" id="pstamp">STILL UNREAD</div>
+    </section>
+    <div class="popcard" id="painPop1">
+      <div class="hline sm glitchtext" id="pt1">
+        <span class="gl gl-c">YOU SENT IT.</span><span class="gl gl-m">YOU SENT IT.</span><span class="gl-base">YOU SENT IT.</span>
+      </div>
+    </div>
+    <div class="popcard" id="painPop2">
+      <div class="hline sm glitchtext" id="pt2">
+        <span class="gl gl-c">SILENCE.</span><span class="gl gl-m">SILENCE.</span><span class="gl-base">SILENCE.</span>
+      </div>
+    </div>
+    <div class="popcard" id="painPop3">
+      <div class="hline sm glitchtext" id="pt3">
+        <span class="gl gl-c">NO REPLY.</span><span class="gl gl-m">NO REPLY.</span><span class="gl-base">NO REPLY.</span>
+      </div>
+    </div>
+    <div class="popcard" id="painPop4">
+      <div class="hline sm glitchtext" id="pt4">
+        <span class="gl gl-c">STILL UNREAD.</span><span class="gl gl-m">STILL UNREAD.</span><span class="gl-base">STILL UNREAD.</span>
+      </div>
+    </div>
+
+    <!-- ===================== 4000-7000ms — THE TEASE ===================== -->
+    <section class="scene" id="sTease">
+      <div class="tease-eye eyebrow" id="teaseEye">THE SHIFT</div>
+      <div class="orbwrap" style="margin-top:12px;"><div class="orb" id="orbTease">
+        <div class="orb-core"></div>
+        <div class="orb-ring"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div>
+        <div class="orb-spark">✦</div>
+      </div></div>
+      <div class="tease-head" id="teaseHeadWrap"></div>
+    </section>
+
+    <!-- ===================== 7000-9000ms — CS·MEDIA BUG + END TAG ===================== -->
+    <section class="scene" id="sCTA">
+      <div class="cta-stack">
+        <div class="wordmark" id="wordmark">CS<span class="dot">·</span>MEDIA</div>
+        <div class="rule" id="rule"></div>
+        <div class="endtag" id="endtag">There's a better<br>way to pitch.</div>
+      </div>
+    </section>
+
+    <div class="wipe" id="wipe"></div>
+    <div class="flash" id="flash"></div>
+
+    <!-- caption track -->
+    <div class="caption" id="caption"></div>
+    <div class="prog"><i id="progbar"></i></div>
+  </div>
+</div>
+
+<!-- ===================== CONTROLS ===================== -->
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  Deterministic 9s beat-grid teaser (120 BPM) — screen-record the stage to export. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
+  Music plays from the first Play (record with tab/system audio on). Captions are burned in for muted-first viewing.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const BPM = 120;
+  const BEAT = 60000 / BPM;          // 500ms
+  const BAR = BEAT * 4;              // 2000ms
+  const beatT = (n) => Math.round(n * BEAT);   // ms at beat index n (0-based)
+  const DUR = Math.round(18 * BEAT); // 18 beats = 9000ms exactly
+
+  // ============================================================
+  //  WEBAUDIO SCORE — 120 BPM electro-glitch bed: kick every beat,
+  //  hats on the off-beat, snare on beat 3 of every bar, a bassline
+  //  note per bar, and stab() chords at the TEASE ignition + final CTA hit.
+  // ============================================================
+  let actx, master, soundOn = true;
+  function ensureAudio(){
+    if (actx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    actx = new AC(); master = actx.createGain(); master.gain.value = 0; master.connect(actx.destination);
+  }
+  function noiseBurst(when, dur, gain, hp){
+    const n = Math.max(1, Math.floor(actx.sampleRate * dur)); const buf = actx.createBuffer(1, n, actx.sampleRate);
+    const d = buf.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const src = actx.createBufferSource(); src.buffer = buf;
+    const f = actx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = hp || 4000;
+    const g = actx.createGain(); g.gain.setValueAtTime(gain, when); g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    src.connect(f); f.connect(g); g.connect(master); src.start(when); src.stop(when + dur + 0.02);
+  }
+  function kick(when){
+    const o = actx.createOscillator(); const g = actx.createGain();
+    o.frequency.setValueAtTime(150, when); o.frequency.exponentialRampToValueAtTime(40, when + 0.12);
+    g.gain.setValueAtTime(0.9, when); g.gain.exponentialRampToValueAtTime(0.001, when + 0.22);
+    o.connect(g); g.connect(master); o.start(when); o.stop(when + 0.25);
+  }
+  function bass(freq, when, dur){
+    const o = actx.createOscillator(); o.type = "sawtooth"; o.frequency.value = freq;
+    const f = actx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 420;
+    const g = actx.createGain(); g.gain.setValueAtTime(0.001, when); g.gain.linearRampToValueAtTime(0.18, when + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    o.connect(f); f.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.02);
+  }
+  function stab(freqs, when, dur, gain){
+    freqs.forEach(function(f){
+      const o = actx.createOscillator(); o.type = "sawtooth"; o.frequency.value = f;
+      const g = actx.createGain(); g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(gain, when + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+      o.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.05);
+    });
+  }
+  function zap(when, dur){ // glitch laser-zap accent for wipes
+    const o = actx.createOscillator(); o.type = "square";
+    o.frequency.setValueAtTime(1800, when); o.frequency.exponentialRampToValueAtTime(120, when + dur);
+    const g = actx.createGain(); g.gain.setValueAtTime(0.07, when); g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    o.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.02);
+  }
+
+  const BASSLINE = [110, 130.81, 146.83, 98, 110]; // per-bar root, bars 0-4 (4.5 bars total)
+  let scheduledUntilBeat = -1;
+  function scheduleAudioFrom(elapsedMs){
+    if (!actx || !soundOn) return;
+    const nowCtx = actx.currentTime;
+    const startBeat = Math.max(0, Math.floor(elapsedMs / BEAT));
+    for (let b = startBeat; b <= 18; b++){
+      if (b <= scheduledUntilBeat) continue;
+      const cueMs = beatT(b);
+      const when = nowCtx + (cueMs - elapsedMs) / 1000;
+      if (when < nowCtx - 0.05) continue;
+      kick(when);
+      if (b % 2 === 1) noiseBurst(when, 0.05, 0.18, 7500); // off-beat hats
+      if (b % 4 === 2) noiseBurst(when, 0.16, 0.5, 1800);  // snare on beat 3 of bar
+      if (b % 4 === 0) bass(BASSLINE[Math.floor(b/4)] || 110, when, BAR/1000*0.9);
+    }
+    scheduledUntilBeat = 18;
+    // tease ignition stab — beat 8 (t=4000, bar 3 start)
+    scheduleOnce("teaseStab", beatT(8), elapsedMs, nowCtx, () => {
+      stab([220,277.18,329.63,440], nowCtx + (beatT(8)-elapsedMs)/1000, 0.7, 0.16);
+    });
+    // CTA wipe-in stab — beat 14 (t=7000)
+    scheduleOnce("ctaStab", beatT(14), elapsedMs, nowCtx, () => {
+      stab([164.81,207.65,246.94,329.63], nowCtx + (beatT(14)-elapsedMs)/1000, 0.9, 0.18);
+    });
+    // final hit — last beat (beat 18, t=9000)
+    scheduleOnce("finalHit", beatT(18), elapsedMs, nowCtx, () => {
+      stab([130.81,164.81,196,261.63], nowCtx + (beatT(18)-elapsedMs)/1000, 1.2, 0.22);
+    });
+    // zap accents on glitch wipe boundaries (beats 8, 14)
+    [8,14].forEach((bi) => {
+      scheduleOnce("zap"+bi, beatT(bi), elapsedMs, nowCtx, () => {
+        zap(nowCtx + (beatT(bi)-elapsedMs)/1000, 0.16);
+      });
+    });
+  }
+  const _doneFlags = {};
+  function scheduleOnce(key, cueMs, elapsedMs, nowCtx, fn){
+    if (_doneFlags[key]) return;
+    if (cueMs < elapsedMs - 30) { _doneFlags[key] = true; return; } // already passed, skip (e.g. restart mid-timeline)
+    _doneFlags[key] = true; fn();
+  }
+  function resetAudioSchedule(){ scheduledUntilBeat = -1; Object.keys(_doneFlags).forEach(k=>delete _doneFlags[k]); }
+
+  function audioResume(){ if (!soundOn) return; ensureAudio(); if (actx && actx.state === "suspended") actx.resume();
+    if (master) master.gain.linearRampToValueAtTime(0.85, (actx?actx.currentTime:0) + 0.2); }
+  function audioSuspend(){ if (actx && master) master.gain.linearRampToValueAtTime(0.0, actx.currentTime + 0.15); }
+  function audioStop(){ if (actx && master) master.gain.linearRampToValueAtTime(0.0, actx.currentTime + 0.2); resetAudioSchedule(); }
+
+  // ============================================================
+  //  VISUAL CUE TIMELINE — every cue time is beatT(n), so all cuts
+  //  are quantized exactly to the 120bpm grid. Section boundaries:
+  //  PAIN 0-4000 (beats 0-8) / TEASE 4000-7000 (beats 8-14) / CTA 7000-9000 (beats 14-18).
+  // ============================================================
+  function showPop(id){ const el = $(id); if(!el) return; el.classList.remove("leave"); el.classList.add("go"); }
+  function hidePop(id){ const el = $(id); if(!el) return; el.classList.remove("go"); el.classList.add("leave"); }
+  function punch(){ const sh = $("shakehost"); sh.classList.remove("punch"); void sh.offsetWidth; sh.classList.add("punch"); }
+  function flashpop(){ const f = $("flash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go"); }
+  function wipego(){ const w = $("wipe"); w.classList.remove("go"); void w.offsetWidth; w.classList.add("go"); }
+  // Each non-glitchtext element that gets flicked has its own persistent "resting" animation
+  // (gradient slide and/or a pop-in). A CSS `animation` shorthand fully replaces whatever was
+  // there before, so to layer a brief glitch flick on TOP without losing that resting animation
+  // we compose one combined shorthand string in JS: resting animation(s) + the one-shot soloflick.
+  const FLICK_RESTING = {
+    teaseEye: "rise 280ms ease forwards",
+    wordmark: "wmpop 380ms cubic-bezier(.2,1.5,.4,1) forwards, gradslide 2.6s linear infinite",
+    endtag:   "tagpop 360ms cubic-bezier(.2,1.5,.4,1) forwards, gradslide 2.6s linear infinite",
+  };
+  const flickTimers = {};
+  function glitchFlick(id){
+    const el=$(id); if(!el) return;
+    if (el.classList.contains("glitchtext")) {
+      el.classList.remove("flick"); void el.offsetWidth; el.classList.add("flick");
+      return;
+    }
+    const resting = FLICK_RESTING[id] || "";
+    el.style.animation = (resting ? resting + ", " : "") + "soloflick 220ms steps(4,end) 1";
+    if (flickTimers[id]) clearTimeout(flickTimers[id]);
+    flickTimers[id] = setTimeout(() => { el.style.animation = resting; }, 230); // settle back to resting only
+  }
+  function washOn(id){ ["washMag","washLime","washViolet","washCyan"].forEach(w=>$(w).classList.toggle("on", w===id)); }
+
+  const cues = [];
+  function at(beatIdx, fn){ cues.push({ t: beatT(beatIdx), fn }); }
+
+  // ---------- PAIN beats 0-8 (t 0-4000): sent → silence → no reply → still unread ----------
+  at(0, () => { $("sPain").classList.add("on"); washOn("washCyan"); });
+  at(0, () => { $("phone").style.opacity = 1; $("pbubble").classList.add("in"); punch(); });
+  at(1, () => { $("preceipt").style.color = "var(--accent)"; });
+  at(2, () => { showPop("painPop1"); glitchFlick("pt1"); punch(); flashpop(); });
+  at(3, () => { hidePop("painPop1"); $("pstamp").classList.add("in"); });
+  at(4, () => { showPop("painPop2"); glitchFlick("pt2"); punch(); washOn("washMag"); });
+  at(5, () => { hidePop("painPop2"); $("phone").style.filter = "saturate(0.45)"; });
+  at(6, () => { showPop("painPop3"); glitchFlick("pt3"); punch(); flashpop(); washOn("washViolet"); });
+  at(7, () => { hidePop("painPop3"); });
+
+  // ---------- beat8 boundary: glitch wipe into TEASE (t=4000) — orb ignites, "WHAT IF..." unresolved ----------
+  at(8, () => {
+    wipego(); punch(); flashpop();
+    $("sPain").classList.remove("on"); hidePop("painPop3"); hidePop("painPop4");
+    $("sTease").classList.add("on"); washOn("washCyan");
+  });
+  at(8, () => { showPop("painPop4"); glitchFlick("pt4"); }); // last pain beat flickers under the wipe
+  at(8, () => { $("teaseEye").classList.add("in"); });
+  at(9, () => { hidePop("painPop4"); $("orbTease").classList.add("lit"); punch(); });
+  at(10, () => {
+    $("teaseHeadWrap").innerHTML = '<div class="hline sm glitchtext flick" id="tw0">'+
+      '<span class="gl gl-c">WHAT IF…</span><span class="gl gl-m">WHAT IF…</span><span class="gl-base">WHAT IF…</span></div>';
+    punch(); washOn("washMag");
+  });
+  at(11, () => { glitchFlick("tw0"); punch(); });
+  at(12, () => { glitchFlick("teaseEye"); punch(); washOn("washLime"); });
+  at(13, () => { glitchFlick("tw0"); punch(); flashpop(); washOn("washViolet"); });
+
+  // ---------- beat14 boundary: glitch wipe into CTA bug (t=7000) ----------
+  at(14, () => {
+    wipego(); punch(); flashpop();
+    $("sTease").classList.remove("on"); $("teaseHeadWrap").innerHTML = "";
+    $("sCTA").classList.add("on"); washOn("washCyan");
+  });
+  at(14, () => { $("wordmark").classList.add("in"); punch(); });
+  at(15, () => { $("rule").classList.add("in"); });
+  at(16, () => { $("endtag").classList.add("in"); punch(); washOn("washMag"); });
+  at(17, () => { glitchFlick("wordmark"); punch(); washOn("washLime"); });
+  at(18, () => { punch(); flashpop(); glitchFlick("endtag"); washOn("washCyan"); }); // final beat hit, confident landing
+
+  // ---------- captions (continuous, beat-aligned) ----------
+  const CAPS = [
+    [0, beatT(2),  "YOU SENT THE PERFECT PITCH."],
+    [beatT(2), beatT(4),  "YOU SENT IT."],
+    [beatT(4), beatT(6),  "THEN… SILENCE."],
+    [beatT(6), beatT(8),  "STILL UNREAD."],
+    [beatT(8), beatT(10), "WHAT IF IT COULD…"],
+    [beatT(10), beatT(14), "…PRESENT ITSELF?"],
+    [beatT(14), beatT(16), "CS · MEDIA"],
+    [beatT(16), DUR, "THERE'S A BETTER WAY TO PITCH."],
+  ];
+
+  // ---------- director ----------
+  let raf=null, startTs=null, elapsed=0, playing=false, fired=new Set();
+  const beadgeFor=(t)=> t<beatT(8)?"TEASER · THE PAIN": t<beatT(14)?"TEASER · THE TEASE":"TEASER · CTA";
+
+  function resetVisuals(){
+    fired.clear();
+    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("on"));
+    document.querySelectorAll(".popcard").forEach(p=>p.classList.remove("go","leave"));
+    document.querySelectorAll(".glitchtext").forEach(g=>g.classList.remove("flick"));
+    Object.keys(flickTimers).forEach(id=>{ clearTimeout(flickTimers[id]); delete flickTimers[id]; });
+    ["phone","pbubble","preceipt","pstamp","teaseEye","orbTease","wordmark","rule","endtag"]
+      .forEach(id=>{ const e=$(id); if(e){ e.classList.remove("in","lit"); e.style.opacity=""; e.style.animation=""; } });
+    $("phone").style.filter = "";
+    $("preceipt").style.color = "var(--faint)";
+    $("teaseHeadWrap").innerHTML = "";
+    ["washMag","washLime","washViolet","washCyan"].forEach(w=>$(w).classList.remove("on"));
+    $("wipe").classList.remove("go"); $("flash").classList.remove("go"); $("shakehost").classList.remove("punch");
+    $("caption").classList.remove("on");
+    $("progbar").style.width="0%";
+  }
+
+  function applyCaption(t){
+    const cap=$("caption"); let active=null;
+    for(const c of CAPS){ if(t>=c[0] && t<c[1]){ active=c; break; } }
+    if(active){ if(cap.textContent!==active[2]) cap.textContent=active[2]; cap.classList.add("on"); }
+    else cap.classList.remove("on");
+  }
+
+  function fmt(ms){const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+
+  function frame(ts){
+    if(startTs===null) startTs=ts-elapsed;
+    elapsed=ts-startTs;
+    const t=Math.min(elapsed,DUR);
+    for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.fn();}catch(e){} } }
+    applyCaption(t);
+    $("progbar").style.width=(t/DUR*100)+"%";
+    $("tc").textContent=fmt(t)+" / "+fmt(DUR);
+    $("beadge").textContent=beadgeFor(t);
+    scheduleAudioFrom(t);
+    if(elapsed>=DUR){ stop(true); return; }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function play(){
+    if(playing) return;
+    if(elapsed>=DUR){ hardRestart(); }
+    playing=true; startTs=null; $("playBtn").textContent="⏸ Pause";
+    audioResume(); raf=requestAnimationFrame(frame);
+  }
+  function pause(){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent="▶ Play"; audioSuspend(); }
+  function stop(ended){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent= ended?"↺ Replay":"▶ Play"; if(ended){ audioStop(); } }
+  function hardRestart(){ elapsed=0; startTs=null; resetVisuals(); audioStop(); }
+  function toggle(){ playing?pause():play(); }
+
+  // ---------- clean (recording) mode ----------
+  $("recBtn").addEventListener("click",()=>{ document.body.classList.toggle("recording"); $("recBtn").classList.toggle("active"); });
+
+  // ---------- buttons / keys ----------
+  $("playBtn").addEventListener("click",toggle);
+  $("restartBtn").addEventListener("click",()=>{ pause(); hardRestart(); play(); });
+  $("soundBtn").addEventListener("click",()=>{
+    soundOn=!soundOn; ensureAudio();
+    $("soundBtn").textContent= soundOn?"🔊 Sound on":"🔇 Sound off";
+    $("soundBtn").classList.toggle("active",soundOn);
+    if(soundOn){ if(actx&&actx.state==="suspended")actx.resume(); if(playing){audioResume();} }
+    else { audioSuspend(); }
+  });
+  document.addEventListener("keydown",(e)=>{
+    if(e.code==="Space"){ e.preventDefault(); toggle(); }
+    else if(e.key==="r"||e.key==="R"){ pause(); hardRestart(); play(); }
+    else if(e.key==="c"||e.key==="C"){ $("recBtn").click(); }
+    else if(e.key==="s"||e.key==="S"){ $("soundBtn").click(); }
+  });
+
+  // ---------- boot: show first frame poster (paused) ----------
+  resetVisuals();
+  $("sPain").classList.add("on"); $("phone").style.opacity=1; $("pbubble").classList.add("in"); washOn("washCyan");
+})();
+</script>
+</body></html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · Teaser: The Shift (Bold Pop Poster cut)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
+
+<style>
+:root{
+  --base:#04090c; --base2:#0b1622; --text:#eafdff;
+  --cy:#00E5FF; --cy2:#0b6b76; --pink:#FF2E9A; --yellow:#FFD400; --violet:#7B2FFF;
+  --dim:rgba(234,253,255,0.6); --faint:rgba(234,253,255,0.3);
+  --font:'Inter',Arial,sans-serif;
+  --disp:'Montserrat','Arial Narrow',Impact,sans-serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --stage-w:clamp(280px, 56vh, 540px);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--text);font-family:var(--font);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;}
+
+/* ============================ STAGE ============================ */
+#stage{
+  position:relative;width:var(--stage-w);aspect-ratio:9/16;max-height:92vh;
+  background:var(--base);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,229,255,0.15), 0 40px 120px -30px rgba(255,46,154,0.25), 0 30px 90px rgba(0,0,0,0.7);
+}
+/* candy halftone dot texture, very low opacity, always present for poster grain */
+.halftone{position:absolute;inset:-10%;z-index:1;pointer-events:none;opacity:0.07;mix-blend-mode:overlay;
+  background-image:radial-gradient(circle, #fff 1px, transparent 1.4px);background-size:7px 7px;}
+/* base anchor glow -- keeps the brand cyan/black reading as CS Media even amid the candy palette */
+.brandglow{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 14%, rgba(0,229,255,0.16) 0%, transparent 46%),
+             radial-gradient(ellipse at 50% 100%, rgba(11,107,118,0.22) 0%, transparent 60%);}
+
+/* ============================ COLOR-BLOCK WIPE PANELS ============================ */
+.blockpanel{position:absolute;inset:0;z-index:50;}
+.blockpanel i{position:absolute;top:0;bottom:0;width:25%;transform:scaleY(0);transform-origin:bottom;}
+.blockpanel i:nth-child(1){left:0%;background:var(--violet);}
+.blockpanel i:nth-child(2){left:25%;background:var(--pink);}
+.blockpanel i:nth-child(3){left:50%;background:var(--yellow);}
+.blockpanel i:nth-child(4){left:75%;background:var(--cy);}
+.blockpanel.go i{animation:blockup .42s cubic-bezier(.2,1.3,.3,1) forwards;}
+.blockpanel.go i:nth-child(1){animation-delay:0s;}
+.blockpanel.go i:nth-child(2){animation-delay:.04s;}
+.blockpanel.go i:nth-child(3){animation-delay:.08s;}
+.blockpanel.go i:nth-child(4){animation-delay:.12s;}
+@keyframes blockup{0%{transform:scaleY(0);}60%{transform:scaleY(1.05);}100%{transform:scaleY(1);}}
+.blockpanel.retreat i{animation:blockdown .34s cubic-bezier(.6,0,.85,.4) forwards;}
+@keyframes blockdown{0%{transform:scaleY(1);}100%{transform:scaleY(0);transform-origin:top;}}
+
+/* ============================ SCENES ============================ */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 7%;text-align:center;z-index:10;opacity:0;pointer-events:none;}
+.scene.on{opacity:1;}
+
+/* ============================ POP-POSTER TEXT TECHNIQUES ============================ */
+/* technique 1: thick stroked/duotone sticker type (stroke + gradient-fill duplicate behind) */
+.stroke-stack{position:relative;display:inline-block;}
+.stroke-stack .back{position:absolute;inset:0;color:transparent;-webkit-text-stroke:0;
+  background:linear-gradient(135deg,var(--pink),var(--yellow));-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;transform:translate(5px,5px);z-index:0;}
+.stroke-stack .front{position:relative;z-index:1;color:transparent;-webkit-text-stroke:3px var(--cy);
+  paint-order:stroke fill;}
+
+/* technique 2: stacked hard-edge 3D poster drop-shadow (no blur) */
+.poster3d{color:var(--yellow);
+  text-shadow:3px 3px 0 var(--pink),6px 6px 0 var(--violet),9px 9px 0 #04090c, 0 0 22px rgba(255,212,0,0.25);}
+.poster3d.alt{color:#fff;
+  text-shadow:3px 3px 0 var(--cy),6px 6px 0 var(--violet),9px 9px 0 #04090c,0 0 22px rgba(0,229,255,0.3);}
+.poster3d.pinkbase{color:var(--pink);
+  text-shadow:3px 3px 0 var(--cy),6px 6px 0 var(--yellow),9px 9px 0 #04090c,0 0 22px rgba(255,46,154,0.3);}
+
+/* technique 3: animated gradient marquee fill for hero words */
+.marquee-fill{background:linear-gradient(90deg,var(--cy),var(--yellow),var(--pink),var(--violet),var(--cy));
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  animation:marquee 2.2s linear infinite;}
+@keyframes marquee{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
+
+.headline{font-family:var(--disp);font-weight:900;line-height:0.94;text-transform:uppercase;letter-spacing:-0.01em;
+  font-size:clamp(1.7rem,8.6vw,3.1rem);}
+.eyebrow{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--base);
+  background:var(--yellow);padding:5px 12px;border-radius:99px;display:inline-block;
+  box-shadow:3px 3px 0 var(--violet);}
+
+/* bouncy/elastic pop-in -- the signature motion of this flavor */
+.pop{opacity:0;transform:scale(0.3) rotate(-6deg);}
+.pop.in{animation:popin .48s cubic-bezier(.2,1.85,.32,1.15) forwards;}
+.pop.in.fast{animation-duration:.36s;}
+@keyframes popin{
+  0%{opacity:0;transform:scale(0.3) rotate(-6deg);}
+  55%{opacity:1;transform:scale(1.12) rotate(2deg);}
+  78%{transform:scale(0.95) rotate(-1deg);}
+  100%{opacity:1;transform:scale(1) rotate(0deg);}
+}
+
+/* slam-stamp variant for big single-word hits */
+.stamp{opacity:0;transform:scale(2.6) rotate(-10deg);}
+.stamp.in{animation:stampin .36s cubic-bezier(.15,1.3,.3,1) forwards;}
+@keyframes stampin{
+  0%{opacity:0;transform:scale(2.6) rotate(-10deg);}
+  60%{opacity:1;transform:scale(0.92) rotate(3deg);}
+  100%{opacity:1;transform:scale(1) rotate(-2deg);}
+}
+
+/* perpetual idle wobble so nothing ever sits dead while visible */
+.wobble{animation:wob 1.3s ease-in-out infinite;}
+@keyframes wob{0%,100%{transform:rotate(-1.6deg);}50%{transform:rotate(1.6deg);}}
+.pop.in.wobble{animation:popin .48s cubic-bezier(.2,1.85,.32,1.15) forwards, wob 1.3s ease-in-out 0.48s infinite;}
+.stamp.in.beat{animation:stampin .36s cubic-bezier(.15,1.3,.3,1) forwards, ctabeat .8s ease-in-out 0.36s infinite;}
+@keyframes ctabeat{0%,100%{transform:scale(1) rotate(-2deg);}50%{transform:scale(1.05) rotate(1deg);}}
+
+/* the doc-mini's "burst alive" exit -- a forwards-filled fade/scale-out class swap.
+   NOTE: an `animation` shorthand fully replaces whatever was there before (it does not
+   compose across cascade), so adding .docburst on top of .pop.in.wobble overrides that
+   rule's `forwards`-filled opacity:1 entirely, which is required here -- a plain inline
+   style.opacity would otherwise lose to the still-active forwards-filled pop-in animation. */
+.pop.in.wobble.docburst{animation:docburstout .3s cubic-bezier(.4,0,.85,.4) forwards;}
+@keyframes docburstout{0%{opacity:1;transform:scale(1) rotate(0deg);}100%{opacity:0;transform:scale(1.35) rotate(4deg);}}
+
+/* ============================ CONFETTI BURST ============================ */
+#confetti{position:absolute;inset:0;z-index:45;pointer-events:none;overflow:hidden;}
+.conf{position:absolute;top:50%;left:50%;width:9px;height:14px;opacity:0;will-change:transform,opacity;}
+.conf.go{animation:confburst var(--cdur,1s) cubic-bezier(.15,.6,.4,1) forwards;}
+@keyframes confburst{
+  0%{opacity:1;transform:translate(-50%,-50%) translate(0,0) rotate(0deg) scale(1);}
+  85%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,-50%) translate(var(--cx),var(--cy2)) rotate(var(--crot)) scale(0.7);}
+}
+
+/* ============================ BEAT 1 — DOC BURSTING ALIVE (0-4000ms) ============================ */
+.doc-mini{position:relative;width:128px;margin:0 auto;border-radius:12px;background:linear-gradient(180deg,#101a22,#070d11);
+  border:3px solid var(--violet);padding:12px 10px;box-shadow:5px 5px 0 var(--pink);}
+.doc-mini .ln{height:7px;border-radius:3px;background:rgba(234,253,255,0.22);margin-bottom:6px;}
+.doc-mini .ln.w1{width:88%;}.doc-mini .ln.w2{width:62%;background:var(--cy);box-shadow:0 0 8px var(--cy);}
+.doc-mini .ln.w3{width:74%;}.doc-mini .ln.w4{width:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow);}
+.doc-shatter{position:relative;width:18px;height:18px;}
+.shard{position:absolute;width:30px;height:22px;border-radius:3px;opacity:0;will-change:transform,opacity;}
+.shard.go{animation:shardfly var(--sdur,0.9s) cubic-bezier(.2,1.4,.3,1) forwards;}
+@keyframes shardfly{
+  0%{opacity:1;transform:translate(-50%,-50%) translate(0,0) rotate(0deg) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-50%) translate(var(--fx),var(--fy)) rotate(var(--frot)) scale(0.3);}
+}
+.boom-eye{margin-top:14px;}
+
+/* ============================ BEAT 2 — MEET YOUR AI PRESENTER (4000-7000ms) ============================ */
+.meet-stack{position:relative;z-index:10;}
+.orbmini{position:relative;width:84px;height:84px;margin:0 auto 14px;}
+.orbmini .core{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,var(--cy),var(--pink),var(--violet),var(--yellow),var(--cy));
+  filter:blur(5px);animation:orbrot 1.6s linear infinite, orbpulse .6s ease-in-out infinite;
+  box-shadow:0 0 40px var(--cy),0 0 80px rgba(255,46,154,0.5);}
+.orbmini .core::after{content:'';position:absolute;inset:10%;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.4) 0%, var(--base) 45%, var(--base) 100%);}
+@keyframes orbrot{to{transform:rotate(360deg);}}
+@keyframes orbpulse{0%,100%{filter:blur(5px) brightness(1);}50%{filter:blur(8px) brightness(1.4);}}
+.orbmini .spark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.1rem;color:#fff;
+  filter:drop-shadow(0 0 10px var(--cy));z-index:3;}
+.orbmini.pop{opacity:0;transform:scale(0.3) rotate(-6deg);}
+.orbmini.pop.in{animation:popin .42s cubic-bezier(.2,1.85,.32,1.15) forwards;}
+
+/* ============================ BEAT 3 — CS·MEDIA BUG + END TAG (7000-9000ms) ============================ */
+.wordmark-pop{font-family:var(--disp);font-weight:900;font-size:clamp(1.6rem,8vw,2.5rem);letter-spacing:0.03em;
+  text-transform:uppercase;color:var(--base);background:var(--yellow);padding:9px 20px;border-radius:10px;
+  box-shadow:5px 5px 0 var(--cy), 5px 5px 0 4px var(--base);}
+.wordmark-pop b{color:var(--pink);}
+.tagline-pop{margin-top:16px;font-family:var(--font);font-weight:700;font-size:clamp(0.88rem,3.8vw,1.15rem);
+  color:#fff;text-shadow:2px 2px 0 var(--violet),4px 4px 0 var(--cy2);max-width:84%;line-height:1.4;}
+.tagline-pop b{color:var(--yellow);-webkit-text-stroke:0.6px var(--base);}
+
+/* ============================ CAPTION TRACK (funky, never flat) ============================ */
+.caption{position:absolute;left:6%;right:6%;bottom:6%;z-index:40;text-align:center;
+  font-family:var(--disp);font-weight:800;text-transform:uppercase;letter-spacing:0.005em;
+  font-size:clamp(0.72rem,3.2vw,0.92rem);line-height:1.3;color:var(--yellow);
+  text-shadow:2px 2px 0 var(--violet),4px 4px 0 var(--base);opacity:0;transition:opacity .15s;pointer-events:none;}
+.caption.on{opacity:1;}
+
+/* progress + timecode + phase badge */
+.prog{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:55;background:rgba(255,255,255,0.1);}
+.prog > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--yellow),var(--cy));box-shadow:0 0 12px var(--pink);}
+.tc{position:absolute;top:11px;right:13px;z-index:55;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.14em;
+  color:var(--base);background:var(--cy);padding:3px 8px;border-radius:6px;}
+.beadge{position:absolute;top:11px;left:13px;z-index:55;font-family:var(--mono);font-size:0.5rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--base);background:var(--yellow);padding:3px 8px;border-radius:6px;}
+
+/* ============================ CONTROLS ============================ */
+#controls{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:99px;cursor:pointer;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:all .2s;}
+.ctl:hover{border-color:var(--pink);box-shadow:0 0 18px rgba(255,46,154,0.3);}
+.ctl.primary{background:var(--cy);color:#04090c;border-color:var(--cy);box-shadow:0 0 20px rgba(0,229,255,0.4);}
+.ctl.active{border-color:var(--yellow);color:var(--yellow);}
+.hint{margin-top:12px;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.1em;color:var(--faint);text-align:center;max-width:540px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 6px;color:var(--text);}
+
+@media(max-width:520px){#controls{gap:7px;}.ctl{padding:8px 11px;font-size:0.56rem;}}
+
+/* hide all chrome for clean screen-recording */
+body.recording #controls,body.recording .hint,body.recording .prog,body.recording .tc,body.recording .beadge{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="brandglow"></div>
+  <div class="halftone"></div>
+  <div id="confetti"></div>
+
+  <span class="beadge" id="beadge">CS MEDIA</span>
+  <span class="tc" id="tc">00:00 / 00:09</span>
+
+  <!-- color block wipe layer used at every hard-cut beat -->
+  <div class="blockpanel" id="blockpanel"><i></i><i></i><i></i><i></i></div>
+
+  <!-- ===================== 0-4000ms — THE DOC BURSTS ALIVE ===================== -->
+  <section class="scene" id="s1">
+    <div class="eyebrow pop" id="b1-eye">YOUR PITCH DECK</div>
+    <div class="doc-mini pop wobble" id="b1-doc" style="margin-top:14px;">
+      <div class="ln w1"></div><div class="ln w2"></div><div class="ln w3"></div><div class="ln w4"></div>
+    </div>
+    <div id="b1-shatter-host" style="position:relative;width:1px;height:1px;margin:0 auto;"></div>
+    <h1 class="headline stamp" id="b1-boom" style="margin-top:18px;">
+      <span class="stroke-stack"><span class="back">ALIVE.</span><span class="front">ALIVE.</span></span>
+    </h1>
+    <div class="eyebrow pop fast boom-eye" id="b1-eye2" style="background:var(--pink);color:#fff;">NOT JUST A FILE ANYMORE</div>
+  </section>
+
+  <!-- ===================== 4000-7000ms — MEET YOUR AI PRESENTER ===================== -->
+  <section class="scene" id="s2">
+    <div class="meet-stack">
+      <div class="orbmini pop" id="b2-orb"><div class="core"></div><div class="spark">✦</div></div>
+      <h1 class="headline marquee-fill pop" id="b2-l1" style="font-size:clamp(1.5rem,7.4vw,2.4rem)">MEET YOUR</h1>
+      <h1 class="headline stamp" id="b2-l2" style="margin-top:8px;">
+        <span class="stroke-stack"><span class="back">AI PRESENTER</span><span class="front">AI PRESENTER</span></span>
+      </h1>
+      <div class="eyebrow pop fast" id="b2-tag" style="margin-top:16px;background:var(--violet);color:#fff;">IT TALKS BACK</div>
+    </div>
+  </section>
+
+  <!-- ===================== 7000-9000ms — CS·MEDIA BUG + END TAG ===================== -->
+  <section class="scene" id="s3">
+    <div class="wordmark-pop stamp" id="b3-bug">CS <b>·</b> MEDIA</div>
+    <div class="tagline-pop pop fast" id="b3-tag">Meet your<br><b>AI presenter.</b></div>
+  </section>
+
+  <!-- caption track -->
+  <div class="caption" id="caption"></div>
+  <div class="prog"><i id="progbar"></i></div>
+</div>
+
+<!-- ===================== CONTROLS ===================== -->
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  Deterministic 9s teaser, beat-quantized to 120 BPM. <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>C</kbd> clean mode · <kbd>S</kbd> sound.<br>
+  Music plays from the first Play (record with tab/system audio on). Captions are burned in for muted-first viewing.<br>
+  Vertical 9:16 only — Bold Pop Poster teaser of "The Shift" for the CS Media AI Presenter.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const BPM = 120;
+  const BEAT = 60000 / BPM;          // 500ms — chosen so the 0/4000/7000/9000ms section
+                                      // boundaries from the brief land EXACTLY on beats 0/8/14/18
+                                      // (4000 and 7000 are both whole multiples of 500ms and of the
+                                      // 2000ms bar, so structural cuts also land on bar boundaries).
+  const Q = (ms) => Math.round(ms / BEAT) * BEAT; // quantize any ms value to the beat grid
+  const DUR = Q(9000);               // = 9000ms exactly
+
+  // ---------- confetti burst builder (re-buildable each play) ----------
+  function burstConfetti(count){
+    const host = $("confetti");
+    const colors = ["#00E5FF","#FF2E9A","#FFD400","#7B2FFF","#eafdff"];
+    for(let i=0;i<count;i++){
+      const el = document.createElement("div");
+      el.className = "conf";
+      const ang = (Math.PI*2) * (i/count) + (Math.random()*0.5-0.25);
+      const dist = 110 + Math.random()*170;
+      const cx = Math.cos(ang)*dist, cy2 = Math.sin(ang)*dist*0.9 + 55; // gravity-biased downward drift
+      el.style.setProperty("--cx", cx.toFixed(0)+"px");
+      el.style.setProperty("--cy2", cy2.toFixed(0)+"px");
+      el.style.setProperty("--crot", (Math.random()*720-360).toFixed(0)+"deg");
+      el.style.setProperty("--cdur", (0.8+Math.random()*0.5).toFixed(2)+"s");
+      el.style.background = colors[i % colors.length];
+      el.style.borderRadius = (i%3===0) ? "50%" : "2px";
+      host.appendChild(el);
+      requestAnimationFrame(()=> el.classList.add("go"));
+      setTimeout(()=>{ el.remove(); }, 1500);
+    }
+  }
+
+  // ---------- doc-shatter builder (the "bursting alive" beat) ----------
+  function shatterDoc(){
+    const host = $("b1-shatter-host");
+    if(!host) return;
+    const colors = ["var(--cy)","var(--pink)","var(--yellow)","var(--violet)"];
+    for(let i=0;i<14;i++){
+      const el = document.createElement("div");
+      el.className = "shard";
+      const ang = (Math.PI*2) * (i/14) + (Math.random()*0.4-0.2);
+      const dist = 70 + Math.random()*90;
+      el.style.setProperty("--fx", (Math.cos(ang)*dist).toFixed(0)+"px");
+      el.style.setProperty("--fy", (Math.sin(ang)*dist).toFixed(0)+"px");
+      el.style.setProperty("--frot", (Math.random()*540-270).toFixed(0)+"deg");
+      el.style.setProperty("--sdur", (0.7+Math.random()*0.4).toFixed(2)+"s");
+      el.style.background = colors[i % colors.length];
+      el.style.left = "50%"; el.style.top = "50%";
+      host.appendChild(el);
+      requestAnimationFrame(()=> el.classList.add("go"));
+      setTimeout(()=>{ el.remove(); }, 1300);
+    }
+  }
+
+  // ---------- caption track (continuous, beat-quantized in/out) ----------
+  const CAPS = [
+    [Q(0),    Q(1500), "YOUR PITCH DECK…"],
+    [Q(1500), Q(4000), "…JUST CAME ALIVE."],
+    [Q(4000), Q(5500), "MEET YOUR"],
+    [Q(5500), Q(7000), "AI PRESENTER."],
+    [Q(7000), Q(9000), "MEET YOUR AI PRESENTER."],
+  ];
+
+  // ---------- timeline cues — every cue time is a whole-beat multiple of BEAT (500ms @ 120bpm),
+  // so every cut lands exactly on the grid. Section boundaries (beats 0/8/14/18 = 0/4000/7000/9000ms)
+  // are also bar boundaries (every 4th beat), matching the brief's structural-cut requirement. ----------
+  const cues = [
+    // ===== beats 0-8 (0-4000ms) — THE DOC BURSTS ALIVE =====
+    {t:Q(0*BEAT),  fn:()=>{ $("s1").classList.add("on"); }},
+    {t:Q(0*BEAT),  fn:()=>{ $("b1-eye").classList.add("in"); }},
+    {t:Q(1*BEAT),  fn:()=>{ $("b1-doc").classList.add("in"); }},
+    {t:Q(3*BEAT),  fn:()=>{ $("b1-doc").classList.add("docburst"); shatterDoc(); burstConfetti(14); }},
+    {t:Q(4*BEAT),  fn:()=>{ $("b1-boom").classList.add("in"); burstConfetti(10); }},
+    {t:Q(6*BEAT),  fn:()=>{ $("b1-eye2").classList.add("in"); }},
+    // color-block wipe starts a half-beat before the cut so it's fully opaque by the swap
+    {t:Q(7.5*BEAT),fn:()=>{ $("blockpanel").classList.add("go"); burstConfetti(24); }},
+    {t:Q(8*BEAT),  fn:()=>{ $("s1").classList.remove("on");
+      ["b1-eye","b1-doc","b1-boom","b1-eye2"].forEach(id=>$(id).classList.remove("in")); }},
+
+    // ===== beats 8-14 (4000-7000ms) — MEET YOUR AI PRESENTER =====
+    {t:Q(8*BEAT),    fn:()=>{ $("blockpanel").classList.remove("go"); $("blockpanel").classList.add("retreat");
+      $("s2").classList.add("on"); $("b2-orb").classList.add("in"); }},
+    {t:Q(8.7*BEAT),  fn:()=>{ $("blockpanel").classList.remove("retreat"); }},
+    {t:Q(9*BEAT),    fn:()=>{ $("b2-l1").classList.add("in"); }},
+    {t:Q(10*BEAT),   fn:()=>{ $("b2-l2").classList.add("in"); burstConfetti(18); }},
+    {t:Q(11*BEAT),   fn:()=>{ $("b2-tag").classList.add("in"); }},
+    {t:Q(12*BEAT),   fn:()=>{ $("b2-l2").classList.add("wobble"); }},
+    // hard cut into the CTA bug, half-beat lead-in, same-beat swap — zero gap
+    {t:Q(13.5*BEAT), fn:()=>{ $("blockpanel").classList.add("go"); burstConfetti(20); }},
+    {t:Q(14*BEAT),   fn:()=>{ $("s2").classList.remove("on");
+      ["b2-orb","b2-l1","b2-l2","b2-tag"].forEach(id=>{const e=$(id); e.classList.remove("in","wobble");}); }},
+
+    // ===== beats 14-18 (7000-9000ms) — CS·MEDIA BUG + END TAG, final bouncy landing hit =====
+    {t:Q(14*BEAT),   fn:()=>{ $("blockpanel").classList.remove("go"); $("blockpanel").classList.add("retreat");
+      $("s3").classList.add("on"); $("b3-bug").classList.add("in"); burstConfetti(26); }},
+    {t:Q(14.7*BEAT), fn:()=>{ $("blockpanel").classList.remove("retreat"); }},
+    {t:Q(16*BEAT),   fn:()=>{ $("b3-tag").classList.add("in"); }},
+    {t:Q(17*BEAT),   fn:()=>{ $("b3-bug").classList.add("beat"); burstConfetti(30); }}, // final beat landing hit
+  ];
+
+  // ---------- director ----------
+  let raf=null, startTs=null, elapsed=0, playing=false, fired=new Set();
+  const beadgeFor=(t)=> t<8*BEAT?"TEASER · COMES ALIVE": t<14*BEAT?"TEASER · MEET NOVA":"TEASER · CS MEDIA";
+
+  function resetVisuals(){
+    fired.clear();
+    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("on"));
+    // NOTE: "wobble" is NOT stripped from b1-doc here -- it carries `wobble` as a permanent
+    // base class straight from the HTML (its idle motion), not a cue-toggled one, so removing
+    // it on reset would silently kill it on every replay (same gotcha as intro-30-v2-pop.html).
+    ["b1-eye","b1-doc","b1-boom","b1-eye2","b2-orb","b2-l1","b2-l2","b2-tag","b3-bug","b3-tag"]
+      .forEach(id=>{const e=$(id); if(e){e.classList.remove("in","beat");}});
+    $("b2-l2").classList.remove("wobble"); // this one IS cue-toggled (added at beat 12), so it must reset
+    $("b1-doc").classList.remove("docburst");
+    $("blockpanel").classList.remove("go","retreat");
+    $("confetti").innerHTML = "";
+    $("caption").classList.remove("on");
+    $("progbar").style.width="0%";
+  }
+
+  function applyCaption(t){
+    const cap=$("caption"); let active=null;
+    for(const c of CAPS){ if(t>=c[0] && t<c[1]){ active=c; break; } }
+    if(active){ if(cap.textContent!==active[2]) cap.textContent=active[2]; cap.classList.add("on"); }
+    else cap.classList.remove("on");
+  }
+
+  function fmt(ms){const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+
+  function frame(ts){
+    if(startTs===null) startTs=ts-elapsed;
+    elapsed=ts-startTs;
+    const t=Math.min(elapsed,DUR);
+    for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.fn();}catch(e){} } }
+    applyCaption(t);
+    $("progbar").style.width=(t/DUR*100)+"%";
+    $("tc").textContent=fmt(t)+" / "+fmt(DUR);
+    $("beadge").textContent=beadgeFor(t);
+    score(t);
+    if(elapsed>=DUR){ stop(true); return; }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function play(){
+    if(playing) return;
+    if(elapsed>=DUR){ hardRestart(); }
+    playing=true; startTs=null; $("playBtn").textContent="⏸ Pause";
+    ensureAudio(); audioResume(); raf=requestAnimationFrame(frame);
+  }
+  function pause(){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent="▶ Play"; audioSuspend(); }
+  function stop(ended){ playing=false; if(raf)cancelAnimationFrame(raf); raf=null; $("playBtn").textContent= ended?"↺ Replay":"▶ Play"; if(ended){ audioStop(); } }
+  function hardRestart(){ elapsed=0; startTs=null; resetVisuals(); audioStop(); musicCursor=0; }
+  function toggle(){ playing?pause():play(); }
+
+  // ---------- clean (recording) mode ----------
+  $("recBtn").addEventListener("click",()=>{ document.body.classList.toggle("recording"); $("recBtn").classList.toggle("active"); });
+
+  // ---------- buttons / keys ----------
+  $("playBtn").addEventListener("click",toggle);
+  $("restartBtn").addEventListener("click",()=>{ pause(); hardRestart(); play(); });
+  document.addEventListener("keydown",(e)=>{
+    if(e.code==="Space"){ e.preventDefault(); toggle(); }
+    else if(e.key==="r"||e.key==="R"){ pause(); hardRestart(); play(); }
+    else if(e.key==="c"||e.key==="C"){ $("recBtn").click(); }
+    else if(e.key==="s"||e.key==="S"){ $("soundBtn").click(); }
+  });
+
+  // ============================================================
+  //  WEBAUDIO SCORE — upbeat 120 BPM candy-pop beat: four-on-the-
+  //  floor kick, off-beat hihats, snare on beat 3 of every bar,
+  //  a bouncy sawtooth bassline per bar, and bright stab() chords
+  //  on the "ALIVE" boom (beat 4 / 2000ms), the "MEET YOUR AI PRESENTER"
+  //  drop (beat 8 / 4000ms), and the final CTA landing hit (beat 17 / 8500ms).
+  //  soundOn defaults true; Play ramps master gain up immediately.
+  // ============================================================
+  let actx, master, soundOn = true;
+  function ensureAudio(){
+    if (actx) return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    actx = new AC(); master = actx.createGain(); master.gain.value = 0; master.connect(actx.destination);
+  }
+  function noiseBurst(when, dur, gain, hp){
+    if(!actx) return;
+    const n = Math.max(1, Math.floor(actx.sampleRate * dur)); const buf = actx.createBuffer(1, n, actx.sampleRate);
+    const d = buf.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const src = actx.createBufferSource(); src.buffer = buf;
+    const f = actx.createBiquadFilter(); f.type = "highpass"; f.frequency.value = hp || 4000;
+    const g = actx.createGain(); g.gain.setValueAtTime(gain, when); g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    src.connect(f); f.connect(g); g.connect(master); src.start(when); src.stop(when + dur + 0.02);
+  }
+  function kick(when){
+    if(!actx) return;
+    const o = actx.createOscillator(); const g = actx.createGain();
+    o.frequency.setValueAtTime(150, when); o.frequency.exponentialRampToValueAtTime(42, when + 0.11);
+    g.gain.setValueAtTime(0.95, when); g.gain.exponentialRampToValueAtTime(0.001, when + 0.2);
+    o.connect(g); g.connect(master); o.start(when); o.stop(when + 0.23);
+  }
+  function bass(freq, when, dur){
+    if(!actx) return;
+    const o = actx.createOscillator(); o.type = "sawtooth"; o.frequency.value = freq;
+    const f = actx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 460;
+    const g = actx.createGain(); g.gain.setValueAtTime(0.001, when); g.gain.linearRampToValueAtTime(0.2, when + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    o.connect(f); f.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.02);
+  }
+  function stab(freqs, when, dur, gain){
+    if(!actx) return;
+    freqs.forEach(function(f){
+      const o = actx.createOscillator(); o.type = "sawtooth"; o.frequency.value = f;
+      const g = actx.createGain(); g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(gain, when + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+      o.connect(g); g.connect(master); o.start(when); o.stop(when + dur + 0.05);
+    });
+  }
+
+  // bouncy candy-pop bassline, root-fifth bounce per bar (C major-ish, upbeat)
+  const BASSLINE = [130.81,196.00,146.83,196.00];
+  const BOOM_CHORD  = [261.63,329.63,392.00,523.25]; // "ALIVE" — C major, bright pop stab
+  const DROP_CHORD  = [293.66,369.99,440.00,587.33]; // "MEET YOUR AI PRESENTER" — D major
+  const LAND_CHORD  = [349.23,440.00,523.25,698.46]; // final beat hit — F major resolve
+
+  let musicCursor = 0; // ms of timeline already scheduled into WebAudio
+  let scoreState = {boomHit:false, dropHit:false, landHit:false};
+
+  function score(t){
+    if(!soundOn || !actx) return;
+    // schedule ~600ms ahead of the visual timeline so audio is always sample-accurate
+    const lookaheadMs = 600;
+    const target = Math.min(t + lookaheadMs, DUR);
+    const beatsTotal = Math.ceil(DUR / BEAT);
+    let beatIdx = Math.floor(musicCursor / BEAT);
+    while (beatIdx * BEAT < target && beatIdx < beatsTotal){
+      const beatMs = beatIdx * BEAT;
+      const when = (actx.currentTime - (t - beatMs)/1000);
+      if (when >= actx.currentTime - 0.02){
+        kick(when);
+        noiseBurst(when + (BEAT/1000)/2, 0.045, 0.18, 7500); // off-beat hihat
+        if (beatIdx % 4 === 2){ noiseBurst(when, 0.11, 0.5, 1800); } // snare on beat 3 of bar
+        if (beatIdx % 4 === 0){
+          const barIdx = Math.floor(beatIdx/4) % BASSLINE.length;
+          bass(BASSLINE[barIdx], when, BEAT*2/1000 - 0.03);
+        }
+      }
+      beatIdx++;
+    }
+    musicCursor = beatIdx * BEAT;
+
+    // bright stab chords exactly on the three big drops
+    if (t >= 4*BEAT && !scoreState.boomHit){ scoreState.boomHit = true;
+      const when = actx.currentTime - (t - 4*BEAT)/1000;
+      if (when >= actx.currentTime - 0.05) stab(BOOM_CHORD, when, 0.7, 0.16);
+    }
+    if (t >= 8*BEAT && !scoreState.dropHit){ scoreState.dropHit = true;
+      const when = actx.currentTime - (t - 8*BEAT)/1000;
+      if (when >= actx.currentTime - 0.05) stab(DROP_CHORD, when, 0.9, 0.17);
+    }
+    if (t >= 17*BEAT && !scoreState.landHit){ scoreState.landHit = true;
+      const when = actx.currentTime - (t - 17*BEAT)/1000;
+      if (when >= actx.currentTime - 0.05) stab(LAND_CHORD, when, 1.3, 0.2);
+    }
+  }
+
+  function audioResume(){ if(!soundOn) return; if(actx&&actx.state==="suspended") actx.resume(); if(master) master.gain.linearRampToValueAtTime(0.85,(actx?actx.currentTime:0)+0.25); }
+  function audioSuspend(){ if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.15); }
+  function audioStop(){ scoreState={boomHit:false,dropHit:false,landHit:false}; if(actx&&master) master.gain.linearRampToValueAtTime(0.0,actx.currentTime+0.2); }
+
+  $("soundBtn").addEventListener("click",()=>{
+    soundOn=!soundOn; ensureAudio();
+    $("soundBtn").textContent= soundOn?"🔊 Sound on":"🔇 Sound off";
+    $("soundBtn").classList.toggle("active",soundOn);
+    if(soundOn){ if(actx&&actx.state==="suspended")actx.resume(); if(playing){audioResume();} }
+    else { audioSuspend(); }
+  });
+
+  // ---------- boot ----------
+  resetVisuals();
+  // show first frame poster (beat 1 visible, paused)
+  $("s1").classList.add("on"); $("b1-eye").classList.add("in"); $("b1-doc").classList.add("in");
+})();
+</script>
+</body></html>

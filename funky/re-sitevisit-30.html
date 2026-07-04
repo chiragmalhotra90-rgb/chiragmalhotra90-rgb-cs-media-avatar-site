@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Media — AI Presenter · RE 30s · Site Visit Starts Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --base:#04090c; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76; --green:#39f08e;
+  --dim:rgba(234,253,255,0.6); --faint:rgba(234,253,255,0.3); --line:rgba(150,190,205,0.22);
+  --disp:'Montserrat',Impact,'Arial Narrow',sans-serif; --body:'Inter',Arial,sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#000;color:var(--text);font-family:var(--body);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;padding:10px;}
+
+/* ---------------- STAGE (vertical 9:16 · 1cqi = 1% stage width) ---------------- */
+#stage{position:relative;width:min(430px,calc((100vh - 120px) * 0.5625));aspect-ratio:9/16;border-radius:16px;overflow:hidden;
+  container-type:inline-size;
+  background:
+    radial-gradient(120% 80% at 82% 8%, rgba(26,96,150,0.42), transparent 55%),
+    radial-gradient(120% 85% at 6% 96%, rgba(40,190,110,0.30), transparent 52%),
+    radial-gradient(ellipse at 50% 40%, #0b1622 0%, #050b10 62%, #04090c 100%);
+  box-shadow:0 0 0 1px rgba(0,229,255,0.14), 0 40px 120px -28px rgba(0,229,255,0.22), 0 30px 90px rgba(0,0,0,0.7);}
+
+/* layers */
+.layer{position:absolute;inset:0;}
+#bgFlash{z-index:2;background:#eafdff;opacity:0;pointer-events:none;mix-blend-mode:screen;}
+#skyLayer{z-index:4;display:flex;align-items:flex-start;justify-content:center;pointer-events:none;}
+#orbLayer{z-index:5;display:flex;align-items:flex-start;justify-content:center;pointer-events:none;}
+#csLayer{z-index:6;display:flex;align-items:flex-start;justify-content:center;pointer-events:none;}
+.scene{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 8%;text-align:center;
+  opacity:0;transition:opacity .3s ease;pointer-events:none;}
+.scene.on{opacity:1;}
+/* text is anchored so it can NEVER overlap the skyline, the orb, or the CS logo video */
+#sHook{padding-top:26cqi;}
+.scene.on.dimmed{opacity:0;} /* hook clears fully at the drop so the orb reveal is the single focal point */
+#sReveal{padding-top:60cqi;}
+#sHub{padding-top:64cqi;}
+#sBenefit{padding-top:76cqi;}
+#sCTA{padding-top:94cqi;}
+#footerLayer{z-index:40;pointer-events:none;}
+#capLayer{z-index:45;pointer-events:none;}
+#chrome{z-index:55;}
+#grain{z-index:60;pointer-events:none;opacity:0.05;mix-blend-mode:overlay;inset:-40%;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain .5s steps(2) infinite;}
+@keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-2%,1%)}100%{transform:translate(1%,-2%)}}
+#vig{z-index:59;pointer-events:none;background:radial-gradient(ellipse at center,transparent 46%,rgba(0,0,0,0.4) 88%,rgba(0,0,0,0.72) 100%);}
+
+/* ---------------- SKYLINE MOTIF (line-art silhouette + location pin — the orb takes over at the drop) ---------------- */
+.skyWrap{margin-top:82cqi;width:80cqi;transition:opacity .5s ease, transform .5s ease;filter:drop-shadow(0 0 3cqi rgba(0,229,255,.22));}
+.skyWrap.gone{opacity:0;transform:translateY(6cqi) scale(.96);}
+.skyWrap svg{display:block;width:100%;height:auto;overflow:visible;}
+.skyWrap .bl{fill:rgba(0,229,255,.03);stroke:rgba(0,229,255,.78);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:1;stroke-dashoffset:1;}
+.skyWrap .gnd{fill:none;stroke:rgba(125,249,255,.5);stroke-width:1.2;}
+.skyWrap .ant{fill:none;stroke:rgba(0,229,255,.6);stroke-width:1.4;}
+.skyWrap.in .bl{animation:draw 1s cubic-bezier(.4,0,.2,1) forwards;animation-delay:var(--d,0s);}
+@keyframes draw{to{stroke-dashoffset:0;}}
+.skyWrap .wins{opacity:0;stroke:rgba(125,249,255,.42);stroke-width:1.3;stroke-dasharray:3 4;stroke-linecap:round;}
+.skyWrap.in .wins{animation:winfade .8s ease .9s forwards;}
+@keyframes winfade{to{opacity:1;}}
+.skyWrap .pin{opacity:0;}
+.skyWrap .pin path{fill:rgba(57,240,142,.16);stroke:#39f08e;stroke-width:1.8;stroke-linejoin:round;}
+.skyWrap .pin circle{fill:#39f08e;}
+.skyWrap.pinned .pin{animation:pindrop .6s cubic-bezier(.3,1.4,.4,1) forwards;filter:drop-shadow(0 0 2cqi rgba(57,240,142,.7));}
+@keyframes pindrop{0%{opacity:0;transform:translateY(-30px);}60%{opacity:1;transform:translateY(4px);}100%{opacity:1;transform:translateY(0);}}
+.skyWrap .ping{fill:none;stroke:rgba(57,240,142,.7);stroke-width:1.4;opacity:0;transform-box:fill-box;transform-origin:center;}
+.skyWrap .ping.go{animation:ringgo .6s ease-out;}
+@keyframes ringgo{0%{opacity:.9;transform:scale(.5);}100%{opacity:0;transform:scale(2.4);}}
+
+/* ---------------- ORB (product logo — real video) ---------------- */
+.orbstack{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;
+  margin-top:84cqi;transition:margin-top .75s cubic-bezier(.16,1,.3,1);}
+.orbstack.hub{margin-top:24cqi;}
+#orb{position:relative;width:44cqi;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.6);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.16,1,.3,1), width .75s cubic-bezier(.16,1,.3,1);
+  will-change:transform,opacity;}
+#orb.show{opacity:1;transform:scale(1);}
+#orb.small{width:24cqi;}
+#orb video{width:118%;height:118%;object-fit:contain;mix-blend-mode:screen;filter:saturate(1.15) brightness(1.05);
+  -webkit-mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);
+  mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,0.5) 64%, transparent 74%);}
+#orb .halo{position:absolute;inset:-6%;border-radius:50%;pointer-events:none;
+  box-shadow:0 0 14cqi rgba(0,229,255,0.28), inset 0 0 9cqi rgba(57,240,142,0.15);}
+.orb-pulse{animation:orbpulse .3s ease;}
+@keyframes orbpulse{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
+/* "AI Presenter" wordmark — matches the product */
+.orbwm{font-family:var(--disp);font-weight:600;font-size:6.5cqi;letter-spacing:-0.01em;display:flex;gap:.14em;align-items:baseline;
+  opacity:0;transform:translateY(1.4cqi);transition:opacity .4s ease, transform .4s ease, font-size .75s cubic-bezier(.16,1,.3,1);margin-top:-2cqi;
+  text-shadow:0 .5cqi 3.5cqi rgba(4,9,12,0.9);}
+.orbwm.on{opacity:1;transform:none;}
+.orbwm.glow{text-shadow:0 0 5cqi rgba(0,229,255,.55), 0 .5cqi 3.5cqi rgba(4,9,12,0.9);}
+.orbstack.hub .orbwm{font-size:5cqi;}
+.orbwm .ai{font-weight:900;background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.orbwm .pr{font-weight:400;color:#f4feff;}
+
+/* ---------------- CS MEDIA graffiti logo (CTA only) ---------------- */
+.cswrap{position:relative;margin-top:32cqi;width:58cqi;opacity:0;transform:scale(.85);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);}
+.cswrap.show{opacity:1;transform:scale(1);}
+.cswrap video{width:100%;display:block;mix-blend-mode:screen;filter:saturate(1.1) brightness(1.04);
+  -webkit-mask:radial-gradient(ellipse 72% 68% at 50% 47%, #000 60%, transparent 100%);
+  mask:radial-gradient(ellipse 72% 68% at 50% 47%, #000 60%, transparent 100%);}
+.cs-pulse{animation:cspulse .32s ease;}
+@keyframes cspulse{0%{transform:scale(1)}40%{transform:scale(1.025)}100%{transform:scale(1)}}
+
+/* ---------------- KINETIC TEXT (cqi tiers per rulebook) ---------------- */
+.eyebrow{font-family:var(--mono);font-size:2.6cqi;letter-spacing:0.34em;text-transform:uppercase;color:var(--accent);
+  text-shadow:0 0 3cqi rgba(0,229,255,0.6);}
+.big{font-family:var(--disp);font-weight:800;line-height:1.06;letter-spacing:-0.01em;font-size:10cqi;margin-top:3cqi;}
+.big .cy{background:linear-gradient(120deg,#7df9ff,#00E5FF 45%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.big .wh{color:#f4feff;text-shadow:0 .5cqi 5cqi rgba(0,229,255,0.25);}
+.pop{opacity:0;transform:translateY(3cqi) scale(.94);}
+.pop.in{animation:pop .42s cubic-bezier(.2,1.3,.35,1) forwards;}
+@keyframes pop{to{opacity:1;transform:none;}}
+
+/* reveal line — subtitle tier; the orb + wordmark are the focal at the drop */
+.reveal{font-family:var(--disp);font-weight:700;line-height:1.22;letter-spacing:-0.01em;font-size:6.5cqi;
+  color:#f4feff;filter:drop-shadow(0 .6cqi 3cqi rgba(4,9,12,.85));}
+.reveal .cy{background:linear-gradient(120deg,#7df9ff,#00E5FF 45%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+.chipwrap{display:flex;flex-direction:column;gap:2.4cqi;align-items:center;transition:opacity .5s ease, transform .5s ease;}
+.chipwrap.dimmed{opacity:.5;transform:translateY(-1.5cqi);}
+.chiprow{display:flex;gap:2.2cqi;justify-content:center;flex-wrap:nowrap;}
+.chip{font-family:var(--mono);font-size:2.9cqi;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  color:#bdf6ff;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.35);border-radius:99px;
+  padding:1.5cqi 2.6cqi;white-space:nowrap;box-shadow:inset 0 0 3cqi rgba(0,229,255,0.08), 0 1.4cqi 4cqi rgba(0,0,0,0.35);
+  opacity:0;transform:scale(.8);}
+.chip.in{animation:chipin .4s cubic-bezier(.2,1.3,.35,1) forwards;}
+@keyframes chipin{to{opacity:1;transform:scale(1);}}
+
+.bodyblock{margin-top:7cqi;display:flex;flex-direction:column;gap:3.4cqi;align-items:center;
+  transition:transform .6s cubic-bezier(.16,1,.3,1);}
+.bodyblock.up{transform:translateY(-4cqi);}
+.bodyline{font-family:var(--body);font-weight:500;font-size:4.3cqi;line-height:1.45;max-width:78cqi;
+  color:rgba(234,253,255,.92);text-shadow:0 .5cqi 3cqi rgba(4,9,12,.9);}
+.bodyline b{font-weight:800;font-family:var(--disp);background:linear-gradient(120deg,#00E5FF,#39f08e);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.bodyline .lit{color:rgba(234,253,255,.92);transition:color .35s ease, text-shadow .35s ease;}
+.bodyline .lit.on{color:#8affc4;text-shadow:0 0 4cqi rgba(57,240,142,.6);}
+
+.benefit{font-family:var(--body);font-weight:600;font-size:5.6cqi;line-height:1.4;max-width:80cqi;
+  color:#eafdff;text-shadow:0 .5cqi 3cqi rgba(4,9,12,.9);}
+.benefit .live{color:rgba(234,253,255,.92);transition:color .35s ease, text-shadow .35s ease;}
+.benefit .live.lit{color:var(--green);text-shadow:0 0 4cqi rgba(57,240,142,.7);}
+
+.ctaline1{font-family:var(--disp);font-weight:700;font-size:6.4cqi;line-height:1.15;color:#f4feff;
+  text-shadow:0 .5cqi 4cqi rgba(0,229,255,0.2), 0 .5cqi 3cqi rgba(4,9,12,.9);}
+.ctaline2{font-family:var(--disp);font-weight:800;font-size:7.4cqi;line-height:1.15;margin-top:1.6cqi;
+  background:linear-gradient(120deg,#7df9ff,#00E5FF 45%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 .5cqi 3cqi rgba(4,9,12,.9));}
+
+/* ---------------- PERSISTENT FOOTER (client requirement · inside safe band) ---------------- */
+#footerLayer{display:flex;align-items:flex-end;justify-content:center;}
+#footerBar{margin-bottom:24cqi; /* bottom edge ≈ y 86.5% of stage height — never below 87% */
+  font-family:var(--body);font-weight:500;font-size:2.4cqi;letter-spacing:0.02em;white-space:nowrap;
+  color:rgba(234,253,255,0.8);background:rgba(4,10,14,0.6);border:1px solid rgba(150,190,205,0.18);
+  border-radius:99px;padding:1cqi 2.6cqi;backdrop-filter:blur(4px);
+  opacity:0;transform:translateY(1.5cqi);transition:opacity .8s ease, transform .8s ease;}
+#footerBar.on{opacity:1;transform:none;}
+
+/* ---------------- CAPTIONS (engine parity — unused in this cut, kept inside safe band) ---------------- */
+#cap{position:absolute;left:8%;right:8%;bottom:22%;text-align:center;font-family:var(--body);font-weight:600;
+  font-size:3.4cqi;line-height:1.4;opacity:0;transition:opacity .25s;
+  background:linear-gradient(100deg,#7df9ff,#eafdff 40%,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 .5cqi 2.4cqi rgba(0,0,0,0.8));}
+#cap.on{opacity:1;}
+
+/* ---------------- CHROME ---------------- */
+#tc{position:absolute;top:3.5%;right:5%;font-family:var(--mono);font-size:2cqi;letter-spacing:0.14em;color:var(--faint);}
+#beadge{position:absolute;top:3.5%;left:5%;font-family:var(--mono);font-size:2cqi;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);opacity:0.7;}
+#prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,0.08);}
+#prog>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0b6b76,#00E5FF,#39f08e);box-shadow:0 0 12px var(--accent);}
+#beatdot{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:7px;height:7px;border-radius:50%;background:var(--accent);opacity:0.25;}
+#beatdot.hit{animation:bd .18s ease;}
+@keyframes bd{0%{opacity:1;transform:translateX(-50%) scale(1.9)}100%{opacity:0.25;transform:translateX(-50%) scale(1)}}
+
+/* ---------------- CONTROLS ---------------- */
+#controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:99px;cursor:pointer;user-select:none;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--text);
+  font-family:var(--mono);font-size:0.62rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:.2s;}
+.ctl:hover{border-color:var(--accent);box-shadow:0 0 16px rgba(0,229,255,0.25);}
+.ctl.primary{background:var(--accent);color:#04090c;border-color:var(--accent);}
+.ctl.active{border-color:var(--accent);color:var(--accent);}
+.hint{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.08em;color:var(--faint);text-align:center;max-width:460px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:5px;padding:1px 5px;color:var(--text);}
+
+body.recording #controls,body.recording .hint,body.recording #chrome{display:none!important;}
+body.recording #stage{box-shadow:none;border-radius:0;}
+
+/* full-screen logo-matched backgrounds — the orb clip and the CS graffiti clip both
+   sit on pure black, so during those scenes the whole stage goes black with a soft
+   glow sampled from the logo's own palette; the video box edge disappears entirely */
+#matchBg{opacity:0;transition:opacity .7s ease;background:#000;}
+#matchBg.on{opacity:1;}
+#matchBg.orbbg{background:
+  radial-gradient(60% 45% at 50% 44%, rgba(0,160,255,0.16), transparent 70%),
+  radial-gradient(50% 40% at 42% 58%, rgba(57,240,142,0.12), transparent 70%),
+  #000;}
+#matchBg.csbg{background:
+  radial-gradient(55% 42% at 50% 42%, rgba(64,200,255,0.15), transparent 70%),
+  radial-gradient(45% 38% at 62% 58%, rgba(255,122,0,0.11), transparent 70%),
+  #000;}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <!-- background flash for beat hits -->
+  <div class="layer" id="matchBg"></div>
+  <div class="layer" id="bgFlash"></div>
+
+  <!-- SKYLINE MOTIF (minimal line-art + location pin — exits at the drop) -->
+  <div class="layer" id="skyLayer">
+    <div class="skyWrap" id="skyline">
+      <svg viewBox="0 0 360 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- ground -->
+        <path class="bl gnd" style="--d:0s" pathLength="1" d="M8 152 H352"/>
+        <!-- buildings (drawn in on the first downbeat) -->
+        <path class="bl" style="--d:.05s" pathLength="1" d="M22 152 V96 H58 V152"/>
+        <path class="bl" style="--d:.15s" pathLength="1" d="M66 152 V64 H102 V152"/>
+        <path class="bl ant" style="--d:.55s" pathLength="1" d="M84 64 V46"/>
+        <path class="bl" style="--d:.25s" pathLength="1" d="M118 152 V40 H136 V30 H160 V40 H178 V152"/>
+        <path class="bl" style="--d:.35s" pathLength="1" d="M186 152 V80 H224 V152"/>
+        <path class="bl" style="--d:.45s" pathLength="1" d="M232 152 V56 H284 V152"/>
+        <path class="bl ant" style="--d:.6s" pathLength="1" d="M258 56 V38"/>
+        <path class="bl" style="--d:.5s" pathLength="1" d="M292 152 V104 H336 V152"/>
+        <!-- window hints -->
+        <g class="wins">
+          <path d="M28 110 H52"/><path d="M28 124 H52"/>
+          <path d="M72 78 H96"/><path d="M72 94 H96"/><path d="M72 110 H96"/>
+          <path d="M125 54 H171"/><path d="M125 70 H171"/><path d="M125 86 H171"/><path d="M125 102 H171"/>
+          <path d="M192 94 H218"/><path d="M192 110 H218"/>
+          <path d="M239 70 H277"/><path d="M239 86 H277"/><path d="M239 104 H277"/>
+          <path d="M298 118 H330"/><path d="M298 132 H330"/>
+        </g>
+        <!-- location pin over the hero tower (drops on beat 2) -->
+        <ellipse class="ping" id="pinRing" cx="148" cy="31" rx="11" ry="3.2"/>
+        <g transform="translate(148,26)">
+          <g class="pin" id="pinG">
+            <path d="M0 -34 C-7.7 -34 -14 -27.7 -14 -20 C-14 -10 0 4 0 4 C0 4 14 -10 14 -20 C14 -27.7 7.7 -34 0 -34 Z"/>
+            <circle cx="0" cy="-20" r="4.6"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ORB (product logo — real video) + wordmark -->
+  <div class="layer" id="orbLayer">
+    <div class="orbstack" id="orbStack">
+      <div id="orb">
+        <div class="halo"></div>
+        <video id="orbVid" poster="assets/orb-poster.jpg" muted loop playsinline preload="auto"><source src="assets/orb.webm" type="video/webm"><source src="assets/orb.mp4" type="video/mp4"></video>
+      </div>
+      <div class="orbwm" id="orbWM"><span class="ai">AI</span><span class="pr">Presenter</span></div>
+    </div>
+  </div>
+
+  <!-- CS MEDIA graffiti logo (CTA section only) -->
+  <div class="layer" id="csLayer">
+    <div class="cswrap" id="csWrap">
+      <video id="csVid" poster="assets/cs-logo-poster.jpg" muted loop playsinline preload="auto"><source src="assets/cs-logo.webm" type="video/webm"><source src="assets/cs-logo.mp4" type="video/mp4"></video>
+    </div>
+  </div>
+
+  <!-- SCENES (kinetic text — always above props, never overlapping them) -->
+  <section class="scene" id="sHook">
+    <div class="eyebrow pop" id="eyeb">MUMBAI REAL ESTATE</div>
+    <h1 class="big">
+      <span class="pop" id="hk1" style="display:block"><span class="wh">The site visit</span></span>
+      <span class="pop" id="hk2" style="display:block"><span class="cy">starts online.</span></span>
+    </h1>
+  </section>
+
+  <section class="scene" id="sReveal">
+    <div class="reveal pop" id="rev">Meet buyers<br><span class="cy">before they arrive.</span></div>
+  </section>
+
+  <section class="scene" id="sHub">
+    <div class="chipwrap" id="chipWrap">
+      <div class="chiprow">
+        <span class="chip" id="c1">Location</span>
+        <span class="chip" id="c2">Amenities</span>
+        <span class="chip" id="c3">Layouts</span>
+      </div>
+      <div class="chiprow">
+        <span class="chip" id="c4">Prices</span>
+        <span class="chip" id="c5">Payment Plans</span>
+      </div>
+    </div>
+    <div class="bodyblock" id="bodyBlock">
+      <div class="bodyline pop" id="b1"><b>All explained</b> — <span class="lit" id="bLit">before the buyer books a visit.</span></div>
+    </div>
+  </section>
+
+  <section class="scene" id="sBenefit">
+    <div class="benefit pop" id="ben">Fewer cold visits.<br><span class="live" id="liveWord">More serious buyers.</span></div>
+  </section>
+
+  <section class="scene" id="sCTA">
+    <div class="ctaline1 pop" id="cta1">The site visit</div>
+    <div class="ctaline2 pop" id="cta2">starts online.</div>
+  </section>
+
+  <!-- PERSISTENT FOOTER (fades in on the first downbeat, stays through the end hold) -->
+  <div class="layer" id="footerLayer">
+    <div id="footerBar">AI Presenter · 📞 7755883886 · ✉️ info@csmediaandproduction.in</div>
+  </div>
+
+  <!-- caption track (engine parity — unused in this cut) -->
+  <div class="layer" id="capLayer"><div id="cap"></div></div>
+
+  <!-- chrome -->
+  <div class="layer" id="chrome">
+    <span id="beadge">HOOK</span>
+    <span id="tc">0:00 / 0:30</span>
+    <div id="beatdot"></div>
+    <div id="prog"><i id="progbar"></i></div>
+  </div>
+
+  <div class="layer" id="grain"></div>
+  <div class="layer" id="vig"></div>
+</div>
+
+<!-- REAL music: client track, already trimmed to the post-2:00 section -->
+<audio id="music" src="assets/track.mp3" preload="auto"></audio>
+
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  30s spot · every cut &amp; effect lands on a real detected beat (the drop hits at 5.22s).<br>
+  <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>S</kbd> sound · <kbd>C</kbd> clean mode — hides all chrome for a full-frame screen recording.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const DUR = 30.0; // seconds (audio-clock authoritative)
+
+  // ---- real detected beats (seconds, from the trimmed track) ----
+  const BEATS = [0.116,0.534,0.952,1.37,1.788,2.229,2.647,3.065,3.506,3.947,4.365,4.807,5.224,5.642,6.06,6.502,6.92,7.361,7.779,8.22,8.638,9.079,9.497,9.938,10.356,10.797,11.215,11.656,12.074,12.516,12.934,13.351,13.793,14.234,14.652,15.07,15.511,15.952,16.37,16.788,17.229,17.67,18.088,18.506,18.924,19.365,19.783,20.225,20.643,21.084,21.502,21.943,22.361,22.802,23.22,23.661,24.079,24.52,24.938,25.379,25.797,26.215,26.657,27.098,27.492,27.934,28.352,28.793,29.211,29.652,30.07];
+
+  // ---- content cues, snapped to real downbeats (chips pop on alternating beats). Fired once past t. ----
+  const cues = [
+    // HOOK — skyline motif draws in + eyebrow + persistent footer; pin drops on beat 2
+    {t:0.12, f:()=>{ show('sHook'); $('eyeb').classList.add('in'); $('footerBar').classList.add('on'); $('skyline').classList.add('in'); }},
+    {t:0.95, f:()=>{ $('skyline').classList.add('pinned'); ping(); }},
+    {t:1.79, f:()=>{ $('hk1').classList.add('in'); }},
+    {t:3.51, f:()=>{ $('hk2').classList.add('in'); }},
+    // THE DROP at 5.22 — flash, skyline out, orb ignites + wordmark, reveal line lands
+    {t:5.22, f:()=>{ flash(1); $('skyline').classList.add('gone');
+                     $('sHook').classList.add('dimmed'); $('eyeb').classList.remove('in');
+                     orbShow(); $('orbWM').classList.add('on'); show('sReveal'); $('rev').classList.add('in'); }},
+    {t:6.92, f:()=>{ flash(.22); $('orbWM').classList.add('glow'); }},
+    // FEATURES — orb docks small up top; chips pop on beats (and stay on screen)
+    {t:8.64, f:()=>{ hide('sHook'); hide('sReveal'); $('orbStack').classList.add('hub'); $('orb').classList.add('small'); show('sHub'); }},
+    {t:10.36,f:()=>{ chip('c1'); flash(.14); }},
+    {t:11.22,f:()=>{ chip('c2'); }},
+    {t:12.07,f:()=>{ chip('c3'); flash(.12); }},
+    {t:12.93,f:()=>{ chip('c4'); }},
+    {t:13.79,f:()=>{ chip('c5'); flash(.16); }},
+    // STORY — locked body line (holds ≥2.5s; only its emphasis colour changes after)
+    {t:15.51,f:()=>{ $('b1').classList.add('in'); }},
+    {t:17.23,f:()=>{ $('bLit').classList.add('on'); flash(.14); }},
+    {t:18.92,f:()=>{ $('chipWrap').classList.add('dimmed'); $('bodyBlock').classList.add('up'); flash(.15); }},
+    // BENEFIT — locked benefit line
+    {t:20.64,f:()=>{ hide('sHub'); show('sBenefit'); $('ben').classList.add('in'); }},
+    {t:22.36,f:()=>{ $('liveWord').classList.add('lit'); flash(.18); }},
+    // CTA — CS Media graffiti logo + CTA line (footer stays)
+    {t:24.08,f:()=>{ hide('sBenefit'); orbHide(); $('orbWM').classList.remove('on','glow'); flash(.45);
+                     csShow(); show('sCTA'); $('cta1').classList.add('in'); }},
+    {t:25.80,f:()=>{ $('cta2').classList.add('in'); }},
+    // STATIC END HOLD from 27.49 — no text changes; logo keeps looping; audio fades last 0.7s
+    {t:27.49,f:()=>{ flash(.4); }},
+    {t:29.21,f:()=>{ flash(.22); }},
+  ];
+
+  // section badges by time
+  const badge = (t)=> t<5.22?'HOOK': t<8.64?'THE DROP': t<15.51?'FEATURES': t<20.64?'STORY': t<24.08?'BENEFIT':'CTA';
+
+  // ---- helpers ----
+  function show(id){ $(id).classList.add('on'); }
+  function hide(id){ $(id).classList.remove('on'); }
+  function cap(txt){ const c=$('cap'); if(!txt){ c.classList.remove('on'); return;} c.textContent=txt; c.classList.add('on'); }
+  function flash(a){ const f=$('bgFlash'); f.style.transition='none'; f.style.opacity=a; requestAnimationFrame(()=>{ f.style.transition='opacity .5s ease'; f.style.opacity=0; }); }
+  function orbShow(){ $('matchBg').className='layer on orbbg'; $('orb').classList.add('show'); const v=$('orbVid'); if(v&&v.paused) v.play().catch(()=>{}); }
+  function orbHide(){ if($('matchBg').classList.contains('orbbg')) $('matchBg').className='layer'; $('orb').classList.remove('show'); }
+  function chip(id){ $(id).classList.add('in'); }
+  function csShow(){ $('matchBg').className='layer on csbg'; $('csWrap').classList.add('show'); const v=$('csVid'); if(v&&v.paused) v.play().catch(()=>{}); }
+  function ping(){ const r=$('pinRing'); r.classList.remove('go'); void r.getBoundingClientRect(); r.classList.add('go'); }
+
+  function resetAll(){
+    fired.clear(); lastBeat=-1; $('matchBg').className='layer';
+    document.querySelectorAll('.scene').forEach(s=>s.classList.remove('on'));
+    ['eyeb','hk1','hk2','rev','c1','c2','c3','c4','c5','b1','ben','cta1','cta2'].forEach(id=>$(id).classList.remove('in'));
+    $('sHook').classList.remove('dimmed');
+    $('skyline').classList.remove('in','pinned','gone'); $('pinRing').classList.remove('go');
+    $('bLit').classList.remove('on'); $('chipWrap').classList.remove('dimmed'); $('bodyBlock').classList.remove('up');
+    $('liveWord').classList.remove('lit');
+    $('orb').classList.remove('show','small','orb-pulse'); $('orbStack').classList.remove('hub');
+    $('orbWM').classList.remove('on','glow');
+    $('csWrap').classList.remove('show','cs-pulse'); if(csVid) csVid.pause();
+    $('footerBar').classList.remove('on');
+    $('cap').classList.remove('on');
+    $('progbar').style.width='0%';
+  }
+
+  // ---- clock: audio.currentTime is authoritative; perf fallback if muted/failed ----
+  let raf=null, playing=false, fired=new Set(), lastBeat=-1, perfStart=0, usePerf=false;
+  const music=$('music'), orbVid=$('orbVid'), csVid=$('csVid');
+
+  function clock(){ // seconds
+    if(!usePerf && music && music.readyState>=1 && !music.paused) return music.currentTime;
+    return (performance.now()-perfStart)/1000;
+  }
+  function fmt(s){ s=Math.max(0,Math.floor(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+  function frame(){
+    const t=clock();
+    for(const c of cues){ if(t>=c.t && !fired.has(c)){ fired.add(c); try{c.f();}catch(e){} } }
+    // beat pulses
+    for(let i=lastBeat+1;i<BEATS.length;i++){ if(t>=BEATS[i]){ onBeat(i); lastBeat=i; } else break; }
+    $('progbar').style.width=Math.min(100,t/DUR*100)+'%';
+    $('tc').textContent=fmt(t)+' / 0:30';
+    $('beadge').textContent=badge(t);
+    if(music && t>DUR-0.7){ music.volume=Math.max(0,(DUR-t)/0.7); } // gentle fade-out on the last beat
+    if(t>=DUR){ stop(true); return; }
+    raf=requestAnimationFrame(frame);
+  }
+
+  function onBeat(i){
+    const dot=$('beatdot'); dot.classList.remove('hit'); void dot.offsetWidth; dot.classList.add('hit');
+    // orb throbs every beat once ignited
+    const orb=$('orb'); if(orb.classList.contains('show')){ orb.classList.remove('orb-pulse'); void orb.offsetWidth; orb.classList.add('orb-pulse'); }
+    // downbeats (every 4th) = stronger accents
+    if(i%4===0){
+      // location pin ripples with the music while the skyline is up
+      const sk=$('skyline');
+      if(sk.classList.contains('pinned') && !sk.classList.contains('gone')) ping();
+      // the CS logo breathes gently in the CTA section
+      const cw=$('csWrap'); if(cw.classList.contains('show')){ cw.classList.remove('cs-pulse'); void cw.offsetWidth; cw.classList.add('cs-pulse'); }
+    }
+  }
+
+  // ---- transport ----
+  function play(){
+    if(playing) return; playing=true; $('playBtn').textContent='⏸ Pause';
+    if(clock()>=DUR-0.01){ hardRestart(); }
+    perfStart=performance.now()-clock()*1000;
+    if(music){ music.muted=!soundOn; const p=music.play(); if(p&&p.catch)p.catch(()=>{usePerf=true;}); }
+    if(orbVid && $('orb').classList.contains('show')) orbVid.play().catch(()=>{});
+    if(csVid && $('csWrap').classList.contains('show')) csVid.play().catch(()=>{});
+    raf=requestAnimationFrame(frame);
+  }
+  function pause(){ playing=false; $('playBtn').textContent='▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); if(orbVid)orbVid.pause(); if(csVid)csVid.pause(); }
+  function stop(ended){ playing=false; $('playBtn').textContent=ended?'↺ Replay':'▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); }
+  function hardRestart(){ if(music){ try{music.currentTime=0; music.volume=1;}catch(e){} } perfStart=performance.now(); resetAll(); }
+  function toggle(){ playing?pause():play(); }
+
+  let soundOn=true; // sound DEFAULT ON from the first Play
+  $('playBtn').addEventListener('click',toggle);
+  $('restartBtn').addEventListener('click',()=>{ pause(); hardRestart(); play(); });
+  $('soundBtn').addEventListener('click',()=>{ soundOn=!soundOn; if(music)music.muted=!soundOn; $('soundBtn').textContent=soundOn?'🔊 Sound on':'🔇 Muted'; $('soundBtn').classList.toggle('active',soundOn); });
+  $('recBtn').addEventListener('click',()=>{ document.body.classList.toggle('recording'); $('recBtn').classList.toggle('active'); });
+  document.addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault();toggle();} else if(e.key==='r'||e.key==='R'){pause();hardRestart();play();} else if(e.key==='c'||e.key==='C'){$('recBtn').click();} else if(e.key==='s'||e.key==='S'){$('soundBtn').click();} });
+
+  resetAll();
+})();
+</script>
+</body></html>
