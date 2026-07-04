@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Presenter — the friendly explainer (Sparky's story)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   "SPARKY EXPLAINS AI PRESENTER" — a kid-simple animated explainer
+   16:9 master · 186s · deterministic timeline (__seek) for MP4 render.
+   Cast: Rohan the builder · Snoozy the brochure · SPARKY the AI-orb.
+   VO script lives in the CAPS array (narration = captions, karaoke pace).
+   Drop per-scene voice files at assets/vo/exp-s1.mp3 … exp-s8.mp3 and the
+   interactive player auto-plays them; for the MP4, mux with ffmpeg.
+   ============================================================ */
+:root{
+  --sky1:#aee7ff; --sky2:#e8f9ff; --grass:#8fdf76; --sun:#ffd76b;
+  --ink:#20303c; --card:#ffffff; --brandA:#00b5d8; --brandB:#39c06e;
+  --orange:#ff8a3d; --red:#ff6b6b; --night1:#28356e; --night2:#0e1533;
+  --fun:'Baloo 2','Fredoka','Comic Sans MS','Arial Rounded MT Bold',Verdana,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;background:#0b1420;color:var(--ink);font-family:var(--fun);overflow:hidden;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;padding:10px;}
+#stage{position:relative;width:min(94vw,calc((100vh - 110px)*1.7778),1100px);aspect-ratio:16/9;border-radius:16px;overflow:hidden;
+  container-type:inline-size;background:linear-gradient(180deg,var(--sky1),var(--sky2) 62%,var(--grass) 62.2%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.25), 0 30px 90px rgba(0,0,0,.5);}
+body.render{padding:0;gap:0;}
+body.render #stage{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;box-shadow:none;}
+body.render #controls,body.render .hint,body.render #chrome{display:none!important;}
+body.recording #controls,body.recording .hint,body.recording #chrome{display:none!important;}
+
+.layer{position:absolute;inset:0;}
+.scene{position:absolute;inset:0;opacity:0;will-change:opacity;}
+svg{display:block;overflow:visible;}
+
+/* night overlay for the problem scene */
+#nightBg{opacity:0;background:linear-gradient(180deg,var(--night1),var(--night2) 62%,#1c4030 62.2%);}
+/* brand end-card bg */
+#brandBg{opacity:0;background:
+  radial-gradient(55% 45% at 50% 40%, rgba(0,160,255,.16), transparent 70%),
+  radial-gradient(45% 40% at 42% 60%, rgba(57,240,142,.12), transparent 70%), #000;}
+
+/* ---------- captions (the narration, kid-big) ---------- */
+#capWrap{position:absolute;left:6%;right:6%;bottom:5.5%;display:flex;justify-content:center;pointer-events:none;z-index:40;}
+#cap{max-width:88%;background:rgba(255,255,255,.94);border:0.35cqi solid var(--ink);border-radius:3cqi;
+  padding:1.4cqi 2.6cqi;font-family:var(--fun);font-weight:700;font-size:2.55cqi;line-height:1.35;color:var(--ink);
+  text-align:center;box-shadow:0 .8cqi 0 rgba(32,48,60,.25);opacity:0;}
+.night #cap{background:rgba(255,255,255,.96);}
+#cap b{color:var(--orange);}
+#cap .sp{color:var(--brandA);}
+
+/* ---------- chrome / controls ---------- */
+#chrome{z-index:55;pointer-events:none;}
+#tc{position:absolute;top:3%;right:2.5%;font-family:var(--fun);font-weight:700;font-size:1.7cqi;color:rgba(32,48,60,.55);}
+#beadge{position:absolute;top:3%;left:2.5%;font-family:var(--fun);font-weight:800;font-size:1.7cqi;letter-spacing:.06em;text-transform:uppercase;color:rgba(32,48,60,.55);}
+.night #tc,.night #beadge,.brand #tc,.brand #beadge{color:rgba(255,255,255,.5);}
+#prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(0,0,0,.15);}
+#prog>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brandA),var(--brandB));}
+#controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.ctl{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:99px;cursor:pointer;user-select:none;
+  background:#fff;border:2px solid var(--ink);color:var(--ink);font-family:var(--fun);font-size:0.72rem;font-weight:700;box-shadow:0 3px 0 rgba(32,48,60,.35);}
+.ctl.primary{background:var(--brandB);color:#fff;}
+.ctl.active{background:var(--brandA);color:#fff;}
+.hint{font-family:var(--fun);font-size:0.62rem;color:rgba(255,255,255,.55);text-align:center;max-width:560px;line-height:1.6;}
+.hint kbd{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:1px 5px;color:#fff;}
+
+/* ---------- reusable cartoon bits ---------- */
+.pop{transform-origin:center;}
+.chip{position:absolute;background:#fff;border:0.32cqi solid var(--ink);border-radius:2.2cqi;padding:1cqi 1.8cqi;
+  font-weight:800;font-size:2.1cqi;color:var(--ink);box-shadow:0 .6cqi 0 rgba(32,48,60,.25);white-space:nowrap;}
+.chip .ok{color:var(--brandB);} .chip .no{color:var(--red);}
+.bigword{position:absolute;left:0;right:0;text-align:center;font-weight:800;color:var(--ink);}
+
+/* end card */
+#s8 .orbreal{position:absolute;left:50%;top:23%;transform:translate(-50%,-50%);width:24cqi;aspect-ratio:1;display:flex;align-items:center;justify-content:center;}
+#s8 .orbreal video,#s8 .orbreal img{width:118%;height:118%;object-fit:contain;mix-blend-mode:screen;
+  -webkit-mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,.5) 64%, transparent 74%);
+  mask:radial-gradient(circle at 50% 47%, #000 50%, rgba(0,0,0,.5) 64%, transparent 74%);}
+#s8 .wm{position:absolute;left:0;right:0;top:40%;text-align:center;font-family:var(--fun);font-weight:800;font-size:6cqi;color:#f4feff;}
+#s8 .wm .ai{background:linear-gradient(120deg,#00E5FF,#39f08e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+#s8 .tagl{position:absolute;left:0;right:0;top:50%;text-align:center;font-weight:700;font-size:2.9cqi;color:#cfe9f5;}
+#s8 .tagl b{color:#39f08e;}
+#s8 .contact{position:absolute;left:50%;top:58%;transform:translateX(-50%);background:rgba(255,255,255,.08);
+  border:1px solid rgba(0,229,255,.35);border-radius:2.4cqi;padding:1cqi 2.6cqi;text-align:center;
+  font-weight:700;font-size:1.8cqi;color:#eafdff;line-height:1.5;}
+#s8 .contact .ph{font-size:2.7cqi;color:#ffd76b;letter-spacing:.06em;}
+#s8 .contact .site{color:#7df9ff;font-size:1.6cqi;}
+</style>
+</head>
+<body>
+
+<div id="stage" data-duration="186">
+  <div class="layer" id="nightBg"></div>
+  <div class="layer" id="brandBg"></div>
+
+  <!-- ================= S1 · MEET ROHAN (0–18) ================= -->
+  <div class="scene" id="s1">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <circle cx="1380" cy="130" r="80" fill="#ffd76b" stroke="#20303c" stroke-width="6" id="sun"/>
+      <circle cx="1355" cy="118" r="9" fill="#20303c"/><circle cx="1405" cy="118" r="9" fill="#20303c"/>
+      <path d="M1355 152 q25 20 50 0" stroke="#20303c" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <g id="cloud1"><ellipse cx="300" cy="140" rx="90" ry="38" fill="#fff"/><ellipse cx="370" cy="120" rx="70" ry="34" fill="#fff"/></g>
+      <g id="cloud2"><ellipse cx="900" cy="90" rx="80" ry="32" fill="#fff"/><ellipse cx="960" cy="75" rx="55" ry="26" fill="#fff"/></g>
+      <!-- city -->
+      <g stroke="#20303c" stroke-width="6">
+        <rect x="120" y="330" width="180" height="240" rx="10" fill="#b8c8e8"/>
+        <rect x="360" y="270" width="160" height="300" rx="10" fill="#f2c19a"/>
+        <rect x="1180" y="300" width="190" height="270" rx="10" fill="#cbb3e6"/>
+      </g>
+      <!-- Rohan's NEW building (hero) -->
+      <g id="heroBldg" stroke="#20303c" stroke-width="7">
+        <rect x="700" y="180" width="260" height="390" rx="14" fill="#7fd0a3"/>
+        <g fill="#fff8d9" stroke-width="5">
+          <rect x="730" y="215" width="52" height="52" rx="8"/><rect x="804" y="215" width="52" height="52" rx="8"/><rect x="878" y="215" width="52" height="52" rx="8"/>
+          <rect x="730" y="300" width="52" height="52" rx="8"/><rect x="804" y="300" width="52" height="52" rx="8"/><rect x="878" y="300" width="52" height="52" rx="8"/>
+          <rect x="730" y="385" width="52" height="52" rx="8"/><rect x="804" y="385" width="52" height="52" rx="8"/><rect x="878" y="385" width="52" height="52" rx="8"/>
+        </g>
+        <rect x="795" y="480" width="70" height="90" rx="8" fill="#20303c"/>
+        <path d="M690 180 L830 96 L970 180 Z" fill="#ff8a3d"/>
+      </g>
+      <g id="spark1" fill="#ffd76b" stroke="#20303c" stroke-width="4">
+        <path d="M660 150 l8 20 20 8 -20 8 -8 20 -8 -20 -20 -8 20 -8 z"/>
+        <path d="M1000 130 l7 17 17 7 -17 7 -7 17 -7 -17 -17 -7 17 -7 z"/>
+      </g>
+      <!-- Rohan -->
+      <g id="rohan" transform="translate(0,-80)">
+        <ellipse cx="520" cy="792" rx="70" ry="14" fill="rgba(32,48,60,.18)"/>
+        <rect x="480" y="660" width="80" height="110" rx="26" fill="#4a90d9" stroke="#20303c" stroke-width="6"/>
+        <circle cx="520" cy="612" r="46" fill="#ffd9b3" stroke="#20303c" stroke-width="6"/>
+        <path d="M470 596 a52 52 0 0 1 100 0 l6 -2 a10 10 0 0 0 0-14 l-112 0 a10 10 0 0 0 0 14 z" fill="#f7c948" stroke="#20303c" stroke-width="6"/>
+        <rect x="466" y="574" width="108" height="16" rx="8" fill="#f7c948" stroke="#20303c" stroke-width="5"/>
+        <circle cx="504" cy="614" r="5.5" fill="#20303c"/><circle cx="536" cy="614" r="5.5" fill="#20303c"/>
+        <path d="M504 634 q16 12 32 0" stroke="#20303c" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <g id="rohanArm"><rect x="552" y="668" width="18" height="74" rx="9" fill="#ffd9b3" stroke="#20303c" stroke-width="5" transform-origin="561px 672px"/></g>
+      </g>
+      <text x="520" y="745" text-anchor="middle" font-family="Baloo 2,Verdana" font-weight="800" font-size="40" fill="#20303c" stroke="#ffffff" stroke-width="10" paint-order="stroke" id="rohanTag">ROHAN · BUILDER</text>
+    </svg>
+  </div>
+
+  <!-- ================= S2 · SNOOZY THE BROCHURE (18–42) ================= -->
+  <div class="scene" id="s2">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <circle cx="1350" cy="140" r="62" fill="#f6f2d8" stroke="#20303c" stroke-width="6"/>
+      <circle cx="1330" cy="128" r="14" fill="#e4dfc0"/><circle cx="1368" cy="158" r="9" fill="#e4dfc0"/>
+      <g fill="#fff"><circle cx="200" cy="120" r="4"/><circle cx="420" cy="80" r="3"/><circle cx="640" cy="140" r="4"/><circle cx="1050" cy="90" r="3"/><circle cx="880" cy="60" r="3"/></g>
+      <!-- Snoozy: the sleeping brochure -->
+      <g id="snoozy">
+        <ellipse cx="560" cy="700" rx="120" ry="18" fill="rgba(0,0,0,.3)"/>
+        <rect x="450" y="360" width="220" height="320" rx="16" fill="#fdfdf6" stroke="#20303c" stroke-width="7"/>
+        <rect x="478" y="392" width="164" height="60" rx="8" fill="#cdd7db"/>
+        <rect x="478" y="470" width="164" height="12" rx="6" fill="#cdd7db"/>
+        <rect x="478" y="496" width="130" height="12" rx="6" fill="#cdd7db"/>
+        <path d="M515 560 a10 10 0 0 1 20 0" stroke="#20303c" stroke-width="6" fill="none"/>
+        <path d="M585 560 a10 10 0 0 1 20 0" stroke="#20303c" stroke-width="6" fill="none"/>
+        <ellipse cx="560" cy="608" rx="14" ry="9" fill="#20303c"/>
+      </g>
+      <text id="zz1" x="700" y="380" font-family="Baloo 2,Verdana" font-weight="800" font-size="52" fill="#9fb4ff">z</text>
+      <text id="zz2" x="740" y="330" font-family="Baloo 2,Verdana" font-weight="800" font-size="66" fill="#9fb4ff">Z</text>
+      <text id="zz3" x="790" y="270" font-family="Baloo 2,Verdana" font-weight="800" font-size="82" fill="#9fb4ff">Z</text>
+      <!-- buyer with phone -->
+      <g id="buyer">
+        <rect x="1050" y="640" width="66" height="96" rx="22" fill="#e07a9a" stroke="#20303c" stroke-width="6"/>
+        <circle cx="1083" cy="600" r="38" fill="#ffd9b3" stroke="#20303c" stroke-width="6"/>
+        <circle cx="1070" cy="600" r="5" fill="#20303c"/><circle cx="1096" cy="600" r="5" fill="#20303c"/>
+        <path d="M1072 620 q11 -8 22 0" stroke="#20303c" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <rect x="1120" y="640" width="34" height="58" rx="8" fill="#20303c"/>
+        <rect x="1126" y="648" width="22" height="38" rx="4" fill="#9fdcff"/>
+      </g>
+      <g id="qbub">
+        <rect x="1010" y="420" width="330" height="90" rx="24" fill="#fff" stroke="#20303c" stroke-width="6"/>
+        <path d="M1100 510 l16 34 22 -32 z" fill="#fff" stroke="#20303c" stroke-width="6"/>
+        <text x="1175" y="478" text-anchor="middle" font-family="Baloo 2,Verdana" font-weight="700" font-size="36" fill="#20303c">How much is it?</text>
+      </g>
+      <text id="noreply" x="560" y="250" text-anchor="middle" font-family="Baloo 2,Verdana" font-weight="800" font-size="56" fill="#ff6b6b">…no reply 😴</text>
+    </svg>
+  </div>
+
+  <!-- ================= S3 · MEET SPARKY (42–62) ================= -->
+  <div class="scene" id="s3">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <!-- browser window -->
+      <g id="browser">
+        <rect x="380" y="150" width="840" height="560" rx="26" fill="#fff" stroke="#20303c" stroke-width="8"/>
+        <rect x="380" y="150" width="840" height="80" rx="26" fill="#e8f1f5" stroke="#20303c" stroke-width="8"/>
+        <circle cx="440" cy="190" r="12" fill="#ff6b6b"/><circle cx="480" cy="190" r="12" fill="#ffd76b"/><circle cx="520" cy="190" r="12" fill="#8fdf76"/>
+        <rect x="580" y="172" width="480" height="38" rx="19" fill="#fff" stroke="#20303c" stroke-width="5"/>
+        <text x="600" y="200" font-family="Baloo 2,Verdana" font-weight="600" font-size="26" fill="#5b7383">ai.csmediaandproduction.in</text>
+      </g>
+      <!-- SPARKY -->
+      <g id="sparky">
+        <circle cx="800" cy="470" r="130" fill="url(#sparkGrad)" stroke="#20303c" stroke-width="8"/>
+        <path d="M735 380 q60 40 0 90 q-50 45 20 90" stroke="rgba(255,255,255,.5)" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <g id="sparkyEyes">
+          <circle cx="762" cy="450" r="21" fill="#fff"/><circle cx="838" cy="450" r="21" fill="#fff"/>
+          <circle cx="766" cy="455" r="10" fill="#20303c" id="pupL"/><circle cx="842" cy="455" r="10" fill="#20303c" id="pupR"/>
+        </g>
+        <path id="sparkyMouth" d="M765 515 q35 26 70 0" stroke="#20303c" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path d="M712 384 l10 24 24 10 -24 10 -10 24 -10 -24 -24 -10 24 -10 z" fill="#fff" opacity=".9"/>
+      </g>
+      <text x="800" y="670" text-anchor="middle" font-family="Baloo 2,Verdana" font-weight="800" font-size="46" fill="#20303c" id="sparkyTag">SPARKY · AI PRESENTER ✨</text>
+    </svg>
+    <div class="chip" id="c3a" style="left:8%;top:30%">No downloads! <span class="ok">✓</span></div>
+    <div class="chip" id="c3b" style="right:7%;top:42%">Never sleeps! <span class="ok">✓</span></div>
+  </div>
+
+  <!-- ================= S4 · SPARKY'S POWERS (62–92) ================= -->
+  <div class="scene" id="s4">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <g id="sparky4">
+        <circle cx="420" cy="480" r="115" fill="url(#sparkGrad)" stroke="#20303c" stroke-width="8"/>
+        <circle cx="388" cy="462" r="18" fill="#fff"/><circle cx="452" cy="462" r="18" fill="#fff"/>
+        <circle cx="392" cy="466" r="9" fill="#20303c"/><circle cx="456" cy="466" r="9" fill="#20303c"/>
+        <ellipse id="mouth4" cx="422" cy="520" rx="20" ry="12" fill="#20303c"/>
+      </g>
+    </svg>
+    <div class="chip" id="c4a" style="left:38%;top:18%">🏠 Shows the building</div>
+    <div class="chip" id="c4b" style="left:48%;top:33%">💰 Tells the price</div>
+    <div class="chip" id="c4c" style="left:40%;top:48%">❓ Answers EVERY question</div>
+    <div class="chip" id="c4d" style="left:43%;top:63%">🌙 Even at midnight <span class="ok">✓</span></div>
+    <div class="chip" id="c4e" style="left:34%;top:78%">📱 On any phone <span class="ok">✓</span></div>
+    <!-- Maya card -->
+    <div id="mayaCard" style="position:absolute;right:5%;top:22%;width:22%;background:#fff;border:0.4cqi solid var(--ink);border-radius:2.6cqi;padding:1.6cqi;text-align:center;box-shadow:0 .8cqi 0 rgba(32,48,60,.25);">
+      <svg viewBox="0 0 100 100" style="width:9cqi;height:9cqi;margin:0 auto .8cqi;display:block"><circle cx="50" cy="50" r="46" fill="#ffd9b3" stroke="#20303c" stroke-width="5"/><path d="M12 45 a40 40 0 0 1 76 0 l4 14 a48 48 0 0 0 -84 0 z" fill="#7a5230" stroke="#20303c" stroke-width="4"/><circle cx="38" cy="52" r="4.5" fill="#20303c"/><circle cx="62" cy="52" r="4.5" fill="#20303c"/><path d="M38 68 q12 10 24 0" stroke="#20303c" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+      <div style="font-weight:800;font-size:2cqi;">MAYA <span style="color:#39c06e">● LIVE</span></div>
+      <div style="font-weight:600;font-size:1.7cqi;line-height:1.4;">"Hi! Ask me anything!"</div>
+      <div style="margin-top:.8cqi;background:var(--brandA);color:#fff;border-radius:99px;padding:.7cqi;font-weight:800;font-size:1.8cqi;">▶ TALK TO MAYA</div>
+    </div>
+  </div>
+
+  <!-- ================= S5 · THE MAGIC MAP (92–118) ================= -->
+  <div class="scene" id="s5">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <rect x="140" y="120" width="1320" height="640" rx="28" fill="#eef7e8" stroke="#20303c" stroke-width="8"/>
+      <g stroke="#cfe3c2" stroke-width="26"><path d="M140 420 H1460" /><path d="M600 120 V760"/><path d="M1050 120 V760"/></g>
+      <g stroke="#ffffff" stroke-width="6" stroke-dasharray="24 18"><path d="M140 420 H1460"/><path d="M600 120 V760"/><path d="M1050 120 V760"/></g>
+      <path id="route" d="M600 420 L820 420 L820 600 L1050 600" stroke="#ff8a3d" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="700" stroke-dashoffset="700"/>
+      <!-- pin -->
+      <g id="pin5">
+        <path d="M600 340 c-40 0 -64 30 -64 62 c0 44 64 108 64 108 c0 0 64 -64 64 -108 c0 -32 -24 -62 -64 -62 z" fill="#39c06e" stroke="#20303c" stroke-width="7"/>
+        <circle cx="600" cy="404" r="22" fill="#fff" stroke="#20303c" stroke-width="6"/>
+      </g>
+      <!-- POIs -->
+      <g id="poiSchool"><rect x="300" y="200" width="150" height="100" rx="14" fill="#fff" stroke="#20303c" stroke-width="6"/><text x="375" y="248" text-anchor="middle" font-size="40">🎓</text><text x="375" y="288" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="26" fill="#20303c">School</text></g>
+      <g id="poiHosp"><rect x="1150" y="200" width="170" height="100" rx="14" fill="#fff" stroke="#20303c" stroke-width="6"/><text x="1235" y="248" text-anchor="middle" font-size="40">🏥</text><text x="1235" y="288" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="26" fill="#20303c">Hospital</text></g>
+      <g id="poiMetro"><rect x="1000" y="560" width="160" height="100" rx="14" fill="#fff" stroke="#20303c" stroke-width="6"/><text x="1080" y="608" text-anchor="middle" font-size="40">🚇</text><text x="1080" y="648" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="26" fill="#20303c">Metro</text></g>
+    </svg>
+    <div class="chip" id="c5a" style="left:17%;top:38%">🎓 School · <b>12 min</b></div>
+    <div class="chip" id="c5b" style="right:12%;top:38%">🏥 Hospital · <b>15 min</b></div>
+    <div class="chip" id="c5c" style="left:36%;top:70%">🚇 Metro · <b>10 min</b></div>
+    <div class="chip" id="c5t" data-tx="translateX(-50%)" style="left:50%;top:6%;transform:translateX(-50%);background:#20303c;color:#fff;">🧭 CS PROJECT NAVIGATOR — the magic map</div>
+  </div>
+
+  <!-- ================= S6 · EVERYWHERE (118–140) ================= -->
+  <div class="scene" id="s6">
+    <div class="bigword" style="top:9%;font-size:5cqi;">One Sparky. <span style="color:#39c06e">Many friends!</span></div>
+    <div class="chip" id="c6a" style="left:10%;top:30%;font-size:2.6cqi;">🏠 Homes</div>
+    <div class="chip" id="c6b" style="left:42%;top:26%;font-size:2.6cqi;">🛍️ Shops</div>
+    <div class="chip" id="c6c" style="left:72%;top:30%;font-size:2.6cqi;">🏥 Hospitals</div>
+    <div class="chip" id="c6d" style="left:14%;top:58%;font-size:2.6cqi;">🎓 Schools</div>
+    <div class="chip" id="c6e" style="left:44%;top:62%;font-size:2.6cqi;">🏨 Hotels</div>
+    <div class="chip" id="c6f" style="left:70%;top:58%;font-size:2.6cqi;">📊 Business</div>
+  </div>
+
+  <!-- ================= S7 · SPARKY REMEMBERS (140–162) ================= -->
+  <div class="scene" id="s7">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%">
+      <g id="sparky7">
+        <circle cx="380" cy="470" r="105" fill="url(#sparkGrad)" stroke="#20303c" stroke-width="8"/>
+        <circle cx="352" cy="452" r="17" fill="#fff"/><circle cx="410" cy="452" r="17" fill="#fff"/>
+        <circle cx="356" cy="456" r="8" fill="#20303c"/><circle cx="414" cy="456" r="8" fill="#20303c"/>
+        <path d="M352 508 q30 22 60 0" stroke="#20303c" stroke-width="8" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- chart board -->
+      <g>
+        <rect x="620" y="180" width="700" height="480" rx="24" fill="#fff" stroke="#20303c" stroke-width="8"/>
+        <text x="970" y="250" text-anchor="middle" font-family="Baloo 2" font-weight="800" font-size="40" fill="#20303c">Who visited? What did they ask?</text>
+        <rect id="bar1" x="720" y="580" width="90" height="0" fill="#8fdf76" stroke="#20303c" stroke-width="6"/>
+        <rect id="bar2" x="860" y="580" width="90" height="0" fill="#7fc9e8" stroke="#20303c" stroke-width="6"/>
+        <rect id="bar3" x="1000" y="580" width="90" height="0" fill="#ffb066" stroke="#20303c" stroke-width="6"/>
+        <rect id="bar4" x="1140" y="580" width="90" height="0" fill="#e07a9a" stroke="#20303c" stroke-width="6"/>
+        <text id="heart7" x="1185" y="330" text-anchor="middle" font-size="56">❤️</text>
+        <line x1="700" y1="580" x2="1270" y2="580" stroke="#20303c" stroke-width="7"/>
+      </g>
+    </svg>
+    <div class="chip" id="c7a" style="left:44%;top:76%;">Sparky tells Rohan: <b>“Call THIS buyer first!”</b> 📞</div>
+  </div>
+
+  <!-- ================= S8 · END CARD (162–186) ================= -->
+  <div class="scene brand" id="s8">
+    <div class="orbreal">
+      <video id="orbVid" poster="assets/orb-poster.jpg" muted loop playsinline preload="auto"><source src="assets/orb.webm" type="video/webm"><source src="assets/orb.mp4" type="video/mp4"></video>
+      <img id="orbImg" alt="" style="display:none;">
+    </div>
+    <div class="wm"><span class="ai">AI</span> Presenter</div>
+    <div class="tagl">Don't send paper. <b>Send a conversation.</b></div>
+    <div class="contact">
+      <div>Call / WhatsApp</div>
+      <div class="ph">📞 7755883886</div>
+      <div class="site">🌐 csmediaandproduction.in · ✉️ info@csmediaandproduction.in</div>
+    </div>
+  </div>
+
+  <svg width="0" height="0"><defs>
+    <radialGradient id="sparkGrad" cx="38%" cy="32%" r="80%">
+      <stop offset="0%" stop-color="#aef3ff"/><stop offset="45%" stop-color="#2fc8e8"/><stop offset="100%" stop-color="#2f9e5f"/>
+    </radialGradient>
+  </defs></svg>
+
+  <div id="capWrap"><div id="cap"></div></div>
+  <div class="layer" id="chrome">
+    <span id="beadge">SPARKY EXPLAINS</span><span id="tc">0:00 / 3:06</span>
+    <div id="prog"><i id="progbar"></i></div>
+  </div>
+</div>
+
+<audio id="music" src="assets/kids-track.mp3" preload="auto"></audio>
+
+<div id="controls">
+  <div class="ctl primary" id="playBtn">▶ Play</div>
+  <div class="ctl" id="restartBtn">↺ Restart</div>
+  <div class="ctl active" id="soundBtn">🔊 Sound on</div>
+  <div class="ctl" id="recBtn">⦿ Clean mode</div>
+</div>
+<div class="hint">
+  "Sparky Explains AI Presenter" · 3:06 kid-simple explainer · 16:9 · playful original score, scene chimes on cuts.<br>
+  Narration = the captions (VO script in RE-CAMPAIGN.md; drop ElevenLabs files at assets/vo/exp-s1..8.mp3 to auto-play per scene).<br>
+  <kbd>Space</kbd> play/pause · <kbd>R</kbd> restart · <kbd>S</kbd> sound · <kbd>C</kbd> clean · deterministic MP4 render via <code>?render=1</code>.
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $=(id)=>document.getElementById(id);
+  const DUR=186;
+  const RENDER=new URLSearchParams(location.search).has('render');
+  if(RENDER) document.body.classList.add('render');
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const eo=(x)=>1-Math.pow(1-x,3);
+  const bounce=(x)=>{x=clamp(x,0,1);return x<.6? eo(x/.6)*1.08 : 1.08-.08*eo((x-.6)/.4);}
+
+  const SCENES=[
+    {id:'s1',t0:0,   t1:18},
+    {id:'s2',t0:18,  t1:42},
+    {id:'s3',t0:42,  t1:62},
+    {id:'s4',t0:62,  t1:92},
+    {id:'s5',t0:92,  t1:118},
+    {id:'s6',t0:118, t1:140},
+    {id:'s7',t0:140, t1:162},
+    {id:'s8',t0:162, t1:186.5},
+  ];
+
+  /* ============ THE NARRATION (VO script == captions) ============ */
+  const CAPS=[
+    [0.8,4.6,"This is <b>Rohan</b>. Rohan builds homes — big, beautiful homes!"],
+    [5.0,9.4,"He worked very, <i>very</i> hard on his new building."],
+    [9.8,14.2,"Now he wants to show it to <b>everyone</b>."],
+    [18.6,22.6,"So Rohan sends everyone a <b>brochure</b>."],
+    [23.0,27.6,"But a brochure is just <b>paper</b>… and paper can't talk!"],
+    [28.0,33.2,"At night, when people have questions… the brochure just <b>sleeps</b>. 😴"],
+    [33.6,37.6,"“Hello? How much does it cost?” … nothing."],
+    [38.0,41.6,"And Rohan never knows who even <b>opened</b> it."],
+    [42.6,46.4,"But wait… who's that? Meet <span class='sp'>SPARKY!</span> ✨"],
+    [46.8,52.4,"Sparky is an <span class='sp'>AI Presenter</span>. He lives inside your web browser."],
+    [52.8,57.2,"No downloads. No installing. And he <b>NEVER</b> sleeps!"],
+    [62.6,66.8,"Tap a button — and Sparky <span class='sp'>talks!</span>"],
+    [67.2,72.8,"He shows the building, tells the price, and answers <b>every single question</b>."],
+    [73.2,77.6,"At midnight? <b>Yes!</b> On a phone? <b>Yes!</b>"],
+    [78.0,85.0,"And when you tap <b>“Talk to Maya”</b>, a real presenter appears — and talks with you, <span class='sp'>live!</span>"],
+    [92.6,97.0,"Sparky also has a <b>magic map</b> — the <span class='sp'>Project Navigator</span>. 🧭"],
+    [97.4,103.0,"“Where's the school?” — 12 minutes! “The hospital?” — right there!"],
+    [103.4,108.0,"“The metro?” — just 10 minutes away!"],
+    [108.4,114.5,"Buyers see the home, the roads… and the <b>whole journey</b>."],
+    [118.6,123.4,"And Sparky doesn't just help builders!"],
+    [123.8,131.0,"He helps <b>shops</b>, and <b>hospitals</b>, and <b>schools</b>, and <b>hotels</b> too —"],
+    [131.4,135.4,"one platform… <b>many friends!</b>"],
+    [140.6,145.4,"Best of all… Sparky <b>remembers</b>. 🧠"],
+    [145.8,152.0,"He tells Rohan who visited, what they asked, and who <b>really</b> liked it!"],
+    [152.4,158.0,"So Rohan calls the right people <b>first</b>. 📞"],
+    [162.8,167.6,"Now Rohan doesn't send paper…"],
+    [168.0,172.0,"he sends a <b>conversation</b>!"],
+    [172.4,178.4,"<span class='sp'>AI Presenter</span> — by CS Media &amp; Production."],
+    [178.8,185.0,"Get your own <span class='sp'>Sparky</span> today! 🎉"],
+  ];
+
+  /* generic pop-in cue list: [selector, time] — bounce entrance, stays */
+  const POPS=[
+    ['#rohanTag',2.0],['#spark1',6.0],
+    ['#qbub',33.4],['#noreply',35.6],
+    ['#sparkyTag',44.6],['#c3a',53.0],['#c3b',54.4],
+    ['#c4a',67.4],['#c4b',69.2],['#c4c',71.0],['#c4d',73.4],['#c4e',75.4],['#mayaCard',78.6],
+    ['#c5t',93.0],['#pin5',94.2],['#c5a',98.0],['#c5b',100.4],['#c5c',104.0],
+    ['#c6a',123.8],['#c6b',125.0],['#c6c',126.2],['#c6d',127.4],['#c6e',128.6],['#c6f',129.8],
+    ['#c7a',152.6],['#heart7',149.0],
+  ];
+
+  function apply(t){
+    // scenes crossfade
+    for(const s of SCENES){
+      const el=$(s.id);
+      const a=clamp((t-s.t0)/0.5,0,1)-((s.t1>=DUR)?0:clamp((t-(s.t1-0.5))/0.5,0,1));
+      el.style.opacity=clamp(a,0,1);
+    }
+    // per-scene backgrounds
+    $('nightBg').style.opacity=clamp((t-18)/0.6,0,1)-clamp((t-41.6)/0.6,0,1);
+    $('brandBg').style.opacity=clamp((t-161.8)/0.8,0,1);
+    document.getElementById('stage').classList.toggle('night', t>=18&&t<42);
+    // captions
+    const cap=$('cap'); let cur=null;
+    for(const c of CAPS){ if(t>=c[0]&&t<c[1]){cur=c;break;} }
+    if(cur){ if(cap.dataset.k!==String(cur[0])){cap.innerHTML=cur[2];cap.dataset.k=String(cur[0]);}
+      cap.style.opacity=Math.min(clamp((t-cur[0])/0.25,0,1),clamp((cur[1]-t)/0.25,0,1)); }
+    else cap.style.opacity=0;
+    // pop-ins
+    for(const [sel,pt] of POPS){
+      const el=document.querySelector(sel); if(!el) continue;
+      if(t<pt){ el.style.opacity=0; }
+      else { const k=bounce((t-pt)/0.55); el.style.opacity=Math.min(1,k*3);
+        el.style.transform=((el.dataset&&el.dataset.tx)||'')+' scale('+k+')';
+        el.style.transformOrigin='center'; el.style.transformBox='fill-box'; }
+    }
+    /* ---- scene-specific motion (all derived from t) ---- */
+    // S1: clouds drift, sun bob, Rohan waves, hero building pops at 9.8
+    if(t<19){
+      const l=t;
+      const c1=document.getElementById('cloud1'); if(c1) c1.setAttribute('transform','translate('+(l*6%300-40)+',0)');
+      const c2=document.getElementById('cloud2'); if(c2) c2.setAttribute('transform','translate('+(-l*4%260+30)+',0)');
+      const arm=document.getElementById('rohanArm'); if(arm) arm.setAttribute('transform','rotate('+(t>1.2? Math.sin(l*5)*24-12:0)+' 561 672)');
+      const hb=document.getElementById('heroBldg'); if(hb){ const k=bounce((t-9.8)/0.7); hb.setAttribute('transform', t<9.8?'translate(0,40) scale(1)':'translate(0,'+(40*(1-Math.min(1,k)))+')'); hb.style.opacity=t<9.2?0.4:1; }
+    }
+    // S2: zzz float, buyer bob
+    if(t>=18&&t<42){
+      const l=t-18;
+      [['zz1',0],['zz2',0.5],['zz3',1.0]].forEach(([id,ph])=>{const e=document.getElementById(id); if(e){e.setAttribute('transform','translate(0,'+(-8*Math.sin(l*1.4+ph))+')');e.style.opacity=0.5+0.5*Math.sin(l*1.4+ph);}});
+      const by=document.getElementById('buyer'); if(by) by.setAttribute('transform','translate(0,'+(3*Math.sin(l*2))+')');
+    }
+    // S3: Sparky bounces in at 43.2, eyes look around, sparkle
+    if(t>=42&&t<62){
+      const k=bounce((t-43.2)/0.8);
+      const sp=document.getElementById('sparky'); if(sp){ sp.setAttribute('transform','translate(0,'+(260*(1-Math.min(1,k)))+') scale('+Math.max(0.001,k)+')'); sp.style.transformOrigin='800px 470px'; sp.style.transformBox='view-box'; }
+      const l=t-42;
+      const dx=6*Math.sin(l*1.8);
+      const pl=document.getElementById('pupL'), pr=document.getElementById('pupR');
+      if(pl){pl.setAttribute('cx',762+dx);} if(pr){pr.setAttribute('cx',838+dx);}
+    }
+    // S4: mouth talk, sparky bob
+    if(t>=62&&t<92){
+      const l=t-62;
+      const m=document.getElementById('mouth4'); if(m) m.setAttribute('ry', 6+6*Math.abs(Math.sin(l*7)));
+      const s4=document.getElementById('sparky4'); if(s4) s4.setAttribute('transform','translate(0,'+(6*Math.sin(l*2))+')');
+    }
+    // S5: route draws 97.4→103, pin bob
+    if(t>=92&&t<118){
+      const r=document.getElementById('route'); if(r) r.setAttribute('stroke-dashoffset', String(700*(1-clamp((t-97.4)/5.5,0,1))));
+      const p=document.getElementById('pin5'); if(p) p.setAttribute('transform','translate(0,'+(-6*Math.abs(Math.sin((t-92)*2.4)))+')');
+    }
+    // S7: bars grow 145.8→151
+    if(t>=140&&t<162){
+      const hs=[120,220,90,300];
+      ['bar1','bar2','bar3','bar4'].forEach((id,i)=>{const e=document.getElementById(id); if(e){const h=hs[i]*clamp((t-145.8-i*0.35)/1.2,0,1); e.setAttribute('height',h); e.setAttribute('y',580-h);}});
+      const sp=document.getElementById('sparky7'); if(sp) sp.setAttribute('transform','translate(0,'+(5*Math.sin((t-140)*2))+')');
+    }
+    // chrome
+    $('progbar').style.width=clamp(t/DUR*100,0,100)+'%';
+    const mm=Math.floor(clamp(t,0,DUR)/60), ss=String(Math.floor(clamp(t,0,DUR)%60)).padStart(2,'0');
+    $('tc').textContent=mm+':'+ss+' / 3:06';
+    $('beadge').textContent= t<18?'MEET ROHAN': t<42?'THE SLEEPY BROCHURE': t<62?'MEET SPARKY': t<92?"SPARKY'S POWERS": t<118?'THE MAGIC MAP': t<140?'EVERYWHERE': t<162?'SPARKY REMEMBERS':'GET YOUR SPARKY';
+  }
+
+  /* ---------- render seek API ---------- */
+  const orbVid=$('orbVid');
+  function frameSrc(dir,count,fps,localT){
+    let idx=Math.round(((localT%(count/fps))+(count/fps))%(count/fps)*fps)+1;
+    return dir+'/f'+String(Math.max(1,Math.min(count,idx))).padStart(5,'0')+'.jpg';
+  }
+  window.__duration=DUR;
+  window.__seek=(t)=>{
+    t=clamp(t,0,DUR-0.001);
+    apply(t);
+    const FB=window.__FRAMEBASE;
+    if(FB && t>=161.5){
+      orbVid.style.display='none'; const oi=$('orbImg');
+      oi.style.display='block'; oi.src=frameSrc(FB.orb,FB.orbFrames,FB.fps||30,Math.max(0,t-162));
+    }
+  };
+  window.__ready=true;
+
+  /* ---------- interactive mode ---------- */
+  const music=$('music');
+  // optional per-scene VO (assets/vo/exp-s1.mp3 …): auto-attach if present
+  const VO=SCENES.map((s,i)=>{const a=new Audio(); a.src='assets/vo/exp-s'+(i+1)+'.mp3'; a.preload='auto'; return {a,ok:false,s};});
+  VO.forEach(v=>{v.a.addEventListener('canplaythrough',()=>v.ok=true); v.a.addEventListener('error',()=>v.ok=false);});
+  let voCur=-1;
+  function voSync(t){
+    const idx=SCENES.findIndex(s=>t>=s.t0&&t<s.t1);
+    if(idx!==voCur){ if(voCur>=0){try{VO[voCur].a.pause();}catch(e){}} voCur=idx;
+      if(idx>=0&&VO[idx].ok){ try{VO[idx].a.currentTime=Math.max(0,t-SCENES[idx].t0); VO[idx].a.play().catch(()=>{});}catch(e){} } }
+  }
+  let raf=null,playing=false,perfStart=0,usePerf=false,soundOn=true;
+  function clock(){ if(!usePerf&&music&&music.readyState>=1&&!music.paused) return music.currentTime;
+    return (performance.now()-perfStart)/1000; }
+  function frame(){ const t=clock(); apply(t); voSync(t);
+    if(t>=161.5&&orbVid.paused) orbVid.play().catch(()=>{});
+    if(music&&t>DUR-1.2) music.volume=Math.max(0,(DUR-t)/1.2);
+    if(t>=DUR){ stop(true); return; } raf=requestAnimationFrame(frame); }
+  function play(){ if(playing||RENDER) return; playing=true; $('playBtn').textContent='⏸ Pause';
+    if(clock()>=DUR-0.01) hardRestart();
+    perfStart=performance.now()-clock()*1000;
+    if(music){ music.muted=!soundOn; const p=music.play(); if(p&&p.catch)p.catch(()=>{usePerf=true;}); }
+    raf=requestAnimationFrame(frame); }
+  function pause(){ playing=false; $('playBtn').textContent='▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null;
+    if(music)music.pause(); orbVid.pause(); VO.forEach(v=>{try{v.a.pause();}catch(e){}}); }
+  function stop(ended){ playing=false; $('playBtn').textContent=ended?'↺ Replay':'▶ Play'; if(raf)cancelAnimationFrame(raf); raf=null; if(music)music.pause(); }
+  function hardRestart(){ if(music){try{music.currentTime=0;music.volume=1;}catch(e){}} voCur=-1; perfStart=performance.now(); apply(0); }
+  function toggle(){ playing?pause():play(); }
+  $('playBtn').addEventListener('click',toggle);
+  $('restartBtn').addEventListener('click',()=>{pause();hardRestart();play();});
+  $('soundBtn').addEventListener('click',()=>{soundOn=!soundOn; if(music)music.muted=!soundOn;
+    $('soundBtn').textContent=soundOn?'🔊 Sound on':'🔇 Muted'; $('soundBtn').classList.toggle('active',soundOn);});
+  $('recBtn').addEventListener('click',()=>{document.body.classList.toggle('recording');$('recBtn').classList.toggle('active');});
+  document.addEventListener('keydown',(e)=>{ if(e.code==='Space'){e.preventDefault();toggle();}
+    else if(e.key==='r'||e.key==='R'){pause();hardRestart();play();}
+    else if(e.key==='c'||e.key==='C'){$('recBtn').click();}
+    else if(e.key==='s'||e.key==='S'){$('soundBtn').click();} });
+
+  apply(0);
+})();
+</script>
+</body></html>
