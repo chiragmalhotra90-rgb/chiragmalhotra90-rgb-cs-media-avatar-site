@@ -32,10 +32,24 @@ in its nav that links here. Deploy options:
 | Search / extract by keyword or topic | ✅ | search box + `matches()` |
 | Master sheet, downloadable | ✅ | **↓ Master Sheet (CSV)** button + `master-sheet-template.csv` |
 | View on site, download via Drive | ✅ | per-item Drive `download` link in the lightbox |
-| Data sourced from Google Drive | ⏳ needs your Drive link | see **Wiring Google Drive** |
+| Data sourced from Google Drive | ✅ initial sync done | folder **CS MEDIA AND PRODUCTION** → 52 items (50 photos + 2 docs) |
 
 Everything reads from **one file: `content.json`** — the single source of truth (the "master sheet" as data).
-Right now it holds sample placeholder items so the page renders. The weekly automation will regenerate it from Drive.
+It is now populated from the live Drive folder: types auto-detected from mime types, photos link to Drive
+thumbnails, the Doc + deck embed via Drive preview, and every item carries a Drive read/download link.
+
+### ⚠️ Drive sharing
+The folder is currently shared **"Anyone with the link → Editor"**. That makes the files public (so the
+portfolio renders), but *Editor* means anyone with the link could change or delete them. Change it to
+**Viewer** in Drive → Share — the portfolio only needs view access.
+
+### Re-syncing when you add content
+`content.json` is a snapshot of the Drive folder at last sync. To pick up new/removed files it must be
+regenerated. Options, cheapest first:
+1. **On request** — say "re-sync the gallery" and the current Drive contents are re-read and `content.json` regenerated + pushed.
+2. **Weekly automation** — a scheduled job (GitHub Action or a Make/Zapier scenario) that lists the folder via the
+   Google Drive API and commits a fresh `content.json`. This needs Drive API credentials stored as a secret; set that
+   up once and it runs itself on the `refreshCron` cadence.
 
 ---
 

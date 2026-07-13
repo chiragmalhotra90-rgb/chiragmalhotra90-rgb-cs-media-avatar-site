@@ -1,57 +1,1270 @@
 {
-  "_readme": "MASTER MANIFEST — single source of truth for the portfolio. The weekly automation (Drive -> agent) regenerates this file. Each item mirrors one row of the master sheet. 'status':'rejected' routes an item to the hidden Goof-Ups vault. Leave 'src' empty to render a styled placeholder; fill it with a Drive preview/embed URL to show the real asset. 'download' is the per-item Drive download link.",
+  "_readme": "MASTER MANIFEST — auto-generated from Google Drive folder 'CS MEDIA AND PRODUCTION'. Types detected from Drive mime types; photos link to Drive thumbnails, docs/decks embed via Drive preview, downloads/reads resolve to Drive. Re-run the sync to regenerate. status:'rejected' -> Goof-Ups vault.",
   "_schema": {
-    "id": "unique string id (stable across weekly runs)",
+    "id": "unique string id (stable across syncs)",
     "title": "display title",
     "category": "one of: photo | text | animation | gif | design | html | video | audio | print | research",
-    "type": "render hint: photo|text|animation|gif|design|html|video|audio|print|research (research = PDF/paper, opens/reads via Drive)",
+    "type": "render hint (same set as category); research = PDF/doc/deck read via Drive",
     "topics": "array of keyword/topic tags used by search + dedup",
     "aspect": "[width, height] ratio to preserve the original shape",
-    "src": "Drive preview/embed URL for VIEWING (empty = placeholder tile)",
-    "download": "Drive download URL for this item (view-only site; download via Drive)",
-    "status": "published | rejected  (rejected -> Goof-Ups vault, request-only)",
+    "src": "Drive preview/embed URL for VIEWING",
+    "download": "Drive read/download URL for this item",
+    "status": "published | rejected",
     "added": "YYYY-MM-DD",
-    "engagement": "0-100 signal from your tracking (feeds the ranking)",
-    "featured": "true = curator pick (weights the ranking)"
+    "engagement": "0-100 signal (feeds ranking)",
+    "featured": "true = curator pick (weights ranking)"
   },
   "updated": "2026-07-13",
-  "driveFolder": "",
+  "driveFolder": "https://drive.google.com/drive/folders/1Yygagr6HoH9OCf4THy39hFH1bJ5gGAIi",
   "items": [
-    { "id": "ph-001", "title": "Neon Alley — Frame 12", "category": "photo", "type": "photo", "topics": ["cyberpunk", "street", "night", "neon"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-02", "engagement": 88, "featured": true },
-    { "id": "ph-002", "title": "Studio Portrait — Rim Light", "category": "photo", "type": "photo", "topics": ["portrait", "studio", "beauty"], "aspect": [4, 5], "src": "", "download": "", "status": "published", "added": "2026-05-21", "engagement": 74, "featured": false },
-    { "id": "ph-003", "title": "Coastline — Golden Hour", "category": "photo", "type": "photo", "topics": ["landscape", "travel", "ocean"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-18", "engagement": 66, "featured": false },
-    { "id": "vd-001", "title": "Product Reel — Watch 05", "category": "video", "type": "video", "topics": ["product", "reel", "luxury"], "aspect": [9, 16], "src": "", "download": "", "status": "published", "added": "2026-06-28", "engagement": 92, "featured": true },
-    { "id": "vd-002", "title": "Brand Film — Opening Titles", "category": "video", "type": "video", "topics": ["brand", "titles", "cinematic"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-10", "engagement": 81, "featured": false },
-    { "id": "vd-003", "title": "Interview B-Roll — Cutaways", "category": "video", "type": "video", "topics": ["broll", "interview", "documentary"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-05-30", "engagement": 58, "featured": false },
-    { "id": "gf-001", "title": "Loop — Loading Orb", "category": "gif", "type": "gif", "topics": ["loop", "ui", "motion"], "aspect": [1, 1], "src": "", "download": "", "status": "published", "added": "2026-06-14", "engagement": 71, "featured": false },
-    { "id": "gf-002", "title": "Reaction — Wink", "category": "gif", "type": "gif", "topics": ["reaction", "fun", "social"], "aspect": [4, 3], "src": "", "download": "", "status": "published", "added": "2026-06-05", "engagement": 63, "featured": false },
-    { "id": "an-001", "title": "Animated Logo — Reveal", "category": "animation", "type": "animation", "topics": ["logo", "reveal", "brand"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-22", "engagement": 79, "featured": true },
-    { "id": "an-002", "title": "Kinetic Type — Manifesto", "category": "animation", "type": "animation", "topics": ["kinetic", "typography", "motion"], "aspect": [1, 1], "src": "", "download": "", "status": "published", "added": "2026-05-25", "engagement": 69, "featured": false },
-    { "id": "ds-001", "title": "3D Render — Chrome Skull", "category": "design", "type": "design", "topics": ["3d", "render", "chrome", "cgi"], "aspect": [1, 1], "src": "", "download": "", "status": "published", "added": "2026-06-27", "engagement": 85, "featured": true },
-    { "id": "ds-002", "title": "Poster — Festival 2026", "category": "design", "type": "design", "topics": ["poster", "2d", "event"], "aspect": [2, 3], "src": "", "download": "", "status": "published", "added": "2026-06-08", "engagement": 62, "featured": false },
-    { "id": "ds-003", "title": "Isometric City — Concept", "category": "design", "type": "design", "topics": ["isometric", "3d", "concept"], "aspect": [4, 3], "src": "", "download": "", "status": "published", "added": "2026-05-19", "engagement": 55, "featured": false },
-    { "id": "ht-001", "title": "Interactive Hero — WebGL", "category": "html", "type": "html", "topics": ["webgl", "interactive", "hero"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-30", "engagement": 90, "featured": true },
-    { "id": "ht-002", "title": "Micro-site — Product Tour", "category": "html", "type": "html", "topics": ["microsite", "tour", "ui"], "aspect": [16, 10], "src": "", "download": "", "status": "published", "added": "2026-06-03", "engagement": 60, "featured": false },
-    { "id": "au-001", "title": "Sound Design — Whoosh Pack", "category": "audio", "type": "audio", "topics": ["sfx", "sound", "pack"], "aspect": [3, 1], "src": "", "download": "", "status": "published", "added": "2026-06-16", "engagement": 64, "featured": false },
-    { "id": "au-002", "title": "Score — Ambient Loop 03", "category": "audio", "type": "audio", "topics": ["music", "ambient", "score"], "aspect": [3, 1], "src": "", "download": "", "status": "published", "added": "2026-05-28", "engagement": 57, "featured": false },
-    { "id": "tx-001", "title": "Typeface — Display Grotesk", "category": "text", "type": "text", "topics": ["font", "typeface", "display"], "aspect": [4, 3], "src": "", "download": "", "status": "published", "added": "2026-06-12", "engagement": 61, "featured": false },
-    { "id": "tx-002", "title": "Headline System — Editorial", "category": "text", "type": "text", "topics": ["headline", "editorial", "type"], "aspect": [3, 2], "src": "", "download": "", "status": "published", "added": "2026-05-23", "engagement": 52, "featured": false },
-    { "id": "pr-001", "title": "Brochure — Tri-Fold", "category": "print", "type": "print", "topics": ["brochure", "print", "collateral"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-09", "engagement": 48, "featured": false },
-    { "id": "pr-002", "title": "Business Card — Foil Spec", "category": "print", "type": "print", "topics": ["stationery", "print", "foil"], "aspect": [7, 4], "src": "", "download": "", "status": "published", "added": "2026-05-31", "engagement": 45, "featured": false },
-    { "id": "ph-004", "title": "Macro — Water Drop", "category": "photo", "type": "photo", "topics": ["macro", "abstract", "water"], "aspect": [1, 1], "src": "", "download": "", "status": "published", "added": "2026-06-20", "engagement": 70, "featured": false },
-    { "id": "ds-004", "title": "Motion Board — Gradient Set", "category": "design", "type": "design", "topics": ["gradient", "board", "2d"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-25", "engagement": 67, "featured": false },
-    { "id": "vd-004", "title": "Event Recap — Highlights", "category": "video", "type": "video", "topics": ["event", "recap", "highlights"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-01", "engagement": 59, "featured": false },
-
-    { "id": "rp-001", "title": "The Attention Economy of Short-Form Video", "category": "research", "type": "research", "topics": ["short-form", "attention", "social media", "engagement", "whitepaper"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-24", "engagement": 84, "featured": true },
-    { "id": "rp-002", "title": "AI Avatars in Brand Communication — A Field Study", "category": "research", "type": "research", "topics": ["ai avatar", "brand", "field study", "adoption"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-11", "engagement": 77, "featured": true },
-    { "id": "rp-003", "title": "Colour Psychology & Conversion in Digital Ads", "category": "research", "type": "research", "topics": ["colour", "psychology", "conversion", "ads", "cro"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-05-27", "engagement": 66, "featured": false },
-    { "id": "rp-004", "title": "Framework: Weekly View-Preference Ranking for Portfolios", "category": "research", "type": "research", "topics": ["algorithm", "ranking", "portfolio", "framework", "methodology"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-07-02", "engagement": 71, "featured": false },
-    { "id": "rp-005", "title": "Print vs. Digital: Retention in Marketing Collateral", "category": "research", "type": "research", "topics": ["print", "digital", "retention", "marketing", "study"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-05-16", "engagement": 54, "featured": false },
-
-    { "id": "gz-001", "title": "Blooper — Focus Miss", "category": "video", "type": "video", "topics": ["blooper", "outtake"], "aspect": [16, 9], "src": "", "download": "", "status": "rejected", "added": "2026-05-15", "engagement": 12, "featured": false },
-    { "id": "gz-002", "title": "Reject — Overexposed Set", "category": "photo", "type": "photo", "topics": ["reject", "exposure"], "aspect": [3, 2], "src": "", "download": "", "status": "rejected", "added": "2026-05-12", "engagement": 8, "featured": false },
-    { "id": "gz-003", "title": "Scrapped — Logo v1", "category": "design", "type": "design", "topics": ["scrapped", "logo", "draft"], "aspect": [1, 1], "src": "", "download": "", "status": "rejected", "added": "2026-04-30", "engagement": 15, "featured": false },
-    { "id": "gz-004", "title": "Glitch — Render Fail", "category": "design", "type": "design", "topics": ["glitch", "fail", "3d"], "aspect": [16, 9], "src": "", "download": "", "status": "rejected", "added": "2026-04-22", "engagement": 20, "featured": false },
-    { "id": "gz-005", "title": "Take 14 — Line Flub", "category": "audio", "type": "audio", "topics": ["outtake", "vo", "flub"], "aspect": [3, 1], "src": "", "download": "", "status": "rejected", "added": "2026-04-18", "engagement": 6, "featured": false }
+    {
+      "id": "gd-wed-001",
+      "title": "Gloriosa Wedding · 01",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230716_223608"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RMqWFj6xhVQCoAScqPymME0k5AstBwp2&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RMqWFj6xhVQCoAScqPymME0k5AstBwp2",
+      "status": "published",
+      "added": "2023-07-16",
+      "engagement": 55,
+      "featured": true
+    },
+    {
+      "id": "gd-wed-002",
+      "title": "Gloriosa Wedding · 02",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230423_182629_1"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RsJ61I9xdd8jaNRmW-RwOgqI7ymBVm-k&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RsJ61I9xdd8jaNRmW-RwOgqI7ymBVm-k",
+      "status": "published",
+      "added": "2023-04-23",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-003",
+      "title": "Gloriosa Wedding · 03",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230926_083646_1"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Q18NnCnn9DCDeYmCT8DB6X0QeT6SGrEA&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Q18NnCnn9DCDeYmCT8DB6X0QeT6SGrEA",
+      "status": "published",
+      "added": "2023-09-26",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-004",
+      "title": "Gloriosa Wedding · 04",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230423_182609"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RvmKkhemQqS9SS9AvwVv2Xrrsx3M6SPt&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RvmKkhemQqS9SS9AvwVv2Xrrsx3M6SPt",
+      "status": "published",
+      "added": "2023-04-23",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-005",
+      "title": "Gloriosa Wedding · 05",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193149"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QhPZPtVGvb7I_AlNvUVHI1WOPaGZtblk&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QhPZPtVGvb7I_AlNvUVHI1WOPaGZtblk",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-006",
+      "title": "Gloriosa Wedding · 06",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230718_120717"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1R19pg-liQ2WsFrXPR_UziDkMzyYjzmIa&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1R19pg-liQ2WsFrXPR_UziDkMzyYjzmIa",
+      "status": "published",
+      "added": "2023-07-18",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-007",
+      "title": "Gloriosa Wedding · 07",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230731_124703"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QUZNqZIegpajub8KiPzdOFIpEmth_BBG&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QUZNqZIegpajub8KiPzdOFIpEmth_BBG",
+      "status": "published",
+      "added": "2023-07-31",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-008",
+      "title": "Gloriosa Wedding · 08",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_182747"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Qv0nK5dcMZMRZ09HCeS1lTgev34EYU_B&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Qv0nK5dcMZMRZ09HCeS1lTgev34EYU_B",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-009",
+      "title": "Gloriosa Wedding · 09",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230731_124759"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Qc_kr68CLKudYlZcU9jjPrQXp5YWd4I5&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Qc_kr68CLKudYlZcU9jjPrQXp5YWd4I5",
+      "status": "published",
+      "added": "2023-07-31",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-010",
+      "title": "Gloriosa Wedding · 10",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230423_182335"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RmzPq33brDB3J07n_D5laTUs6kCj_MAo&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RmzPq33brDB3J07n_D5laTUs6kCj_MAo",
+      "status": "published",
+      "added": "2023-04-23",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-011",
+      "title": "Gloriosa Wedding · 11",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230718_143739"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1R05QTdKnOWSUZ46t2LLksWPVeOxHgkZJ&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1R05QTdKnOWSUZ46t2LLksWPVeOxHgkZJ",
+      "status": "published",
+      "added": "2023-07-18",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-012",
+      "title": "Gloriosa Wedding · 12",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_194206"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QoRUac2DMwigiUZm6Lfvvh0XyICUza2I&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QoRUac2DMwigiUZm6Lfvvh0XyICUza2I",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-013",
+      "title": "Gloriosa Wedding · 13",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193638"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Qnqx_KtpJYBc4YEZwGQlm04zvO2ookbl&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Qnqx_KtpJYBc4YEZwGQlm04zvO2ookbl",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-014",
+      "title": "Gloriosa Wedding · 14",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230718_143701"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QvHYJAXiT2VdUEg_2kHKYAv80GJfzLfe&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QvHYJAXiT2VdUEg_2kHKYAv80GJfzLfe",
+      "status": "published",
+      "added": "2023-07-18",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-015",
+      "title": "Gloriosa Wedding · 15",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230718_120731"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1R53kUA7Xqjkd7NvHGkZjq-uCGTukWPTo&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1R53kUA7Xqjkd7NvHGkZjq-uCGTukWPTo",
+      "status": "published",
+      "added": "2023-07-18",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-016",
+      "title": "Gloriosa Wedding · 16",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230731_124638"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QS3f9XvevAPPwMBuLFRmCgRg3E5_zqRu&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QS3f9XvevAPPwMBuLFRmCgRg3E5_zqRu",
+      "status": "published",
+      "added": "2023-07-31",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-017",
+      "title": "Gloriosa Wedding · 17",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230423_182430_1"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RpHC4TSePxM9jUNe9Rb8tzwZo4mzFvAc&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RpHC4TSePxM9jUNe9Rb8tzwZo4mzFvAc",
+      "status": "published",
+      "added": "2023-04-23",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-018",
+      "title": "Gloriosa Wedding · 18",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230423_182750"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Rq3NAfYDryM1jMQ7W8hagEWtS6xaBrwd&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Rq3NAfYDryM1jMQ7W8hagEWtS6xaBrwd",
+      "status": "published",
+      "added": "2023-04-23",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-019",
+      "title": "Gloriosa Wedding · 19",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230718_120748"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1RJxWHd4etFAH1XKzTchh9stWyT-6us1N&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1RJxWHd4etFAH1XKzTchh9stWyT-6us1N",
+      "status": "published",
+      "added": "2023-07-18",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-020",
+      "title": "Gloriosa Wedding · 20",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193236"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1QiPW_Z-M85KVy-ZcVWQdjro8MKPPvcqr&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1QiPW_Z-M85KVy-ZcVWQdjro8MKPPvcqr",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-021",
+      "title": "Gloriosa Wedding · 21",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20231106_190016"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1PkzjA3rMBVEGUKJuvQ7G7Zzl7_cxO2X0&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1PkzjA3rMBVEGUKJuvQ7G7Zzl7_cxO2X0",
+      "status": "published",
+      "added": "2023-11-06",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-022",
+      "title": "Gloriosa Wedding · 22",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230920_223022"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1J-HXMRzG-1vXsba5k6c1ywRtDDnIiiNG&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1J-HXMRzG-1vXsba5k6c1ywRtDDnIiiNG",
+      "status": "published",
+      "added": "2023-09-20",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-023",
+      "title": "Gloriosa Wedding · 23",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_181905"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1KFr1u0GDbPy8S4KQMeoWe8aMXaRP9qZU&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1KFr1u0GDbPy8S4KQMeoWe8aMXaRP9qZU",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-024",
+      "title": "Gloriosa Wedding · 24",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_181729"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1K6bM_Xwga206gt3gfwUnq02BbIcnsLze&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1K6bM_Xwga206gt3gfwUnq02BbIcnsLze",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-025",
+      "title": "Gloriosa Wedding · 25",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img-20210814-wa0016"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1HO5zRkec2AwPOtQlRV54ABkuqD4OmXhl&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1HO5zRkec2AwPOtQlRV54ABkuqD4OmXhl",
+      "status": "published",
+      "added": "2021-08-14",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-026",
+      "title": "Gloriosa Wedding · 26",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230924_181814"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Iwo_pzTa3ESP6QJvu4Dkzf2l6sAt3TAw&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Iwo_pzTa3ESP6QJvu4Dkzf2l6sAt3TAw",
+      "status": "published",
+      "added": "2023-09-24",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-027",
+      "title": "Gloriosa Wedding · 27",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230804_121145"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1J6dSnPYyVh2svI7ogAx3EFBaW83n38VE&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1J6dSnPYyVh2svI7ogAx3EFBaW83n38VE",
+      "status": "published",
+      "added": "2023-08-04",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-028",
+      "title": "Gloriosa Wedding · 28",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_182856"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1K0JdtzSmH_BWOnfDHjojQdy42foIHHlX&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1K0JdtzSmH_BWOnfDHjojQdy42foIHHlX",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-029",
+      "title": "Gloriosa Wedding · 29",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230924_181649"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1IiOYX-uMr4xVNTE9SFOVkM3EhLFrvXDB&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1IiOYX-uMr4xVNTE9SFOVkM3EhLFrvXDB",
+      "status": "published",
+      "added": "2023-09-24",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-030",
+      "title": "Gloriosa Wedding · 30",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193605"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JtMe27iYvlxJuZXIJSPyQxCZigpRy2UG&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JtMe27iYvlxJuZXIJSPyQxCZigpRy2UG",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-031",
+      "title": "Gloriosa Wedding · 31",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_181833"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1KFkfPVslnhUY2gNP25R-uCQ6kXT3mq8a&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1KFkfPVslnhUY2gNP25R-uCQ6kXT3mq8a",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-032",
+      "title": "Gloriosa Wedding · 32",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193404"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JeohWfiiDAsC0ET4ssOPeVf_Qj24Bjj5&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JeohWfiiDAsC0ET4ssOPeVf_Qj24Bjj5",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-033",
+      "title": "Gloriosa Wedding · 33",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230819_134525"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1J48MZ3hslZ25Y8YEmjwWNpFsoSQ88i0H&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1J48MZ3hslZ25Y8YEmjwWNpFsoSQ88i0H",
+      "status": "published",
+      "added": "2023-08-19",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-034",
+      "title": "Gloriosa Wedding · 34",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230924_183308_1"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1IeuuX8yszEoDZ_CLldTOMJQRolqqEmVV&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1IeuuX8yszEoDZ_CLldTOMJQRolqqEmVV",
+      "status": "published",
+      "added": "2023-09-24",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-035",
+      "title": "Gloriosa Wedding · 35",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193425"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Jh1chLkxEQEqu_hxkVduLnQ2CBGVV5dG&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Jh1chLkxEQEqu_hxkVduLnQ2CBGVV5dG",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-036",
+      "title": "Gloriosa Wedding · 36",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_181758"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1K7uiYu1K7gFpGVHWN4AHou6aC4YAME0k&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1K7uiYu1K7gFpGVHWN4AHou6aC4YAME0k",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-037",
+      "title": "Gloriosa Wedding · 37",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img-20210708-wa0010"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1HrDHq9IXBqI_1aHefhoUI9EggIb3raIx&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1HrDHq9IXBqI_1aHefhoUI9EggIb3raIx",
+      "status": "published",
+      "added": "2021-07-08",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-038",
+      "title": "Gloriosa Wedding · 38",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230924_181719"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1ImP8qgV44CVIhApxfgDmWjIiihGDIUWK&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1ImP8qgV44CVIhApxfgDmWjIiihGDIUWK",
+      "status": "published",
+      "added": "2023-09-24",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-039",
+      "title": "Gloriosa Wedding · 39",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230731_125034"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JE3BbfqySyeonHs0HY-IsvX22atMSGAq&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JE3BbfqySyeonHs0HY-IsvX22atMSGAq",
+      "status": "published",
+      "added": "2023-07-31",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-040",
+      "title": "Gloriosa Wedding · 40",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230731_124935"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JAuZSzNegjn7Gk4JRRtDcQxgr0jWEhN6&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JAuZSzNegjn7Gk4JRRtDcQxgr0jWEhN6",
+      "status": "published",
+      "added": "2023-07-31",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-041",
+      "title": "Gloriosa Wedding · 41",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193341"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JcNI66EgsqDvVEsHA12Ir7MUbaB8maoF&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JcNI66EgsqDvVEsHA12Ir7MUbaB8maoF",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-042",
+      "title": "Gloriosa Wedding · 42",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193033"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JTMuZgxKrChtoUWWnkuygdUT-vwyvgsc&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JTMuZgxKrChtoUWWnkuygdUT-vwyvgsc",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-043",
+      "title": "Gloriosa Wedding · 43",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_182815"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JwjOZrpWjvkLOSTnYSPhSy36URe6jVUz&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JwjOZrpWjvkLOSTnYSPhSy36URe6jVUz",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-044",
+      "title": "Gloriosa Wedding · 44",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193443"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1Jp637_8p9lrBabqdgf9v5GM4YjNcdB3C&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1Jp637_8p9lrBabqdgf9v5GM4YjNcdB3C",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-045",
+      "title": "Gloriosa Wedding · 45",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230920_222846"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1J2hQ6xVDiOk5kn_JCnsFlP019Tjv8Xb9&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1J2hQ6xVDiOk5kn_JCnsFlP019Tjv8Xb9",
+      "status": "published",
+      "added": "2023-09-20",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-046",
+      "title": "Gloriosa Wedding · 46",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230828_200630"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1J33GoXBwzOGTLYhNJoXprfZVHCt6V1K_&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1J33GoXBwzOGTLYhNJoXprfZVHCt6V1K_",
+      "status": "published",
+      "added": "2023-08-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-047",
+      "title": "Gloriosa Wedding · 47",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20231209_130711"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1IGagtPVluhk0HxGaPE2uwrNDgfwSUznn&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1IGagtPVluhk0HxGaPE2uwrNDgfwSUznn",
+      "status": "published",
+      "added": "2023-12-09",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-048",
+      "title": "Gloriosa Wedding · 48",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img-20210713-wa0015"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1HZskDTDiZUeLFUHi1YwShX9PVsBm2YZT&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1HZskDTDiZUeLFUHi1YwShX9PVsBm2YZT",
+      "status": "published",
+      "added": "2021-07-13",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-049",
+      "title": "Gloriosa Wedding · 49",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20231229_104001"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1I6J_gbpVkmKQ5spcfoVfbKPOOiyG17rS&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1I6J_gbpVkmKQ5spcfoVfbKPOOiyG17rS",
+      "status": "published",
+      "added": "2023-12-29",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-wed-050",
+      "title": "Gloriosa Wedding · 50",
+      "category": "photo",
+      "type": "photo",
+      "topics": [
+        "wedding",
+        "gloriosa",
+        "photography",
+        "event",
+        "portrait",
+        "img_20230728_193114"
+      ],
+      "aspect": [
+        4,
+        3
+      ],
+      "src": "https://drive.google.com/thumbnail?id=1JUXCctXL0AsgBmXn4XAakZ_eGwa3xhGs&sz=w1600",
+      "download": "https://drive.google.com/uc?export=download&id=1JUXCctXL0AsgBmXn4XAakZ_eGwa3xhGs",
+      "status": "published",
+      "added": "2023-07-28",
+      "engagement": 55,
+      "featured": false
+    },
+    {
+      "id": "gd-doc-ai-content",
+      "title": "AI in Content Creation",
+      "category": "research",
+      "type": "research",
+      "topics": [
+        "ai",
+        "content creation",
+        "research",
+        "article",
+        "automation",
+        "workflow"
+      ],
+      "aspect": [
+        3,
+        4
+      ],
+      "src": "https://docs.google.com/document/d/1Aw78iwFKN_F4Nq9th0qTpuGVnZQ6l_nFV8LSPUOPvMg/preview",
+      "download": "https://docs.google.com/document/d/1Aw78iwFKN_F4Nq9th0qTpuGVnZQ6l_nFV8LSPUOPvMg/edit?usp=sharing",
+      "status": "published",
+      "added": "2026-03-31",
+      "engagement": 72,
+      "featured": true
+    },
+    {
+      "id": "gd-deck-nitesh-dental",
+      "title": "Dr. Nitesh Patil — Dental Growth System",
+      "category": "research",
+      "type": "research",
+      "topics": [
+        "case study",
+        "deck",
+        "dental",
+        "growth system",
+        "marketing",
+        "strategy",
+        "client"
+      ],
+      "aspect": [
+        16,
+        9
+      ],
+      "src": "https://docs.google.com/presentation/d/1MCrtYVbnOknA-EzdLkAf4ucbmZHFNhVmtoAeEuzi1VE/preview",
+      "download": "https://docs.google.com/presentation/d/1MCrtYVbnOknA-EzdLkAf4ucbmZHFNhVmtoAeEuzi1VE/edit?usp=sharing",
+      "status": "published",
+      "added": "2026-06-14",
+      "engagement": 66,
+      "featured": false
+    }
   ]
 }
