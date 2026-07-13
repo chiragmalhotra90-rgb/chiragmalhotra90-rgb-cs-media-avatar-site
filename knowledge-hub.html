@@ -1,244 +1,476 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knowledge Nexus — The Digital Marketing Ecosystem | CS Media</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
-<style>
-:root{
-  --base:#04090c; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76;
-  --muted:#7c8b90; --card:#0a1418; --line:rgba(0,229,255,.18);
-  --head:'Montserrat',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-html,body{width:100%;min-height:100%;background:var(--base);color:var(--text);font-family:var(--body);}
-body{overflow-x:hidden;}
-
-/* backdrop */
-#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(60% 50% at 18% 14%, color-mix(in srgb,var(--accent) 12%, transparent), transparent 60%),
-    radial-gradient(58% 50% at 86% 92%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 62%);}
-#grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-  background-image:linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.05) 1px,transparent 1px);
-  background-size:46px 46px;
-  -webkit-mask-image:radial-gradient(circle at 50% 45%,#000,transparent 78%);
-  mask-image:radial-gradient(circle at 50% 45%,#000,transparent 78%);}
-
-/* top bar */
-header{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;
-  padding:18px clamp(20px,4vw,52px);pointer-events:none;}
-.brand{display:flex;flex-direction:column;gap:4px;pointer-events:auto;}
-.brand .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.34em;color:var(--accent);text-transform:uppercase;}
-.brand .sub{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.04em;color:var(--muted);}
-.back{pointer-events:auto;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--text);text-decoration:none;border:1px solid var(--line);padding:9px 16px;border-radius:999px;
-  background:color-mix(in srgb,var(--accent) 6%,transparent);transition:.25s;}
-.back:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px color-mix(in srgb,var(--accent) 22%,transparent);}
-
-/* nexus stage */
-#stage{position:relative;z-index:5;width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:96px 20px 120px;}
-#core{position:relative;text-align:center;padding:26px 42px;border-radius:22px;
-  background:linear-gradient(160deg,#08161b,#04090c);border:2px solid var(--accent);
-  box-shadow:0 0 70px color-mix(in srgb,var(--accent) 30%,transparent), inset 0 1px 0 rgba(255,255,255,.06);
-  margin-bottom:14px;}
-#core .k{font-family:var(--mono);font-size:12px;letter-spacing:.36em;color:var(--accent);margin-bottom:10px;}
-#core .t{font-family:var(--head);font-weight:900;font-size:clamp(2rem,5vw,3rem);line-height:.94;letter-spacing:.01em;color:#fff;text-transform:uppercase;}
-.lead{font-family:var(--body);font-size:15px;color:var(--muted);max-width:560px;text-align:center;margin-bottom:40px;}
-
-/* branch grid */
-.branches{width:100%;max-width:1180px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-@media(max-width:880px){.branches{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.branches{grid-template-columns:1fr;}}
-.branch{position:relative;border:1.5px solid var(--line);border-radius:16px;background:linear-gradient(160deg,#0a1418,#060d10);padding:20px;cursor:pointer;transition:.28s;overflow:hidden;}
-.branch:hover{border-color:var(--accent);box-shadow:0 0 34px color-mix(in srgb,var(--accent) 18%,transparent);transform:translateY(-2px);}
-.branch .row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
-.branch .num{font-family:var(--mono);font-size:12px;color:var(--accent);opacity:.8;}
-.branch .name{font-family:var(--head);font-weight:800;font-size:21px;line-height:1;letter-spacing:.01em;text-transform:uppercase;color:#fff;}
-.branch .desc{font-family:var(--body);font-size:14px;line-height:1.5;color:#b9c6cb;margin:6px 0 14px;}
-.chips{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{font-family:var(--mono);font-size:12px;letter-spacing:.01em;color:#dceef2;padding:6px 12px;border-radius:999px;
-  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);background:color-mix(in srgb,var(--accent) 7%,transparent);
-  cursor:pointer;transition:.22s;}
-.chip:hover{color:#fff;background:color-mix(in srgb,var(--accent) 22%,transparent);border-color:color-mix(in srgb,var(--accent) 70%,transparent);}
-.chip.active{color:#04090c;background:var(--accent);border-color:var(--accent);font-weight:700;}
-
-/* detail panel */
-#panel{position:fixed;z-index:50;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
-  width:min(680px,calc(100% - 40px));opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;}
-#panel.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
-.panel-card{position:relative;padding:22px 26px 24px;border-radius:18px;
-  background:linear-gradient(160deg,#0a1620,#04090c);border:1.5px solid color-mix(in srgb,var(--accent) 72%,transparent);
-  box-shadow:0 0 48px color-mix(in srgb,var(--accent) 24%,transparent), inset 0 1px 0 rgba(255,255,255,.05);}
-.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-.panel-head .pn{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:var(--accent);}
-.panel-head .hr{flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,transparent),transparent);}
-.panel-head .tag{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);}
-.panel-head .close{cursor:pointer;font-family:var(--mono);font-size:16px;color:var(--muted);line-height:1;padding:2px 6px;border-radius:6px;transition:.2s;}
-.panel-head .close:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);}
-#panel .pt{font-family:var(--head);font-weight:800;font-size:26px;line-height:1.04;letter-spacing:.006em;color:#fff;}
-#panel .pd{margin-top:12px;font-family:var(--body);font-weight:400;font-size:16px;line-height:1.55;color:#cdd9de;}
-
-footer{position:relative;z-index:5;text-align:center;padding:30px 20px 40px;border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
-footer a{color:var(--accent);text-decoration:none;}
-</style>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
 <body>
-<div id="bg"></div>
-<div id="grid"></div>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+ html,body{margin:0;background:#06060a;}
+ *{box-sizing:border-box;}
+ @keyframes hub-spin{to{transform:rotate(360deg);}}
+ @keyframes hub-spinrev{to{transform:rotate(-360deg);}}
+ @keyframes hub-pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.55;}50%{transform:translate(-50%,-50%) scale(1.06);opacity:.85;}}
+ @keyframes hub-flow{to{stroke-dashoffset:-28;}}
+ @keyframes hub-grid{to{background-position:48px 48px;}}
+ @keyframes hub-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+ [data-role="hub-fit"]::-webkit-scrollbar{display:none;}
+ [data-role="side-scroll"]::-webkit-scrollbar{width:5px;}
+ [data-role="side-scroll"]::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:9px;}
+</style>
+</helmet>
 
-<header>
-  <div class="brand">
-    <span class="eyebrow">Education&nbsp;Hub</span>
-    <span class="sub">Knowledge Nexus · The Digital Marketing Ecosystem</span>
-  </div>
-  <a class="back" href="index.html#page3">← Back to CS Media</a>
-</header>
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true"><defs>
+ <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 3v6h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="8.5" y1="13" x2="15.5" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8.5" y1="17" x2="13" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-cursor" viewBox="0 0 24 24"><path d="M4 3l7.2 17 2.5-7.3L21 10.2 4 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.2 20c0-3.3 2.6-5.8 5.8-5.8s5.8 2.5 5.8 5.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 5a3.2 3.2 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21 20c0-2.4-1.4-4.5-3.4-5.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-bar" viewBox="0 0 24 24"><line x1="6" y1="20" x2="6" y2="12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><line x1="18" y1="20" x2="18" y2="14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+ <symbol id="ic-book" viewBox="0 0 24 24"><path d="M12 6c-1.6-1.2-3.7-2-6.3-2H3v14h2.7c2.6 0 4.7.8 6.3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 6c1.6-1.2 3.7-2 6.3-2H21v14h-2.7c-2.6 0-4.7.8-6.3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><line x1="12" y1="6" x2="12" y2="20" stroke="currentColor" stroke-width="2"/></symbol>
+ <symbol id="ic-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-x" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5.5l11 6.5-11 6.5z" fill="currentColor"/></symbol>
+ <symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="11" x2="12" y2="16.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.8" r="1" fill="currentColor"/></symbol>
+ <symbol id="ic-arrow" viewBox="0 0 24 24"><line x1="4" y1="12" x2="19" y2="12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-link" viewBox="0 0 24 24"><path d="M9 15l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 6.5l1.5-1.5a4 4 0 0 1 5.5 5.5L16.5 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M13 17.5L11.5 19a4 4 0 0 1-5.5-5.5L7.5 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-code" viewBox="0 0 24 24"><path d="M9 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s-6-5.4-6-10a6 6 0 0 1 12 0c0 4.6-6 10-6 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+ <symbol id="ic-tool" viewBox="0 0 24 24"><path d="M15.5 4.5a3.6 3.6 0 0 0-4.7 4.4L4 15.7 8.3 20l6.8-6.8a3.6 3.6 0 0 0 4.4-4.7l-2.5 2.5-2-2 2.5-2.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1" fill="currentColor"/></symbol>
+ <symbol id="ic-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 13l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-edit" viewBox="0 0 24 24"><path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-send" viewBox="0 0 24 24"><path d="M21 3L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M21 3l-7 18-4-8-8-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-list" viewBox="0 0 24 24"><line x1="9" y1="7" x2="20" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="17" x2="20" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="4.5" cy="7" r="1.1" fill="currentColor"/><circle cx="4.5" cy="12" r="1.1" fill="currentColor"/><circle cx="4.5" cy="17" r="1.1" fill="currentColor"/></symbol>
+ <symbol id="ic-activity" viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-hash" viewBox="0 0 24 24"><line x1="5" y1="9" x2="20" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4" y1="15" x2="19" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="4" x2="8" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="4" x2="14" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-key" viewBox="0 0 24 24"><circle cx="8" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 11l8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 6l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M18.5 3.5l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="4" y1="9.5" x2="20" y2="9.5" stroke="currentColor" stroke-width="2"/><line x1="9" y1="3" x2="9" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="15" y1="3" x2="15" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+ <symbol id="ic-zap" viewBox="0 0 24 24"><path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13" y="4" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="13" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2"/><rect x="13" y="13" width="7" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+ <symbol id="ic-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 7h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="ic-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5 11-12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
 
-<main id="stage">
-  <div id="core">
-    <div class="k">KNOWLEDGE NEXUS</div>
-    <div class="t">Digital<br>Marketing</div>
-  </div>
-  <p class="lead">Six disciplines power a modern growth system. Tap any branch to read what it does, then tap a label to go deeper.</p>
+<div data-role="hub-fit" style="position:fixed; inset:0; background:#06060a; overflow:hidden; display:grid; place-items:center;">
+ <div data-role="hub-stage" style="position:relative; width:1680px; height:945px; transform-origin:center center; color:#eef0f5; font-family:'Manrope',sans-serif;">
 
-  <div class="branches" id="branches"></div>
-</main>
+  <div style="position:absolute; inset:0; background:radial-gradient(58% 50% at 8% 12%, rgba(47,149,255,.16), transparent 60%), radial-gradient(58% 52% at 92% 92%, rgba(255,122,26,.15), transparent 62%), #07070c;"></div>
+  <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(120,150,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,150,255,.045) 1px,transparent 1px); background-size:48px 48px; -webkit-mask-image:radial-gradient(circle at 53% 46%,#000,transparent 72%); mask-image:radial-gradient(circle at 53% 46%,#000,transparent 72%); animation:hub-grid 14s linear infinite;"></div>
 
-<div id="panel">
-  <div class="panel-card">
-    <div class="panel-head">
-      <span class="pn" id="pn">01</span>
-      <span class="hr"></span>
-      <span class="tag" id="ptag">DISCIPLINE</span>
-      <span class="close" id="pclose" title="Close">✕</span>
+  <!-- ENERGY CONNECTORS -->
+  <sc-if value="{{ showConnectors }}" hint-placeholder-val="{{ true }}">
+   <svg viewBox="0 0 1680 945" width="1680" height="945" style="position:absolute; inset:0; overflow:visible; pointer-events:none;">
+    <sc-for list="{{ connectors }}" as="cn" hint-placeholder-count="6">
+     <path d="{{ cn.d }}" fill="none" stroke="{{ cn.color }}" stroke-width="{{ cn.w }}" stroke-linecap="round" stroke-dasharray="2 10" style="opacity:{{ cn.op }}; animation:hub-flow {{ cn.dur }}s linear infinite;"></path>
+     <circle r="3" fill="{{ cn.color }}" style="opacity:{{ cn.dotOp }};"><animateMotion dur="{{ cn.dur }}s" repeatCount="indefinite" path="{{ cn.d }}"></animateMotion></circle>
+    </sc-for>
+   </svg>
+  </sc-if>
+
+  <!-- CORE -->
+  <div style="position:absolute; left:885px; top:432px; width:430px; height:430px; transform:translate(-50%,-50%); pointer-events:none;">
+   <div style="position:absolute; left:50%; top:50%; width:420px; height:420px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(closest-side, rgba(47,149,255,.30), transparent 70%); filter:blur(6px); animation:hub-pulse 5.5s ease-in-out infinite;"></div>
+   <div style="position:absolute; left:50%; top:50%; width:330px; height:330px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(closest-side, rgba(255,122,26,.26), transparent 72%); filter:blur(4px); animation:hub-pulse 5.5s ease-in-out infinite 1.2s;"></div>
+   <div style="position:absolute; left:50%; top:50%; width:392px; height:392px; transform:translate(-50%,-50%); border-radius:50%; background:conic-gradient(from 210deg, #2f95ff, #6fb6ff, #ffb27a, #ff7a1a, #2f95ff); -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 2px)); mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 2px)); animation:hub-spin 26s linear infinite; opacity:.9;"></div>
+   <div style="position:absolute; left:50%; top:50%; width:320px; height:320px; transform:translate(-50%,-50%); border-radius:50%; border:1px dashed rgba(160,190,255,.32); animation:hub-spinrev 34s linear infinite;"></div>
+   <div style="position:absolute; left:50%; top:50%; width:262px; height:262px; transform:translate(-50%,-50%); border-radius:50%; border:1px solid rgba(255,150,90,.28); box-shadow:inset 0 0 40px rgba(47,149,255,.12);"></div>
+   <div style="position:absolute; left:50%; top:50%; width:392px; height:392px; transform:translate(-50%,-50%); animation:hub-spin 22s linear infinite;">
+    <span style="position:absolute; left:50%; top:0; width:6px; height:6px; margin-left:-3px; border-radius:50%; background:#7fc0ff; box-shadow:0 0 10px #2f95ff;"></span>
+    <span style="position:absolute; left:96%; top:34%; width:5px; height:5px; border-radius:50%; background:#ffb27a; box-shadow:0 0 9px #ff7a1a;"></span>
+    <span style="position:absolute; left:8%; top:70%; width:4px; height:4px; border-radius:50%; background:#a9d0ff; box-shadow:0 0 8px #2f95ff;"></span>
+   </div>
+   <div style="position:absolute; left:50%; top:50%; width:240px; height:240px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(closest-side, rgba(9,10,18,.9), rgba(7,8,14,.55) 70%, transparent);"></div>
+   <div style="position:absolute; left:50%; top:50%; width:340px; transform:translate(-50%,-50%); text-align:center;">
+    <div style="font-family:'Archivo',sans-serif; font-weight:800; font-size:46px; line-height:.96; letter-spacing:.012em; color:#fff; text-shadow:0 0 22px rgba(47,149,255,.4);">DIGITAL<br>MARKETING</div>
+    <div style="font-family:'Manrope',sans-serif; font-weight:700; font-size:19px; letter-spacing:.02em; color:#ff8a3c; margin-top:9px;">Knowledge Hub</div>
+    <div style="display:flex; gap:9px; justify-content:center; margin-top:16px;">
+     <span style="display:inline-flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.06em; color:#cdd6e8; padding:6px 12px; border-radius:999px; border:1px solid rgba(160,190,255,.28); background:rgba(120,150,255,.07);"><span style="width:8px;height:8px;border-radius:50%;background:#2f95ff;"></span>STRATEGY</span>
+     <span style="display:inline-flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.06em; color:#cdd6e8; padding:6px 12px; border-radius:999px; border:1px solid rgba(160,190,255,.28); background:rgba(120,150,255,.07);"><span style="width:8px;height:8px;border-radius:50%;background:#c45cff;"></span>DATA</span>
+     <span style="display:inline-flex; align-items:center; gap:6px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.06em; color:#cdd6e8; padding:6px 12px; border-radius:999px; border:1px solid rgba(160,190,255,.28); background:rgba(120,150,255,.07);"><span style="width:8px;height:8px;border-radius:50%;background:#ff7a1a;"></span>GROWTH</span>
     </div>
-    <div class="pt" id="pt">SEO</div>
-    <div class="pd" id="pd">Tap a branch to begin.</div>
+   </div>
   </div>
+
+  <div style="position:absolute; left:885px; top:712px; transform:translateX(-50%); font-family:'Manrope',sans-serif; font-weight:600; font-size:21px; letter-spacing:.03em; color:#9aa3ba; white-space:nowrap;">Explore. Master. Succeed.</div>
+
+  <!-- CATEGORY CARDS -->
+  <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+   <div onClick="{{ c.onClick }}" style="position:absolute; left:{{ c.left }}px; top:{{ c.top }}px; width:272px; padding:18px 20px 16px; border-radius:18px; cursor:pointer; background:linear-gradient(165deg, rgba(20,22,34,.92), rgba(10,11,18,.92)); border:1.5px solid {{ c.border }}; box-shadow:{{ c.shadow }}; backdrop-filter:blur(6px); transition:transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;" style-hover="{ transform:'translateY(-4px)' }">
+    <div style="display:flex; align-items:center; gap:13px; margin-bottom:13px;">
+     <span style="flex:none; width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:{{ c.iconBg }}; border:1px solid {{ c.border }}; color:{{ c.accent }};"><svg viewBox="0 0 24 24" style="width:21px; height:21px;"><use href="#ic-{{ c.icon }}"></use></svg></span>
+     <div style="display:flex; flex-direction:column; gap:2px; min-width:0;">
+      <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:18px; letter-spacing:.01em; color:#fff; line-height:1.05; text-transform:uppercase;">{{ c.name }}</span>
+      <span style="font-size:12.5px; color:#8b93a8; line-height:1.1;">{{ c.cardSub }}</span>
+     </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+     <sc-for list="{{ c.bullets }}" as="b" hint-placeholder-count="5">
+      <div style="display:flex; align-items:center; gap:9px;"><span style="width:5px; height:5px; border-radius:50%; flex:none; background:{{ c.accent }};"></span><span style="font-size:13.5px; color:#c4cad8; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ b }}</span></div>
+     </sc-for>
+    </div>
+    <div style="display:flex; align-items:center; gap:7px; margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,.07);">
+     <span style="font-family:'Manrope',sans-serif; font-weight:700; font-size:13px; letter-spacing:.01em; color:{{ c.accent }};">Click to explore</span>
+     <svg viewBox="0 0 24 24" style="width:14px; height:14px; color:{{ c.accent }};"><use href="#ic-chev"></use></svg>
+    </div>
+   </div>
+  </sc-for>
+
+  <!-- TOP BAR -->
+  <div style="position:absolute; left:0; top:0; width:1680px; height:96px; display:flex; align-items:center; justify-content:space-between; padding:0 40px; z-index:20;">
+   <div style="display:flex; align-items:center; gap:14px;">
+    <span style="position:relative; width:46px; height:46px; display:grid; place-items:center; border-radius:13px; background:radial-gradient(closest-side, rgba(255,122,26,.22), transparent); border:1px solid rgba(255,140,60,.4);">
+     <svg viewBox="0 0 24 24" style="width:26px; height:26px; color:#ff8a3c;"><circle cx="12" cy="12" r="2.2" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.2" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(120 12 12)"/></svg>
+    </span>
+    <div style="display:flex; flex-direction:column; gap:2px;">
+     <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:19px; letter-spacing:.07em; color:#fff;">DM KNOWLEDGE HUB</span>
+     <span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.18em; color:#8b93a8;">Learn. Apply. Grow.</span>
+    </div>
+   </div>
+   <div style="display:flex; align-items:center; gap:34px;">
+    <sc-for list="{{ navs }}" as="nv" hint-placeholder-count="5">
+     <div onClick="{{ nv.onClick }}" style="position:relative; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:{{ nv.weight }}; font-size:15px; color:{{ nv.color }}; padding-bottom:4px; transition:color .2s ease;" style-hover="{ color:'#fff' }">{{ nv.name }}<span style="position:absolute; left:0; bottom:0; height:2px; width:{{ nv.uw }}; background:#ff8a3c; border-radius:2px;"></span></div>
+    </sc-for>
+   </div>
+   <div style="display:flex; align-items:center; gap:16px;">
+    <span style="font-family:'Manrope',sans-serif; font-weight:600; font-size:14px; color:#8b93a8;">Mode</span>
+    <div style="display:flex; padding:4px; gap:3px; border-radius:11px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);">
+     <button onClick="{{ onManual }}" style="cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:13.5px; padding:7px 16px; border-radius:8px; border:none; color:{{ manualColor }}; background:{{ manualBg }}; box-shadow:{{ manualSh }}; transition:all .25s ease;">Manual</button>
+     <button onClick="{{ onAuto }}" style="cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:13.5px; padding:7px 16px; border-radius:8px; border:none; color:{{ autoColor }}; background:{{ autoBg }}; box-shadow:{{ autoSh }}; transition:all .25s ease;">Auto</button>
+    </div>
+    <span style="width:38px; height:38px; display:grid; place-items:center; border-radius:50%; border:1px solid rgba(255,255,255,.14); color:#9aa3ba; cursor:pointer;" style-hover="{ color:'#fff', borderColor:'rgba(255,140,60,.5)' }"><svg viewBox="0 0 24 24" style="width:18px; height:18px;"><use href="#ic-info"></use></svg></span>
+   </div>
+  </div>
+
+  <!-- DETAIL SIDEBAR -->
+  <sc-if value="{{ sideOpen }}" hint-placeholder-val="{{ true }}">
+   <div style="position:absolute; left:28px; top:112px; width:368px; height:700px; z-index:18;">
+    <div data-role="side-scroll" style="position:relative; width:100%; height:100%; overflow-y:auto; border-radius:22px; padding:26px 24px; background:linear-gradient(180deg, rgba(15,17,28,.96), rgba(9,10,17,.96)); border:1.5px solid {{ t.border }}; box-shadow:0 30px 80px rgba(0,0,0,.5), 0 0 50px {{ t.glow }}, inset 0 1px 0 rgba(255,255,255,.05); backdrop-filter:blur(10px);">
+     <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+       <span style="flex:none; width:54px; height:54px; border-radius:50%; display:grid; place-items:center; background:{{ t.iconBg }}; border:1.5px solid {{ t.border }}; color:{{ t.accent }}; box-shadow:0 0 24px {{ t.glow }};"><svg viewBox="0 0 24 24" style="width:26px; height:26px;"><use href="#ic-{{ t.icon }}"></use></svg></span>
+       <div style="display:flex; flex-direction:column; gap:3px;">
+        <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:27px; letter-spacing:.01em; color:#fff; line-height:1; text-transform:uppercase;">{{ t.name }}</span>
+        <span style="font-size:13px; color:#8b93a8;">{{ t.fullSub }}</span>
+       </div>
+      </div>
+      <button onClick="{{ onClose }}" style="flex:none; width:34px; height:34px; border-radius:10px; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.04); color:#aab2c5; cursor:pointer; display:grid; place-items:center;" style-hover="{ color:'#fff', borderColor:'rgba(255,255,255,.25)' }"><svg viewBox="0 0 24 24" style="width:17px; height:17px;"><use href="#ic-x"></use></svg></button>
+     </div>
+
+     <p style="margin:20px 0 0; font-size:14.5px; line-height:1.6; color:#aeb6c8;">{{ t.desc }}</p>
+
+     <div style="margin:24px 0 12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.22em; color:{{ t.accent }};">CORE TOPICS</div>
+     <div style="display:flex; flex-direction:column; gap:8px;">
+      <sc-for list="{{ t.coreTopics }}" as="ct" hint-placeholder-count="5">
+       <div style="display:flex; align-items:center; gap:13px; padding:11px 13px; border-radius:13px; cursor:pointer; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05); transition:background .2s ease, border-color .2s ease, transform .2s ease;" style-hover="{ background:'rgba(255,255,255,.05)', transform:'translateX(3px)' }">
+        <span style="flex:none; width:38px; height:38px; border-radius:10px; display:grid; place-items:center; background:rgba(255,255,255,.04); color:{{ t.accent }};"><svg viewBox="0 0 24 24" style="width:19px; height:19px;"><use href="#ic-{{ ct.icon }}"></use></svg></span>
+        <div style="display:flex; flex-direction:column; gap:2px; min-width:0; flex:1;">
+         <span style="font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; color:#eef0f5; line-height:1.1;">{{ ct.name }}</span>
+         <span style="font-size:12px; color:#828b9f; line-height:1.2;">{{ ct.sub }}</span>
+        </div>
+        <svg viewBox="0 0 24 24" style="width:16px; height:16px; color:#5f6678; flex:none;"><use href="#ic-chev"></use></svg>
+       </div>
+      </sc-for>
+     </div>
+
+     <div style="margin:24px 0 12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:.22em; color:{{ t.accent }};">POPULAR RESOURCES</div>
+     <div style="display:flex; flex-direction:column; gap:8px;">
+      <sc-for list="{{ t.resources }}" as="r" hint-placeholder-count="3">
+       <div style="display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:13px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.05);">
+        <span style="flex:none; width:34px; height:34px; border-radius:9px; display:grid; place-items:center; background:rgba(255,255,255,.04); color:{{ t.accent }};"><svg viewBox="0 0 24 24" style="width:17px; height:17px;"><use href="#ic-{{ r.icon }}"></use></svg></span>
+        <div style="display:flex; flex-direction:column; gap:2px; min-width:0; flex:1;">
+         <span style="font-family:'Manrope',sans-serif; font-weight:700; font-size:14px; color:#eef0f5; line-height:1.1;">{{ r.name }}</span>
+         <span style="font-size:11.5px; color:#828b9f; line-height:1.2;">{{ r.sub }}</span>
+        </div>
+        <button style="flex:none; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:12.5px; padding:6px 15px; border-radius:9px; border:1px solid {{ t.border }}; background:{{ t.iconBg }}; color:{{ t.accent }};" style-hover="{ background:{{ t.glow }} }">{{ r.action }}</button>
+       </div>
+      </sc-for>
+     </div>
+    </div>
+    <button onClick="{{ onClose }}" title="Collapse" style="position:absolute; right:-15px; top:300px; width:30px; height:54px; border-radius:0 10px 10px 0; border:1.5px solid {{ t.border }}; border-left:none; background:rgba(15,17,28,.96); color:{{ t.accent }}; cursor:pointer; display:grid; place-items:center;"><svg viewBox="0 0 24 24" style="width:16px; height:16px; transform:rotate(180deg);"><use href="#ic-chev"></use></svg></button>
+   </div>
+  </sc-if>
+  <sc-if value="{{ sideClosed }}" hint-placeholder-val="{{ false }}">
+   <button onClick="{{ onOpen }}" title="Open details" style="position:absolute; left:28px; top:386px; width:34px; height:58px; border-radius:0 12px 12px 0; border:1.5px solid {{ t.border }}; background:rgba(15,17,28,.96); color:{{ t.accent }}; cursor:pointer; display:grid; place-items:center; z-index:18;"><svg viewBox="0 0 24 24" style="width:17px; height:17px;"><use href="#ic-chev"></use></svg></button>
+  </sc-if>
+
+  <!-- AUTO HINT CARD -->
+  <div style="position:absolute; left:1388px; top:748px; width:264px; height:66px; display:flex; align-items:center; gap:12px; padding:0 14px; border-radius:14px; background:rgba(15,17,28,.9); border:1px solid rgba(255,255,255,.09); z-index:16;">
+   <button onClick="{{ onToggleMode }}" style="flex:none; width:38px; height:38px; border-radius:11px; display:grid; place-items:center; cursor:pointer; border:1px solid {{ autoIconBorder }}; background:{{ autoIconBg }}; color:{{ autoIconColor }};"><svg viewBox="0 0 24 24" style="width:17px; height:17px;"><use href="#ic-play"></use></svg></button>
+   <span style="flex:1; font-family:'Manrope',sans-serif; font-size:12px; line-height:1.35; color:#9aa3ba;">Auto mode advances through topics automatically.</span>
+   <div style="flex:none; position:relative; width:42px; height:42px;">
+    <svg viewBox="0 0 42 42" style="width:42px; height:42px; transform:rotate(-90deg);"><circle cx="21" cy="21" r="18" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="3"/><circle cx="21" cy="21" r="18" fill="none" stroke="#ff8a3c" stroke-width="3" stroke-linecap="round" stroke-dasharray="113" stroke-dashoffset="{{ autoDash }}" style="transition:stroke-dashoffset .4s ease;"/></svg>
+    <span style="position:absolute; inset:0; display:grid; place-items:center; font-family:'Space Mono',monospace; font-size:11px; color:#cdd6e8;">{{ autoFrac }}</span>
+   </div>
+  </div>
+
+  <!-- JOURNEY BAR -->
+  <div style="position:absolute; left:28px; top:840px; width:1624px; height:80px; display:flex; align-items:center; gap:28px; padding:0 26px 0 24px; border-radius:20px; background:linear-gradient(180deg, rgba(15,17,28,.94), rgba(9,10,17,.94)); border:1px solid rgba(255,255,255,.08); z-index:17;">
+   <div style="display:flex; align-items:center; gap:13px; flex:none;">
+    <span style="width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:#cdd6e8;"><svg viewBox="0 0 24 24" style="width:22px; height:22px;"><use href="#ic-book"></use></svg></span>
+    <div style="display:flex; flex-direction:column; gap:2px;">
+     <span style="font-family:'Archivo',sans-serif; font-weight:800; font-size:14px; letter-spacing:.08em; color:#fff;">YOUR JOURNEY</span>
+     <span style="font-size:12px; color:#8b93a8;">6 Core Pillars</span>
+    </div>
+   </div>
+   <div style="position:relative; flex:1; display:flex; align-items:center; justify-content:space-between; height:100%; padding:0 14px;">
+    <div style="position:absolute; left:34px; right:34px; top:36px; height:0; border-top:1.5px dotted rgba(255,255,255,.18);"></div>
+    <sc-for list="{{ journey }}" as="j" hint-placeholder-count="6">
+     <div onClick="{{ j.onClick }}" style="position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:7px; cursor:pointer;">
+      <span style="width:42px; height:42px; border-radius:50%; display:grid; place-items:center; font-family:'Archivo',sans-serif; font-weight:800; font-size:15px; color:{{ j.numColor }}; background:{{ j.circleBg }}; border:2px solid {{ j.ring }}; box-shadow:{{ j.glow }};">{{ j.num }}</span>
+      <span style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:.1em; color:{{ j.labelColor }};">{{ j.label }}</span>
+     </div>
+    </sc-for>
+   </div>
+   <button onClick="{{ onNext }}" style="flex:none; display:flex; align-items:center; gap:14px; cursor:pointer; border:none; background:none; padding:0;">
+    <span style="font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; letter-spacing:.05em; color:#cdd6e8;">NEXT</span>
+    <span style="width:48px; height:48px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(160deg,#ff9a4d,#ff7a1a); color:#1a0d04; box-shadow:0 0 26px rgba(255,122,26,.45); animation:hub-float 3.5s ease-in-out infinite;"><svg viewBox="0 0 24 24" style="width:22px; height:22px;"><use href="#ic-arrow"></use></svg></span>
+   </button>
+  </div>
+
+ </div>
 </div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:787},&quot;connectors&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;autoSeconds&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:10,&quot;min&quot;:2,&quot;max&quot;:10,&quot;step&quot;:0.5,&quot;tsType&quot;:&quot;number&quot;}}">
+const hexA = (hex, a) => {
+  const h = hex.replace('#','');
+  const r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+};
 
-<footer>
-  © 2026 CS Media &amp; Production · <a href="index.html">csmediaandproduction.in</a>
-</footer>
-
-<script>
-const DATA = [
-  { id:'seo', name:'SEO', desc:'Earning visibility in unpaid search results so the right people find you on Google before they ever find a competitor.',
-    subs:['On-Page SEO','Off-Page SEO','Technical SEO','Local SEO','Tools'],
-    leaf:[
-      'Optimising website content, headings, keywords, images and internal links so search engines can understand and rank each page better.',
-      'Building trust and authority through backlinks, guest posts, mentions and other signals coming from outside your website.',
-      'Improving website speed, mobile performance, indexing, crawlability and technical structure so search engines can access it properly.',
-      'Helping nearby customers find your business through Google Business Profile, local listings, reviews and location-based searches.',
-      'Platforms such as Google Search Console, Ahrefs and SEMrush help track rankings, keywords, backlinks and technical problems.'
+const TOPICS = [
+  { id:'seo', name:'SEO', cardSub:'Search Optimization', fullSub:'Search Engine Optimization', accent:'#2f95ff', icon:'search', left:447, top:108,
+    from:[706,286],
+    desc:'Improve your website visibility and rankings on search engines and drive organic traffic.',
+    coreTopics:[
+      {name:'On-Page SEO', sub:'Content, titles, meta, internal linking', icon:'file'},
+      {name:'Off-Page SEO', sub:'Backlinks, guest posting, authority', icon:'link'},
+      {name:'Technical SEO', sub:'Speed, sitemap, crawlability, index', icon:'code'},
+      {name:'Local SEO', sub:'Google Business, local listings, NAP', icon:'pin'},
+      {name:'Tools', sub:'Search Console, Ahrefs, SEMrush', icon:'tool'},
+    ],
+    resources:[
+      {name:'SEO Starter Checklist', sub:'Step-by-step guide', action:'View', icon:'check'},
+      {name:'Technical SEO Guide', sub:'Advanced insights', action:'Read', icon:'book'},
+      {name:'Keyword Research Playbook', sub:'Find high-value keywords', action:'Open', icon:'key'},
     ]},
-  { id:'ppc', name:'PPC', desc:'Buying targeted traffic and paying only when someone actually clicks — measurable, scalable performance you control to the cent.',
-    subs:['Google Ads','Social Media Ads','Keyword Research','Audience Targeting','Performance Tracking'],
-    leaf:[
-      'Paid campaigns that place your business across Google Search, Display, Shopping and YouTube to reach people actively looking for relevant products or services.',
-      'Targeted advertisements on platforms such as Instagram, Facebook, LinkedIn and TikTok, designed to reach specific audiences based on interests and behaviour.',
-      'Identifying the search terms potential customers use, helping campaigns attract more relevant traffic and reduce wasted advertising spend.',
-      'Selecting the right users based on location, age, interests, profession, online behaviour or previous interaction with the brand.',
-      'Measuring clicks, conversions, cost per lead and return on ad spend to understand results and continuously improve campaign performance.'
+  { id:'ppc', name:'PPC', cardSub:'Pay-Per-Click', fullSub:'Pay-Per-Click Advertising', accent:'#8f6bff', icon:'cursor', left:418, top:376,
+    from:[692,456],
+    desc:'Buy targeted, high-intent traffic and pay only when someone actually clicks your ad.',
+    coreTopics:[
+      {name:'Google Ads', sub:'Search, Display, Shopping, PMax', icon:'target'},
+      {name:'Social Media Ads', sub:'Meta, LinkedIn, TikTok, YouTube', icon:'users'},
+      {name:'Keyword Research', sub:'High-intent terms & negatives', icon:'search'},
+      {name:'Audience Targeting', sub:'Demographics, interests, intent', icon:'grid'},
+      {name:'Performance Tracking', sub:'CTR, CPA, ROAS, Quality Score', icon:'trend'},
+    ],
+    resources:[
+      {name:'PPC Launch Checklist', sub:'Step-by-step guide', action:'View', icon:'check'},
+      {name:'Bidding Strategy Guide', sub:'Advanced insights', action:'Read', icon:'book'},
+      {name:'Ad Copy Swipe File', sub:'Proven high-CTR copy', action:'Open', icon:'edit'},
     ]},
-  { id:'smm', name:'SMM', desc:'Building brand, community and demand on the social platforms where your customers already spend their time.',
-    subs:['Organic Marketing','Paid Advertising','Platform Strategy','Tools','Analytics'],
-    leaf:[
-      'Growing visibility through unpaid posts, reels, stories, community interaction and consistent social-media activity.',
-      'Using sponsored campaigns to reach larger or more precisely targeted audiences beyond your existing followers.',
-      'Creating a different content and communication approach for each platform based on its audience and behaviour.',
-      'Tools such as Meta Business Suite, Buffer and Hootsuite help plan, publish and manage social-media activity.',
-      'Tracking reach, engagement, saves, shares, follower growth and audience behaviour to understand what content performs best.'
+  { id:'smm', name:'SMM', cardSub:'Social Media Marketing', fullSub:'Social Media Marketing', accent:'#c45cff', icon:'users', left:472, top:606,
+    from:[728,646],
+    desc:'Build brand, community and demand on the social platforms your customers live on.',
+    coreTopics:[
+      {name:'Organic Marketing', sub:'Calendar, posts, engagement', icon:'send'},
+      {name:'Paid Advertising', sub:'Boosts, Ads Manager, video', icon:'target'},
+      {name:'Platform Strategy', sub:'Instagram, LinkedIn, Pinterest', icon:'layers'},
+      {name:'Tools', sub:'Buffer, Hootsuite, Meta Suite', icon:'tool'},
+      {name:'Analytics', sub:'Reach, saves, follower growth', icon:'activity'},
+    ],
+    resources:[
+      {name:'Social Content Calendar', sub:'Plug-and-play template', action:'Open', icon:'cal'},
+      {name:'Platform Playbook', sub:'Advanced insights', action:'Read', icon:'book'},
+      {name:'Hook & Caption Pack', sub:'High-engagement copy', action:'View', icon:'edit'},
     ]},
-  { id:'content', name:'Content Marketing', desc:'Earning attention and trust by publishing genuinely useful content instead of interrupting people with ads.',
-    subs:['Content Types','Content Planning','Copywriting','Content Distribution','Tools'],
-    leaf:[
-      'The different formats used to communicate with audiences, including blogs, videos, reels, carousels, infographics, guides and case studies.',
-      'Organising topics, publishing schedules and campaign goals so every piece of content supports a clear marketing objective.',
-      'Writing headlines, captions, website text and calls to action that capture attention, explain value and encourage people to respond.',
-      'Publishing and promoting content through websites, search engines, email, social media and partner platforms to maximise reach.',
-      'Software used to research, design, write, edit, schedule and manage content more efficiently across multiple channels.'
+  { id:'content', name:'Content Marketing', cardSub:'Content Strategy', fullSub:'Content Strategy', accent:'#ff7a1a', icon:'file', left:1078, top:114,
+    from:[1086,290],
+    desc:'Earn attention and trust by publishing genuinely useful content instead of interrupting people.',
+    coreTopics:[
+      {name:'Content Types', sub:'Blogs, video, infographics', icon:'layers'},
+      {name:'Content Planning', sub:'Calendar, topic clusters', icon:'cal'},
+      {name:'Copywriting', sub:'Storytelling, hooks, CTAs', icon:'edit'},
+      {name:'Content Distribution', sub:'Email, social, guest posts', icon:'send'},
+      {name:'Tools', sub:'Grammarly, Canva, SurferSEO', icon:'tool'},
+    ],
+    resources:[
+      {name:'Content Calendar Kit', sub:'Plan a full quarter', action:'Open', icon:'cal'},
+      {name:'Copywriting Frameworks', sub:'Advanced insights', action:'Read', icon:'book'},
+      {name:'Blog Post Checklist', sub:'Step-by-step guide', action:'View', icon:'check'},
     ]},
-  { id:'email', name:'Email Marketing', desc:'The highest-ROI channel in marketing — a direct line to an audience you actually own, not one you rent from a platform.',
-    subs:['Newsletter Strategy','List Building','Segmentation','Automation','Platforms'],
-    leaf:[
-      'Sending useful and consistent email updates that educate subscribers, maintain interest and strengthen brand relationships.',
-      'Growing a database of interested subscribers through forms, lead magnets, website sign-ups and campaign offers.',
-      'Dividing subscribers into groups based on interests, behaviour or customer stage so each person receives more relevant messages.',
-      'Sending emails automatically after actions such as signing up, purchasing, abandoning a cart or becoming inactive.',
-      'Tools such as Mailchimp, Brevo and ConvertKit help create, schedule, automate and measure email campaigns.'
+  { id:'email', name:'Email Marketing', cardSub:'Email Strategy', fullSub:'Email Strategy', accent:'#e0ad3c', icon:'mail', left:1156, top:378,
+    from:[1156,456],
+    desc:'The highest-ROI channel in marketing — a direct line to an audience you actually own.',
+    coreTopics:[
+      {name:'Newsletter Strategy', sub:'What to send, to whom, when', icon:'send'},
+      {name:'List Building', sub:'Lead magnets & opt-ins', icon:'users'},
+      {name:'Segmentation', sub:'Right message, right group', icon:'list'},
+      {name:'Automation', sub:'Welcome & abandoned-cart flows', icon:'zap'},
+      {name:'Platforms', sub:'Mailchimp, ConvertKit, Brevo', icon:'tool'},
+    ],
+    resources:[
+      {name:'Welcome Series Template', sub:'Plug-and-play flow', action:'Open', icon:'send'},
+      {name:'Deliverability Guide', sub:'Advanced insights', action:'Read', icon:'book'},
+      {name:'Subject Line Swipe File', sub:'Proven open-rate lines', action:'View', icon:'edit'},
     ]},
-  { id:'analytics', name:'Analytics & Tracking', desc:'Measuring behaviour and results so every marketing decision is backed by hard evidence, not opinion.',
-    subs:['Google Analytics','Google Tag Manager','UTM Parameters','Heatmaps','KPI Metrics'],
-    leaf:[
-      'Shows how visitors discover your website, which pages they view and what actions they complete during their journey.',
-      'Allows tracking codes and marketing tags to be added and managed without repeatedly editing the website’s main source code.',
-      'Tracking labels added to links to identify which campaign, advertisement, email or social platform generated the traffic.',
-      'Visual reports showing where users click, scroll and stop engaging, helping identify design, usability and conversion problems.',
-      'The key measurements used to evaluate performance, including traffic, engagement, leads, conversion rate, acquisition cost and sales.'
-    ]}
+  { id:'analytics', name:'Analytics & Tracking', cardSub:'Data & Insights', fullSub:'Data & Insights', accent:'#1fc7bf', icon:'bar', left:1078, top:610,
+    from:[1082,646],
+    desc:'Measure behaviour and results so every marketing decision is backed by evidence, not opinion.',
+    coreTopics:[
+      {name:'Google Analytics', sub:'GA4 event-based tracking', icon:'activity'},
+      {name:'Tag Manager', sub:'Deploy tags, no code', icon:'code'},
+      {name:'UTM Parameters', sub:'Tag links by campaign', icon:'hash'},
+      {name:'Heatmaps', sub:'See clicks, scroll, drop-off', icon:'grid'},
+      {name:'KPI Metrics', sub:'Bounce, CTR, leads, sales', icon:'trend'},
+    ],
+    resources:[
+      {name:'GA4 Setup Checklist', sub:'Step-by-step guide', action:'View', icon:'check'},
+      {name:'Tracking Plan Template', sub:'Map every event', action:'Open', icon:'layers'},
+      {name:'KPI Dashboard Guide', sub:'Advanced insights', action:'Read', icon:'book'},
+    ]},
 ];
 
-const wrap = document.getElementById('branches');
-DATA.forEach((d,i)=>{
-  const el = document.createElement('div');
-  el.className = 'branch';
-  el.dataset.idx = i;
-  el.innerHTML =
-    '<div class="row"><span class="num">'+('0'+(i+1)).slice(-2)+'</span>'+
-    '<span class="name">'+d.name+'</span></div>'+
-    '<div class="desc">'+d.desc+'</div>'+
-    '<div class="chips">'+d.subs.map((s,j)=>'<span class="chip" data-i="'+i+'" data-j="'+j+'">'+s+'</span>').join('')+'</div>';
-  // clicking the card (not a chip) shows the discipline overview
-  el.addEventListener('click',(e)=>{
-    if(e.target.classList.contains('chip')) return;
-    showDiscipline(i);
-  });
-  wrap.appendChild(el);
-});
+// journey order: SEO, PPC, SMM, CONTENT, EMAIL, ANALYTICS
+const JOURNEY = ['seo','ppc','smm','content','email','analytics'];
+const NAV = ['Overview','All Topics','Resources','Playlists','My Progress'];
+const CORE = [885, 432];
 
-// chip clicks
-wrap.querySelectorAll('.chip').forEach(ch=>{
-  ch.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    const i = +ch.dataset.i, j = +ch.dataset.j;
-    document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
-    ch.classList.add('active');
-    showLeaf(i,j);
-  });
-});
+class Component extends DCLogic {
+  state = { active:'seo', side:true, nav:'Overview', mode:'manual' };
 
-const panel = document.getElementById('panel');
-const pn = document.getElementById('pn'), ptag = document.getElementById('ptag'),
-      pt = document.getElementById('pt'), pd = document.getElementById('pd');
+  componentDidMount(){
+    this.fitEl = document.querySelector('[data-role="hub-fit"]');
+    this.stageEl = document.querySelector('[data-role="hub-stage"]');
+    this.fit();
+    this._ro = new ResizeObserver(()=> this.fit());
+    if(this.fitEl) this._ro.observe(this.fitEl);
+    this._fb = ()=> this.fit();
+    window.addEventListener('resize', this._fb);
+    this._key = (e)=>{
+      if(e.key === 'ArrowRight'){ this.next(); }
+      else if(e.key === 'ArrowLeft'){ this.prev(); }
+    };
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount(){
+    if(this._ro) this._ro.disconnect();
+    window.removeEventListener('resize', this._fb);
+    window.removeEventListener('keydown', this._key);
+    clearInterval(this._timer);
+  }
 
-function showDiscipline(i){
-  const d = DATA[i];
-  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
-  pn.textContent = ('0'+(i+1)).slice(-2);
-  ptag.textContent = 'DISCIPLINE';
-  pt.textContent = d.name;
-  pd.textContent = d.desc;
-  panel.classList.add('show');
+  fit(){
+    if(!this.fitEl || !this.stageEl) return;
+    const w = this.fitEl.clientWidth, h = this.fitEl.clientHeight;
+    const s = Math.min(w/1680, h/945);
+    this.stageEl.style.transform = `scale(${s})`;
+  }
+
+  idx(){ return JOURNEY.indexOf(this.state.active); }
+  topic(){ return TOPICS.find(t=> t.id === this.state.active); }
+
+  setActive(id){ this.setState({ active:id, side:true }); }
+  next(){ const i = (this.idx()+1) % JOURNEY.length; this.setState({ active:JOURNEY[i], side:true }); }
+  prev(){ const i = (this.idx()-1+JOURNEY.length) % JOURNEY.length; this.setState({ active:JOURNEY[i], side:true }); }
+
+  setMode(m){
+    clearInterval(this._timer);
+    if(m === 'auto'){
+      const secs = (this.props.autoSeconds || 4) * 1000;
+      this._timer = setInterval(()=> this.next(), secs);
+    }
+    this.setState({ mode:m });
+  }
+  toggleMode(){ this.setMode(this.state.mode === 'auto' ? 'manual' : 'auto'); }
+
+  renderVals(){
+    const t = this.topic();
+    const active = this.state.active;
+    const auto = this.state.mode === 'auto';
+    const ai = this.idx();
+    const showConnectors = this.props.connectors !== false;
+
+    const tinted = (hex)=>({ accent:hex, border:hexA(hex,.42), iconBg:hexA(hex,.12), glow:hexA(hex,.3) });
+
+    const cards = TOPICS.map(c=>{
+      const isOn = c.id === active;
+      return {
+        ...tinted(c.accent),
+        left:c.left, top:c.top, name:c.name, cardSub:c.cardSub, icon:c.icon,
+        bullets:c.coreTopics.map(x=>x.name),
+        border: isOn ? c.accent : hexA(c.accent,.4),
+        shadow: isOn
+          ? `0 0 0 1px ${c.accent}, 0 18px 50px ${hexA(c.accent,.32)}, 0 0 60px ${hexA(c.accent,.28)}, inset 0 1px 0 rgba(255,255,255,.08)`
+          : `0 14px 38px rgba(0,0,0,.45), 0 0 26px ${hexA(c.accent,.14)}, inset 0 1px 0 rgba(255,255,255,.05)`,
+        onClick: ()=> this.setActive(c.id),
+      };
+    });
+
+    const connectors = TOPICS.map(c=>{
+      const [fx,fy] = c.from;
+      const dx = fx - CORE[0], dy = fy - CORE[1];
+      const len = Math.hypot(dx,dy) || 1;
+      const px = CORE[0] + dx/len*150, py = CORE[1] + dy/len*150;
+      const mx = fx + (px-fx)*0.5;
+      const isOn = c.id === active;
+      return {
+        d:`M ${fx} ${fy} C ${mx} ${fy} ${mx} ${py} ${px} ${py}`,
+        color:c.accent,
+        w: isOn ? 2.4 : 1.6,
+        op: isOn ? 0.75 : 0.32,
+        dotOp: isOn ? 0.95 : 0.5,
+        dur: isOn ? 2.6 : 4.2,
+      };
+    });
+
+    const journey = JOURNEY.map((id,i)=>{
+      const c = TOPICS.find(x=>x.id===id);
+      const isOn = id === active;
+      return {
+        num:('0'+(i+1)).slice(-2),
+        label: id === 'content' ? 'CONTENT' : (id === 'analytics' ? 'ANALYTICS' : c.name.toUpperCase()),
+        onClick: ()=> this.setActive(id),
+        ring: isOn ? c.accent : hexA(c.accent,.5),
+        circleBg: isOn ? hexA(c.accent,.18) : 'rgba(255,255,255,.03)',
+        numColor: isOn ? '#fff' : hexA(c.accent,.95),
+        glow: isOn ? `0 0 0 5px ${hexA(c.accent,.14)}, 0 0 22px ${hexA(c.accent,.7)}` : 'none',
+        labelColor: isOn ? '#fff' : '#6f7790',
+      };
+    });
+
+    const navs = NAV.map(n=>{
+      const on = n === this.state.nav;
+      return { name:n, onClick: ()=> this.setState({ nav:n }), color: on ? '#fff' : '#9aa3ba', weight: on ? 700 : 500, uw: on ? '100%' : '0%' };
+    });
+
+    const dash = (113 * (1 - (ai+1)/6)).toFixed(1);
+
+    return {
+      t: { ...t, ...tinted(t.accent) },
+      cards, connectors, journey, navs, showConnectors,
+      sideOpen: this.state.side, sideClosed: !this.state.side,
+      onClose: ()=> this.setState({ side:false }),
+      onOpen: ()=> this.setState({ side:true }),
+      onNext: ()=> this.next(),
+      onManual: ()=> this.setMode('manual'),
+      onAuto: ()=> this.setMode('auto'),
+      onToggleMode: ()=> this.toggleMode(),
+      manualColor: auto ? '#9aa3ba' : '#ff9a4d', manualBg: auto ? 'transparent' : 'rgba(255,122,26,.14)', manualSh: auto ? 'none' : 'inset 0 0 0 1px rgba(255,140,60,.5)',
+      autoColor: auto ? '#ff9a4d' : '#9aa3ba', autoBg: auto ? 'rgba(255,122,26,.14)' : 'transparent', autoSh: auto ? 'inset 0 0 0 1px rgba(255,140,60,.5)' : 'none',
+      autoIconBorder: auto ? 'rgba(255,140,60,.55)' : 'rgba(255,255,255,.12)',
+      autoIconBg: auto ? 'rgba(255,122,26,.16)' : 'rgba(255,255,255,.04)',
+      autoIconColor: auto ? '#ff9a4d' : '#9aa3ba',
+      autoDash: dash, autoFrac: (ai+1) + '/6',
+    };
+  }
 }
-function showLeaf(i,j){
-  const d = DATA[i];
-  pn.textContent = ('0'+(i+1)).slice(-2)+'·'+('0'+(j+1)).slice(-2);
-  ptag.textContent = d.name;
-  pt.textContent = d.subs[j];
-  pd.textContent = d.leaf[j];
-  panel.classList.add('show');
-}
-document.getElementById('pclose').addEventListener('click',()=>{
-  panel.classList.remove('show');
-  document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
-});
 </script>
-</body></html>
+</body>
+</html>
