@@ -1,8 +1,19 @@
 # Content Library — the self-owned B-Roll Vault
 
-`portfolio.html` is a searchable, borderless content library styled to match the CS Media site.
+`gallery/index.html` is a searchable, borderless content library styled to match the CS Media site.
 It behaves like a private stock/B-roll site of **your own** work: you **view** here, and **download**
 from Google Drive. This doc explains how it works today and exactly what to hand over to wire up Drive.
+
+## Standalone project
+
+Everything lives in this `gallery/` folder and is fully self-contained (`index.html`, `content.json`,
+`vercel.json`, this doc). The original CS Media site is **not modified** except for one **Gallery** button
+in its nav that links here. Deploy options:
+
+- **Same domain (works now):** the main site serves the repo root, so `csmediaandproduction.in/gallery/`
+  already resolves. Nothing else to do.
+- **Its own Vercel project / domain:** create a new Vercel project from this repo and set **Root Directory =
+  `gallery`**. It deploys independently of the main site. Then repoint the Gallery button's `href` to the new URL.
 
 ---
 
@@ -10,7 +21,7 @@ from Google Drive. This doc explains how it works today and exactly what to hand
 
 | Requirement | Status | Where |
 |---|---|---|
-| Categories: photo, text/font, animated, gif, 2D/3D, html, video, audio, print | ✅ | `CATS` in `portfolio.html` |
+| Categories: photo, text/font, animated, gif, 2D/3D, html, video, audio, print | ✅ | `CATS` in `gallery/index.html` |
 | Hidden "Goof-Ups" section, request-only | ✅ | **Request Goof-Ups** button, or `portfolio.html?vault=1` |
 | Seamless, borderless collage that keeps each item's original shape | ✅ | `.collage` CSS columns + aspect-ratio placeholders |
 | No two neighbours of the same category (anti-repeat) | ✅ | `rankAntiRepeat()` |
@@ -68,7 +79,7 @@ score = recency·w1 + engagement·w2 + richness·w3 + curator·w4
 
 Then **anti-repeat** reorders the ranked list so no two neighbours share a category.
 
-**To tune:** edit the `VIEW_PREFERENCE` block at the top of the `<script>` in `portfolio.html` —
+**To tune:** edit the `VIEW_PREFERENCE` block at the top of the `<script>` in `gallery/index.html` —
 weights, per-format `richness`, `recencyHalfLifeDays`, `curatedCount`, `antiRepeat` on/off. That's the
 whole knob panel; the weekly automation can overwrite this block or the per-item scores in `content.json`.
 
