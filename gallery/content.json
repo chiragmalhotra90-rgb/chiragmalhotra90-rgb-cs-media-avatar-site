@@ -3,8 +3,8 @@
   "_schema": {
     "id": "unique string id (stable across weekly runs)",
     "title": "display title",
-    "category": "one of: photo | text | animation | gif | design | html | video | audio | print",
-    "type": "render hint: photo|text|animation|gif|design|html|video|audio|print",
+    "category": "one of: photo | text | animation | gif | design | html | video | audio | print | research",
+    "type": "render hint: photo|text|animation|gif|design|html|video|audio|print|research (research = PDF/paper, opens/reads via Drive)",
     "topics": "array of keyword/topic tags used by search + dedup",
     "aspect": "[width, height] ratio to preserve the original shape",
     "src": "Drive preview/embed URL for VIEWING (empty = placeholder tile)",
@@ -41,6 +41,12 @@
     { "id": "ph-004", "title": "Macro — Water Drop", "category": "photo", "type": "photo", "topics": ["macro", "abstract", "water"], "aspect": [1, 1], "src": "", "download": "", "status": "published", "added": "2026-06-20", "engagement": 70, "featured": false },
     { "id": "ds-004", "title": "Motion Board — Gradient Set", "category": "design", "type": "design", "topics": ["gradient", "board", "2d"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-25", "engagement": 67, "featured": false },
     { "id": "vd-004", "title": "Event Recap — Highlights", "category": "video", "type": "video", "topics": ["event", "recap", "highlights"], "aspect": [16, 9], "src": "", "download": "", "status": "published", "added": "2026-06-01", "engagement": 59, "featured": false },
+
+    { "id": "rp-001", "title": "The Attention Economy of Short-Form Video", "category": "research", "type": "research", "topics": ["short-form", "attention", "social media", "engagement", "whitepaper"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-24", "engagement": 84, "featured": true },
+    { "id": "rp-002", "title": "AI Avatars in Brand Communication — A Field Study", "category": "research", "type": "research", "topics": ["ai avatar", "brand", "field study", "adoption"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-06-11", "engagement": 77, "featured": true },
+    { "id": "rp-003", "title": "Colour Psychology & Conversion in Digital Ads", "category": "research", "type": "research", "topics": ["colour", "psychology", "conversion", "ads", "cro"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-05-27", "engagement": 66, "featured": false },
+    { "id": "rp-004", "title": "Framework: Weekly View-Preference Ranking for Portfolios", "category": "research", "type": "research", "topics": ["algorithm", "ranking", "portfolio", "framework", "methodology"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-07-02", "engagement": 71, "featured": false },
+    { "id": "rp-005", "title": "Print vs. Digital: Retention in Marketing Collateral", "category": "research", "type": "research", "topics": ["print", "digital", "retention", "marketing", "study"], "aspect": [3, 4], "src": "", "download": "", "status": "published", "added": "2026-05-16", "engagement": 54, "featured": false },
 
     { "id": "gz-001", "title": "Blooper — Focus Miss", "category": "video", "type": "video", "topics": ["blooper", "outtake"], "aspect": [16, 9], "src": "", "download": "", "status": "rejected", "added": "2026-05-15", "engagement": 12, "featured": false },
     { "id": "gz-002", "title": "Reject — Overexposed Set", "category": "photo", "type": "photo", "topics": ["reject", "exposure"], "aspect": [3, 2], "src": "", "download": "", "status": "rejected", "added": "2026-05-12", "engagement": 8, "featured": false },

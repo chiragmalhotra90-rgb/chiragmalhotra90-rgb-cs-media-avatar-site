@@ -47,8 +47,8 @@ Each item is one row. Columns:
 |---|---|
 | `id` | stable unique id (keep it stable across weekly runs) |
 | `title` | display title |
-| `category` | `photo` · `text` · `animation` · `gif` · `design` (2D/3D) · `html` · `video` · `audio` · `print` |
-| `type` | render hint (same set as category) |
+| `category` | `photo` · `text` · `animation` · `gif` · `design` (2D/3D) · `html` · `video` · `audio` · `print` · `research` |
+| `type` | render hint (same set as category). `research` = a PDF/paper: shown as a page tile, opened/read via its Drive link |
 | `topics` | `[]` of tags — used by **search** and **dedup** |
 | `aspect` | `[w, h]` — keeps the original shape in the collage |
 | `src` | Drive **preview/embed** URL for viewing (empty ⇒ a styled placeholder is drawn) |
@@ -94,6 +94,7 @@ Give me a Drive link with this kind of shape and I'll finish the pipeline:
    📁 photo      📁 video      📁 design(2D-3D)
    📁 animation  📁 gif        📁 html
    📁 audio      📁 text-font  📁 print
+   📁 research   ← papers / PDFs (read + download via Drive)
    📁 _goofups   ← rejected / request-only
 ```
 
