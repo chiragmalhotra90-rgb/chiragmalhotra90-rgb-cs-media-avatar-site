@@ -43,13 +43,37 @@ The folder is currently shared **"Anyone with the link → Editor"**. That makes
 portfolio renders), but *Editor* means anyone with the link could change or delete them. Change it to
 **Viewer** in Drive → Share — the portfolio only needs view access.
 
-### Re-syncing when you add content
-`content.json` is a snapshot of the Drive folder at last sync. To pick up new/removed files it must be
-regenerated. Options, cheapest first:
-1. **On request** — say "re-sync the gallery" and the current Drive contents are re-read and `content.json` regenerated + pushed.
-2. **Weekly automation** — a scheduled job (GitHub Action or a Make/Zapier scenario) that lists the folder via the
-   Google Drive API and commits a fresh `content.json`. This needs Drive API credentials stored as a secret; set that
-   up once and it runs itself on the `refreshCron` cadence.
+### Automated weekly sync (service account)
+`scripts/drive_sync.py` + `.github/workflows/drive-sync.yml` regenerate `content.json` from the Drive
+folder every Monday (and on-demand via **Actions → Drive → Gallery sync → Run workflow**). It walks the
+whole folder tree recursively, auto-detects types, builds view/embed + download links, de-dupes, and
+**preserves your manual `featured` / `engagement` / `status` edits** across runs.
+
+**One-time setup (your side):**
+1. In Google Cloud (project of the service account), **enable the Google Drive API**.
+2. Service account → **Keys → Add key → Create new key → JSON**, download it.
+3. **Share the Drive folder** with the service-account email
+   (`codex-google-drive-agent@…gserviceaccount.com`) as **Viewer** — this lets the sync read even private files.
+4. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**:
+   - `GDRIVE_SA_KEY` = paste the whole JSON key file
+   - `GDRIVE_FOLDER_ID` = `1Yygagr6HoH9OCf4THy39hFH1bJ5gGAIi`
+5. Run the workflow once (**Run workflow**) to verify. It commits a fresh `content.json` if anything changed.
+
+> **Sync access vs. display access are different.** Sharing with the service account lets the *sync* read
+> private files, but the *website* is fetched by each visitor's browser directly from Drive — so any file
+> you want to **display** must also be **"Anyone with the link → Viewer"**. Files shared only with the SA
+> will be indexed but appear blank on the public page. Keep truly-private material out of the showcase folder.
+
+### Type detection & video
+`drive_sync.py` maps mime types → categories: images→`photo` (gif→`gif`), `video/*`→`video`
+(poster thumbnail + Drive player embed in the lightbox), `audio/*`→`audio`, PDFs/Docs/Slides→`research`,
+PSD/AI/EPS→`design`, spreadsheets skipped. A folder named `_goofups` / `rejected` routes its files to the
+Goof-Ups vault. Suggested video layout: `video/avatar`, `video/broll`, `video/3d`, `video/footage` — folder
+names become search tags automatically.
+
+### Re-syncing on request
+No credentials yet? Just say **"re-sync the gallery"** and the current Drive contents are re-read in-session
+and `content.json` regenerated + pushed.
 
 ---
 
