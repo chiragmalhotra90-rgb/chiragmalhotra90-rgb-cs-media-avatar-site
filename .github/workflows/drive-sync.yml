@@ -1,0 +1,55 @@
+name: Drive → Gallery sync
+
+# Weekly automated refresh of gallery/content.json from the Google Drive folder,
+# plus a manual "Run workflow" button. Requires two repo secrets:
+#   GDRIVE_SA_KEY   – the service-account JSON key (whole file contents)
+#   GDRIVE_FOLDER_ID – the Drive folder id to index
+on:
+  schedule:
+    - cron: '0 6 * * 1'      # every Monday 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: drive-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install -r scripts/requirements.txt
+
+      - name: Write service-account key
+        env:
+          GDRIVE_SA_KEY: ${{ secrets.GDRIVE_SA_KEY }}
+        run: |
+          printf '%s' "$GDRIVE_SA_KEY" > "$RUNNER_TEMP/sa.json"
+
+      - name: Run sync
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+        run: python scripts/drive_sync.py
+
+      - name: Commit if changed
+        run: |
+          rm -f "$RUNNER_TEMP/sa.json" || true
+          if [[ -n "$(git status --porcelain gallery/content.json)" ]]; then
+            git config user.name  "drive-sync-bot"
+            git config user.email "actions@github.com"
+            git add gallery/content.json
+            git commit -m "chore(gallery): weekly Drive sync"
+            git push
+          else
+            echo "No changes."
+          fi

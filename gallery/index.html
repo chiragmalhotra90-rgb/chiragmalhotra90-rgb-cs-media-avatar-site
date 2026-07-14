@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Library — B-Roll Vault | CS Media</title>
+<meta name="description" content="Searchable, self-owned B-roll & content library — photo, video, 3D, motion, audio, print. View here, download via Drive.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2304090c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%2300E5FF'/%3E%3C/svg%3E">
+<style>
+:root{
+  --base:#04090c; --text:#eafdff; --accent:#00E5FF; --accent2:#0b6b76;
+  --muted:#7c8b90; --card:#0a1418; --line:rgba(0,229,255,.18);
+  --reject:#ff5470; --rejectline:rgba(255,84,112,.30);
+  --head:'Montserrat',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{width:100%;min-height:100%;background:var(--base);color:var(--text);font-family:var(--body);}
+body{overflow-x:hidden;}
+
+/* backdrop */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 18% 10%, color-mix(in srgb,var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(58% 50% at 88% 96%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 62%);}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45;
+  background-image:linear-gradient(rgba(0,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.05) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(circle at 50% 20%,#000,transparent 80%);
+  mask-image:radial-gradient(circle at 50% 20%,#000,transparent 80%);}
+
+/* top bar */
+header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(16px,4vw,52px);background:linear-gradient(180deg,rgba(4,9,12,.92),rgba(4,9,12,.6) 70%,transparent);
+  backdrop-filter:blur(10px);}
+.brand{display:flex;flex-direction:column;gap:3px;}
+.brand .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.30em;color:var(--accent);text-transform:uppercase;}
+.brand .sub{font-family:var(--body);font-weight:500;font-size:12px;letter-spacing:.02em;color:var(--muted);}
+.back{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--text);text-decoration:none;border:1px solid var(--line);padding:9px 15px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 6%,transparent);transition:.25s;white-space:nowrap;}
+.back:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 22px color-mix(in srgb,var(--accent) 22%,transparent);}
+
+/* controls */
+#controls{position:relative;z-index:20;max-width:1400px;margin:0 auto;padding:22px clamp(16px,4vw,52px) 6px;}
+.control-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+.search-wrap{position:relative;flex:1;min-width:220px;}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:15px;height:15px;opacity:.55;}
+#search{width:100%;padding:13px 16px 13px 40px;border-radius:12px;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);color:var(--text);font-family:var(--body);font-size:14px;outline:none;transition:.22s;}
+#search:focus{border-color:var(--accent);box-shadow:0 0 24px color-mix(in srgb,var(--accent) 16%,transparent);}
+#search::placeholder{color:var(--muted);}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+  border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 6%,transparent);color:var(--text);
+  padding:12px 15px;border-radius:12px;transition:.22s;white-space:nowrap;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.solid{background:var(--accent);color:#04090c;border-color:var(--accent);font-weight:700;}
+.btn.solid:hover{box-shadow:0 0 24px color-mix(in srgb,var(--accent) 35%,transparent);color:#04090c;}
+.btn.danger{border-color:var(--rejectline);color:var(--reject);background:color-mix(in srgb,var(--reject) 8%,transparent);}
+.btn.danger:hover{border-color:var(--reject);box-shadow:0 0 22px color-mix(in srgb,var(--reject) 22%,transparent);}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.chip{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:#dceef2;padding:8px 13px;border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);background:color-mix(in srgb,var(--accent) 6%,transparent);
+  cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:7px;}
+.chip:hover{color:#fff;background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:color-mix(in srgb,var(--accent) 60%,transparent);}
+.chip.active{color:#04090c;background:var(--accent);border-color:var(--accent);font-weight:700;}
+.chip .ct{opacity:.6;font-size:10px;}
+.chip.active .ct{opacity:.75;}
+.meta-line{margin-top:12px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;}
+.meta-line b{color:var(--accent);font-weight:500;}
+
+/* stage */
+main{position:relative;z-index:10;max-width:1400px;margin:0 auto;padding:10px clamp(16px,4vw,52px) 60px;}
+.section-head{display:flex;align-items:baseline;gap:14px;margin:34px 0 12px;}
+.section-head .h{font-family:var(--head);font-weight:800;font-size:clamp(1.1rem,2.6vw,1.5rem);text-transform:uppercase;letter-spacing:.02em;color:#fff;}
+.section-head .hr{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
+.section-head .n{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em;}
+.section-note{font-family:var(--body);font-size:13px;color:var(--muted);margin:-4px 0 14px;max-width:640px;}
+
+/* seamless borderless collage — CSS columns keep native aspect ratios and pack tight */
+.collage{column-gap:4px;}
+.collage.dense{columns:5 200px;}
+@media(max-width:1100px){.collage.dense{columns:4 180px;}}
+@media(max-width:760px){.collage.dense{columns:2 150px;}}
+.tile{break-inside:avoid;margin:0 0 4px;position:relative;overflow:hidden;cursor:pointer;display:block;
+  border-radius:3px;background:#071013;line-height:0;transform:translateZ(0);
+  content-visibility:auto;contain-intrinsic-size:auto 300px;}
+.show-all{display:block;width:100%;margin:12px 0 4px;padding:12px;border:1px dashed var(--line);border-radius:10px;
+  background:color-mix(in srgb,var(--accent) 5%,transparent);color:var(--accent);font-family:var(--mono);font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:.2s;}
+.show-all:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);}
+.tile .media{width:100%;height:auto;display:block;}
+.tile img,.tile video{width:100%;height:auto;display:block;}
+.tile .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:46px;height:46px;
+  border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.55);display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:15px;padding-left:2px;backdrop-filter:blur(3px);pointer-events:none;transition:.2s;}
+.tile:hover .play{background:var(--accent);color:#04090c;border-color:var(--accent);}
+/* placeholder tile — sized to the original aspect ratio so shapes stay authentic */
+.ph{width:100%;position:relative;display:flex;align-items:flex-end;padding:12px;line-height:1.2;}
+.ph .glyph{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.75;}
+.ph .pt{font-family:var(--head);font-weight:700;font-size:13px;color:#fff;text-shadow:0 1px 10px rgba(0,0,0,.6);}
+.tile .overlay{position:absolute;inset:0;opacity:0;transition:.25s;background:linear-gradient(180deg,transparent 40%,rgba(0,10,14,.86));
+  display:flex;flex-direction:column;justify-content:flex-end;padding:12px;line-height:1.35;}
+.tile:hover .overlay{opacity:1;}
+.tile:hover{outline:1px solid color-mix(in srgb,var(--accent) 55%,transparent);}
+.overlay .ot{font-family:var(--head);font-weight:700;font-size:13px;color:#fff;}
+.overlay .otop{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.overlay .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;color:#bfeef5;background:color-mix(in srgb,var(--accent) 14%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding:3px 7px;border-radius:999px;}
+.badge{position:absolute;top:8px;left:8px;z-index:2;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  padding:4px 7px;border-radius:6px;background:rgba(0,0,0,.55);color:var(--accent);border:1px solid var(--line);backdrop-filter:blur(4px);}
+.badge.star{color:#ffd34d;border-color:rgba(255,211,77,.4);}
+
+/* vault */
+#vaultSection{display:none;}
+#vaultSection.show{display:block;}
+#vaultSection .section-head .h{color:var(--reject);}
+#vaultSection .section-head .hr{background:linear-gradient(90deg,var(--rejectline),transparent);}
+#vaultSection .tile:hover{outline-color:color-mix(in srgb,var(--reject) 60%,transparent);}
+#vaultSection .badge{color:var(--reject);border-color:var(--rejectline);}
+
+.empty{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em;padding:40px 0;text-align:center;}
+
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:60;background:rgba(2,6,8,.9);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;padding:24px;}
+#lb.show{display:flex;}
+.lb-card{position:relative;width:min(880px,100%);max-height:90vh;overflow:auto;border-radius:16px;
+  background:linear-gradient(160deg,#0a1620,#04090c);border:1.5px solid color-mix(in srgb,var(--accent) 55%,transparent);
+  box-shadow:0 0 60px color-mix(in srgb,var(--accent) 22%,transparent);}
+.lb-media{width:100%;background:#060d10;line-height:0;}
+.lb-media img,.lb-media video{width:100%;height:auto;display:block;max-height:60vh;object-fit:contain;background:#060d10;}
+.lb-body{padding:20px 24px 24px;}
+.lb-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.lb-head .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);}
+.lb-head .close{margin-left:auto;cursor:pointer;font-family:var(--mono);font-size:16px;color:var(--muted);padding:2px 8px;border-radius:6px;}
+.lb-head .close:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);}
+.lb-title{font-family:var(--head);font-weight:800;font-size:22px;color:#fff;line-height:1.1;}
+.lb-tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;}
+.lb-meta{font-family:var(--mono);font-size:11px;color:var(--muted);display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px;margin-bottom:18px;}
+.lb-meta span b{color:#cfe9ee;font-weight:500;}
+.lb-actions{display:flex;flex-wrap:wrap;gap:10px;}
+.note{font-family:var(--body);font-size:12px;color:var(--muted);margin-top:12px;}
+
+footer{position:relative;z-index:10;text-align:center;padding:28px 20px 40px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+footer a{color:var(--accent);text-decoration:none;}
+
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);z-index:80;opacity:0;
+  pointer-events:none;transition:.3s;background:#08161b;border:1px solid var(--line);border-radius:10px;
+  padding:11px 18px;font-family:var(--mono);font-size:12px;color:var(--text);box-shadow:0 0 30px rgba(0,0,0,.5);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="grid"></div>
+
+<header>
+  <div class="brand">
+    <span class="eyebrow">Content&nbsp;Library</span>
+    <span class="sub">Self-owned B-Roll Vault · view here · download via Drive</span>
+  </div>
+  <a class="back" href="https://csmediaandproduction.in">← CS Media</a>
+</header>
+
+<section id="controls">
+  <div class="control-row">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#eafdff" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+      <input id="search" type="text" placeholder="Search by keyword or topic — e.g. cyberpunk, brand, 3d, broll…" autocomplete="off">
+    </div>
+    <button class="btn" id="clearBtn">Clear</button>
+    <button class="btn solid" id="csvBtn">↓ Master Sheet (CSV)</button>
+    <button class="btn danger" id="vaultBtn">Request Goof-Ups</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="meta-line" id="metaLine"></div>
+</section>
+
+<main>
+  <!-- Curated feed (ranking + anti-repeat) shows only when no filter/search is active -->
+  <section id="curatedSection">
+    <div class="section-head"><span class="h">Curated Feed</span><span class="hr"></span><span class="n" id="curatedN"></span></div>
+    <div class="section-note">Auto-ranked by the view-preference engine (recency · engagement · richness · curator picks) with anti-repeat so no two neighbours share a category. Re-scored on the weekly automation run.</div>
+    <div class="collage dense" id="curated"></div>
+  </section>
+
+  <!-- Per-category sections -->
+  <div id="sections"></div>
+
+  <!-- Hidden goof-ups vault -->
+  <section id="vaultSection">
+    <div class="section-head"><span class="h">Goof-Ups Vault</span><span class="hr"></span><span class="n" id="vaultN"></span></div>
+    <div class="section-note">Rejected takes, scrapped drafts and happy accidents — kept separate, shown only on request.</div>
+    <div class="collage dense" id="vault"></div>
+  </section>
+</main>
+
+<div id="lb"><div class="lb-card">
+  <div class="lb-media" id="lbMedia"></div>
+  <div class="lb-body">
+    <div class="lb-head"><span class="k" id="lbKind">ASSET</span><span class="close" id="lbClose">✕</span></div>
+    <div class="lb-title" id="lbTitle"></div>
+    <div class="lb-tags" id="lbTags"></div>
+    <div class="lb-meta" id="lbMeta"></div>
+    <div class="lb-actions" id="lbActions"></div>
+    <div class="note">Viewing is on-site only. Downloads are served from Google Drive via the link above.</div>
+  </div>
+</div></div>
+
+<div id="toast"></div>
+
+<footer>
+  © 2026 CS Media &amp; Production · Content Library · <a href="https://csmediaandproduction.in">csmediaandproduction.in</a>
+</footer>
+
+<script>
+/* =========================================================================
+   VIEW-PREFERENCE ENGINE  —  edit these weights; the weekly automation can
+   overwrite this block (or the per-item scores in content.json) on its run.
+   ========================================================================= */
+const VIEW_PREFERENCE = {
+  weights: {           // must be read as relative importance (auto-normalised)
+    recency:    0.25,  // newer work surfaces higher
+    engagement: 0.30,  // views/picks from your master sheet (item.engagement 0-100)
+    richness:   0.20,  // motion/interactive rank above flat stills (global-market bias)
+    curator:    0.25   // your manual "featured" pick
+  },
+  // How "rich" each format reads to a scanning viewer (0-1). Tune to taste.
+  richness: { video:1.0, html:0.95, design:0.9, animation:0.8, audio:0.7, gif:0.6, research:0.6, photo:0.5, print:0.45, text:0.4 },
+  recencyHalfLifeDays: 45,   // engagement of a piece "ages out" over ~this window
+  antiRepeat: true,          // never place two of the same category back-to-back
+  refreshCron: 'weekly',     // documented hook — the automation re-runs scoring weekly
+  curatedCount: 18,          // how many items the Curated Feed shows
+  sectionCap: 60             // tiles rendered per section before a "Show all" reveal (keeps 1000s fast)
+};
+
+/* Category registry — label + accent glyph. Order = display order. */
+const CATS = [
+  { key:'photo',     label:'Photo',        glyph:'PHOTO' },
+  { key:'video',     label:'Video Clips',  glyph:'VIDEO' },
+  { key:'design',    label:'2D / 3D',      glyph:'DESIGN' },
+  { key:'animation', label:'Animated',     glyph:'MOTION' },
+  { key:'gif',       label:'GIF',          glyph:'GIF' },
+  { key:'html',      label:'HTML',         glyph:'HTML' },
+  { key:'audio',     label:'Audio',        glyph:'AUDIO' },
+  { key:'text',      label:'Text / Font',  glyph:'TYPE' },
+  { key:'print',     label:'Print',        glyph:'PRINT' },
+  { key:'research',  label:'Research',     glyph:'PAPER' }
+];
+const CAT_LABEL = Object.fromEntries(CATS.map(c=>[c.key,c.label]));
+const CAT_GLYPH = Object.fromEntries(CATS.map(c=>[c.key,c.glyph]));
+
+/* Inline seed — used only if content.json can't be fetched (e.g. file://). */
+const SEED = { items: [] };
+
+let ALL = [];        // published items
+let VAULT_ITEMS = [];// rejected items
+let activeCat = 'all';
+let query = '';
+let vaultOpen = false;
+const TODAY = new Date('2026-07-13');   // fixed "now" for deterministic recency
+
+/* ---------- data load ---------- */
+async function load(){
+  try{
+    const res = await fetch('content.json', {cache:'no-store'});
+    if(!res.ok) throw new Error('http '+res.status);
+    const data = await res.json();
+    ingest(data.items || []);
+  }catch(err){
+    console.warn('content.json unavailable, using seed:', err.message);
+    ingest(SEED.items);
+  }
+  buildChips();
+  render();
+}
+function ingest(items){
+  // de-duplicate by id AND by a content signature so nothing repeats
+  const seen = new Set();
+  const clean = [];
+  for(const it of items){
+    const sig = (it.id||'') + '|' + (it.title||'').toLowerCase().trim();
+    if(seen.has(sig)) continue;
+    seen.add(sig);
+    clean.push(normalise(it));
+  }
+  ALL = clean.filter(i => i.status !== 'rejected');
+  VAULT_ITEMS = clean.filter(i => i.status === 'rejected');
+}
+function normalise(it){
+  const a = Array.isArray(it.aspect) && it.aspect.length===2 ? it.aspect : [1,1];
+  return {
+    id: it.id, title: it.title || 'Untitled',
+    category: it.category || it.type || 'photo',
+    type: it.type || it.category || 'photo',
+    topics: Array.isArray(it.topics) ? it.topics : [],
+    aspect: a, src: it.src || '', poster: it.poster || '', download: it.download || '',
+    status: it.status || 'published', added: it.added || '',
+    engagement: clamp(+it.engagement || 0, 0, 100),
+    featured: !!it.featured
+  };
+}
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* ---------- scoring ---------- */
+function daysSince(dateStr){
+  if(!dateStr) return 999;
+  const d = new Date(dateStr);
+  if(isNaN(d)) return 999;
+  return Math.max(0,(TODAY - d)/86400000);
+}
+function score(it){
+  const w = VIEW_PREFERENCE.weights;
+  const total = w.recency + w.engagement + w.richness + w.curator || 1;
+  const recency = Math.exp(-daysSince(it.added) / VIEW_PREFERENCE.recencyHalfLifeDays); // 0..1
+  const engagement = it.engagement / 100;                                                // 0..1
+  const richness = VIEW_PREFERENCE.richness[it.type] ?? 0.5;                              // 0..1
+  const curator = it.featured ? 1 : 0;                                                    // 0/1
+  return (w.recency*recency + w.engagement*engagement + w.richness*richness + w.curator*curator) / total;
+}
+/* rank then reorder so no two neighbours share a category (anti-repeat) */
+function rankAntiRepeat(items){
+  const ranked = [...items].sort((a,b)=>score(b)-score(a));
+  if(!VIEW_PREFERENCE.antiRepeat) return ranked;
+  const out=[]; const pool=[...ranked];
+  while(pool.length){
+    let idx = pool.findIndex(x => !out.length || x.category !== out[out.length-1].category);
+    if(idx === -1) idx = 0; // only same-category left; accept it
+    out.push(pool.splice(idx,1)[0]);
+  }
+  return out;
+}
+
+/* ---------- placeholder art (used when item.src is empty) ---------- */
+const HUE = { photo:190, video:205, design:280, animation:320, gif:150, html:170, audio:45, text:220, print:15, research:95 };
+function placeholderTile(it){
+  const [w,h] = it.aspect;
+  const hue = HUE[it.type] ?? 190;
+  const pad = (h/w*100).toFixed(2);
+  const bg = `linear-gradient(150deg, hsl(${hue} 70% 22%), hsl(${(hue+40)%360} 65% 10%))`;
+  return `<div class="ph" style="padding-top:${pad}%;background:${bg}">
+      <span class="glyph" style="color:hsl(${hue} 85% 72%)">${CAT_GLYPH[it.category]||it.type}</span>
+      <span class="pt">${esc(it.title)}</span>
+    </div>`;
+}
+// Drive/Docs embed URLs can't go in <img>/<video> — they must play in an <iframe>.
+function isEmbed(u){ return /\/preview(\?|$|#)|drive\.google\.com\/file|docs\.google\.com/.test(u||''); }
+function mediaInner(it){
+  // research papers are documents (PDFs) — always show a page-style tile, never an <img>
+  if(it.type==='research') return placeholderTile(it);
+  if(it.type==='video'){
+    // Drive video: show the poster thumbnail + a play glyph; plays in the lightbox iframe.
+    if(it.poster) return `<img class="media" loading="lazy" src="${esc(it.poster)}" alt="${esc(it.title)}"><span class="play">▶</span>`;
+    if(it.src && !isEmbed(it.src)) return `<video class="media" src="${esc(it.src)}" muted loop playsinline preload="metadata"></video>`;
+    return placeholderTile(it)+'<span class="play">▶</span>';
+  }
+  if(it.src){
+    return `<img class="media" loading="lazy" src="${esc(it.src)}" alt="${esc(it.title)}">`;
+  }
+  return placeholderTile(it);
+}
+function tileHTML(it){
+  const star = it.featured ? '<span class="badge star">★ Pick</span>' : `<span class="badge">${CAT_LABEL[it.category]||it.category}</span>`;
+  const tags = it.topics.slice(0,3).map(t=>`<span class="tag">#${esc(t)}</span>`).join('');
+  return `<a class="tile" data-id="${esc(it.id)}">
+      ${star}
+      ${mediaInner(it)}
+      <div class="overlay"><span class="ot">${esc(it.title)}</span><span class="otop">${tags}</span></div>
+    </a>`;
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* ---------- filtering ---------- */
+function matches(it){
+  if(activeCat!=='all' && it.category!==activeCat) return false;
+  if(query){
+    const q = query.toLowerCase();
+    const hay = (it.title+' '+it.category+' '+it.type+' '+it.topics.join(' ')).toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+/* ---------- render ---------- */
+function buildChips(){
+  const el = document.getElementById('chips');
+  const counts = {};
+  ALL.forEach(i=>counts[i.category]=(counts[i.category]||0)+1);
+  let html = `<span class="chip active" data-cat="all">All <span class="ct">${ALL.length}</span></span>`;
+  CATS.forEach(c=>{
+    const n = counts[c.key]||0;
+    html += `<span class="chip" data-cat="${c.key}">${c.label} <span class="ct">${n}</span></span>`;
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{
+    activeCat = ch.dataset.cat;
+    el.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active');
+    render();
+  }));
+}
+
+const PENDING = {};   // key -> overflow items awaiting a "Show all" reveal
+function collageBlock(items, key){
+  const cap = VIEW_PREFERENCE.sectionCap;
+  let html = `<div class="collage dense" id="col-${esc(key)}">${items.slice(0,cap).map(tileHTML).join('')}</div>`;
+  if(items.length > cap){
+    PENDING[key] = items.slice(cap);
+    html += `<button class="show-all" data-key="${esc(key)}">Show all ${items.length} →</button>`;
+  }
+  return html;
+}
+function wireShowAll(){
+  document.querySelectorAll('.show-all').forEach(btn=>{
+    btn.onclick = ()=>{
+      const key = btn.dataset.key, rest = PENDING[key] || [];
+      const col = document.getElementById('col-'+key) || document.getElementById(key);
+      if(col) col.insertAdjacentHTML('beforeend', rest.map(tileHTML).join(''));
+      delete PENDING[key]; btn.remove(); wireTiles();
+    };
+  });
+}
+
+function render(){
+  const filtered = ALL.filter(matches);
+  const browsing = (activeCat==='all' && !query);
+
+  // Curated feed only in default browse mode
+  const curatedSec = document.getElementById('curatedSection');
+  if(browsing){
+    curatedSec.style.display='block';
+    const curated = rankAntiRepeat(ALL).slice(0, VIEW_PREFERENCE.curatedCount);
+    document.getElementById('curated').innerHTML = curated.map(tileHTML).join('');
+    document.getElementById('curatedN').textContent = curated.length+' surfaced';
+  } else {
+    curatedSec.style.display='none';
+  }
+
+  // Sections
+  const secWrap = document.getElementById('sections');
+  if(browsing){
+    // one seamless collage per category
+    secWrap.innerHTML = CATS.map(c=>{
+      const items = rankAntiRepeat(ALL.filter(i=>i.category===c.key));
+      if(!items.length) return '';
+      return `<section><div class="section-head"><span class="h">${c.label}</span><span class="hr"></span><span class="n">${items.length}</span></div>
+        ${collageBlock(items, 'cat-'+c.key)}</section>`;
+    }).join('');
+  } else {
+    // single filtered collage
+    const items = rankAntiRepeat(filtered);
+    const title = activeCat==='all' ? 'Results' : (CAT_LABEL[activeCat]||activeCat);
+    const sub = query ? ` · “${esc(query)}”` : '';
+    secWrap.innerHTML = items.length
+      ? `<section><div class="section-head"><span class="h">${title}${sub}</span><span class="hr"></span><span class="n">${items.length}</span></div>
+         ${collageBlock(items, 'filtered')}</section>`
+      : `<div class="empty">No content matches “${esc(query)}”${activeCat!=='all'?' in '+CAT_LABEL[activeCat]:''}. Try another keyword.</div>`;
+  }
+
+  // Vault (respects search/filter too)
+  const oldVaultMore = document.getElementById('vault-more'); if(oldVaultMore) oldVaultMore.remove();
+  if(vaultOpen){
+    const vitems = rankAntiRepeat(VAULT_ITEMS.filter(matches));
+    const vd = document.getElementById('vault');
+    if(vitems.length){
+      vd.innerHTML = vitems.slice(0, VIEW_PREFERENCE.sectionCap).map(tileHTML).join('');
+      if(vitems.length > VIEW_PREFERENCE.sectionCap){
+        PENDING['vault'] = vitems.slice(VIEW_PREFERENCE.sectionCap);
+        vd.insertAdjacentHTML('afterend', `<button class="show-all" id="vault-more" data-key="vault">Show all ${vitems.length} →</button>`);
+      }
+    } else {
+      vd.innerHTML = `<div class="empty">No goof-ups match the current filter.</div>`;
+    }
+    document.getElementById('vaultN').textContent = vitems.length+' rejected';
+  }
+
+  wireTiles();
+  wireShowAll();
+  updateMeta(filtered.length);
+}
+
+function updateMeta(shown){
+  const total = ALL.length + VAULT_ITEMS.length;
+  document.getElementById('metaLine').innerHTML =
+    `<span><b>${ALL.length}</b> published</span>`+
+    `<span><b>${VAULT_ITEMS.length}</b> in vault</span>`+
+    `<span><b>${shown}</b> shown</span>`+
+    `<span>engine: <b>view-preference · ${VIEW_PREFERENCE.refreshCron}</b></span>`+
+    `<span>source: <b>Google Drive</b></span>`;
+}
+
+function wireTiles(){
+  document.querySelectorAll('.tile').forEach(t=>{
+    t.onclick = ()=>openLightbox(t.dataset.id);
+  });
+}
+
+/* ---------- lightbox ---------- */
+function findItem(id){ return [...ALL,...VAULT_ITEMS].find(i=>i.id===id); }
+function openLightbox(id){
+  const it = findItem(id); if(!it) return;
+  const media = document.getElementById('lbMedia');
+  if(it.src){
+    media.innerHTML = it.type==='video'
+      ? (isEmbed(it.src)
+          ? `<iframe src="${esc(it.src)}" style="width:100%;height:60vh;border:0;background:#060d10" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+          : `<video src="${esc(it.src)}" controls autoplay muted loop playsinline></video>`)
+      : ((it.type==='html'||it.type==='research')
+          ? `<iframe src="${esc(it.src)}" style="width:100%;height:56vh;border:0;background:#060d10" allowfullscreen></iframe>`
+          : `<img src="${esc(it.src)}" alt="${esc(it.title)}">`);
+  } else {
+    media.innerHTML = `<div style="padding:0 0 4px">${placeholderTile(it)}</div>`;
+  }
+  document.getElementById('lbKind').textContent = (CAT_LABEL[it.category]||it.category)+(it.status==='rejected'?' · GOOF-UP':'');
+  document.getElementById('lbTitle').textContent = it.title;
+  document.getElementById('lbTags').innerHTML = it.topics.map(t=>`<span class="tag">#${esc(t)}</span>`).join('');
+  document.getElementById('lbMeta').innerHTML =
+    `<span>Type · <b>${esc(it.type)}</b></span>`+
+    `<span>Added · <b>${esc(it.added||'—')}</b></span>`+
+    `<span>Shape · <b>${it.aspect[0]}:${it.aspect[1]}</b></span>`+
+    `<span>Engagement · <b>${it.engagement}/100</b></span>`;
+  const dlLabel = it.type==='research' ? '↗ Read / Download on Drive' : '↓ Download from Drive';
+  const dl = it.download
+    ? `<a class="btn solid" href="${esc(it.download)}" target="_blank" rel="noopener">${dlLabel}</a>`
+    : `<button class="btn solid" id="noDl">${dlLabel}</button>`;
+  document.getElementById('lbActions').innerHTML =
+    dl + `<button class="btn" id="copyId">Copy asset ID</button>`;
+  const lb = document.getElementById('lb'); lb.classList.add('show');
+  const nb = document.getElementById('noDl'); if(nb) nb.onclick=()=>toast('Drive link not set yet for this item');
+  document.getElementById('copyId').onclick=()=>{navigator.clipboard?.writeText(it.id);toast('Asset ID copied: '+it.id);};
+}
+function closeLightbox(){ document.getElementById('lb').classList.remove('show'); document.getElementById('lbMedia').innerHTML=''; }
+document.getElementById('lbClose').onclick=closeLightbox;
+document.getElementById('lb').addEventListener('click',e=>{ if(e.target.id==='lb') closeLightbox(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); });
+
+/* ---------- controls ---------- */
+const searchEl = document.getElementById('search');
+searchEl.addEventListener('input',()=>{ query = searchEl.value.trim(); render(); });
+document.getElementById('clearBtn').onclick=()=>{ query=''; searchEl.value=''; activeCat='all';
+  document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));
+  document.querySelector('#chips .chip[data-cat="all"]').classList.add('active'); render(); };
+
+/* vault unlock — "only accessible on request" */
+function openVault(){
+  vaultOpen = true;
+  document.getElementById('vaultSection').classList.add('show');
+  document.getElementById('vaultBtn').textContent = 'Hide Goof-Ups';
+  render();
+  document.getElementById('vaultSection').scrollIntoView({behavior:'smooth'});
+}
+function closeVault(){
+  vaultOpen = false;
+  document.getElementById('vaultSection').classList.remove('show');
+  document.getElementById('vaultBtn').textContent = 'Request Goof-Ups';
+}
+document.getElementById('vaultBtn').onclick=()=> vaultOpen ? closeVault() : openVault();
+if(new URLSearchParams(location.search).get('vault')==='1'){ addEventListener('load',()=>setTimeout(openVault,300)); }
+
+/* ---------- master sheet CSV export ---------- */
+document.getElementById('csvBtn').onclick=()=>{
+  const rows = [...ALL, ...VAULT_ITEMS];
+  const cols = ['id','title','category','type','topics','aspect','status','added','engagement','featured','src','download'];
+  const csv = [cols.join(',')].concat(rows.map(r=>cols.map(c=>{
+    let v = c==='topics' ? r.topics.join('; ') : c==='aspect' ? r.aspect.join(':') : r[c];
+    v = v==null ? '' : String(v);
+    return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v;
+  }).join(','))).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cs-media-master-sheet.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Master sheet exported ('+rows.length+' rows)');
+};
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+load();
+</script>
+</body></html>
