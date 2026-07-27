@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>try{localStorage.setItem('cs_mode','aipresenter');}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Presenter | AI Sales, Presentation and Automation Platform</title>
+<meta name="description" content="AI Presenter helps businesses present, explain, qualify and follow up through intelligent voice, chat, visuals and automation. Operating from India and Canada, serving India, Canada, USA and global markets.">
+<link rel="canonical" href="https://csmediaandproduction.in/ai-presenter">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Your Business, Presented by Intelligence">
+<meta property="og:description" content="Meet AI Presenter—the international AI presentation, conversation, qualification and follow-up platform operating from India and Canada.">
+<meta property="og:url" content="https://csmediaandproduction.in/ai-presenter">
+<meta property="og:image" content="https://csmediaandproduction.in/ai-presenter/media/logo-horizontal.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F1A17'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%230D6E6A' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23C1440E'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ap-forest:#0F1A17; --ap-forest-2:#0B1512; --ap-deep:#082B27;
+  --ap-teal:#0D6E6A; --ap-teal-lit:#12938d;
+  --ap-green:#68BE23; --ap-sand:#D9B08C; --ap-orange:#C1440E; --ap-orange-lit:#e0561b;
+  --ap-cream:#F5F0E8; --ap-white:#F8F8F4; --ap-silver:#B8C0BC;
+  --ap-border:rgba(216,224,220,.13); --ap-border-lit:rgba(13,110,106,.5);
+  --ap-card:rgba(12,24,21,.72);
+  --ap-radius:22px; --ap-radius-lg:26px;
+  --ap-max:1360px;
+  --ap-ease:cubic-bezier(.22,1,.36,1);
+  --ap-gradient-hero:
+    radial-gradient(circle at 78% 42%, rgba(193,68,14,.18), transparent 28%),
+    radial-gradient(circle at 62% 25%, rgba(13,110,106,.22), transparent 32%),
+    linear-gradient(135deg,#0F1A17 0%,#082B27 58%,#0F1A17 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ap-forest);color:var(--ap-white);font-family:'Poppins',system-ui,-apple-system,sans-serif;font-weight:400;line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video{max-width:100%;display:block}
+:focus-visible{outline:3px solid var(--ap-green);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:999;background:var(--ap-orange);color:#fff;padding:12px 20px;border-radius:0 0 12px 0;font-weight:600}
+.skip-link:focus{left:0}
+
+/* ---------- LAYOUT ---------- */
+.shell{width:min(100% - 48px,var(--ap-max));margin-inline:auto;position:relative;z-index:1}
+section{padding-block:88px 96px;position:relative}
+@media(min-width:1440px){section{padding-block:104px 116px}}
+@media(max-width:1024px){section{padding-block:72px 80px}}
+@media(max-width:640px){.shell{width:min(100% - 28px,var(--ap-max))}section{padding-block:58px 66px}}
+.page-bg{position:fixed;inset:0;z-index:-2;pointer-events:none;background:var(--ap-gradient-hero)}
+.page-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(216,224,220,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(216,224,220,.022) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),rgba(0,0,0,.3) 62%,transparent);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),rgba(0,0,0,.3) 62%,transparent)}
+
+/* ---------- TYPE ---------- */
+h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
+.h1{font-size:clamp(40px,5.1vw,72px);line-height:1.05}
+.h2{font-size:clamp(31px,3.5vw,50px);line-height:1.1;margin-bottom:18px}
+.h3{font-size:clamp(21px,1.7vw,27px)}
+.lead{font-size:clamp(17px,1.35vw,21px);line-height:1.6;color:var(--ap-silver);max-width:920px}
+.body{font-size:clamp(16px,1.15vw,18px);line-height:1.65;color:var(--ap-silver)}
+.eyebrow{font-size:12px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--ap-green);margin-bottom:16px;display:block}
+.eyebrow-teal{color:var(--ap-teal-lit)}
+.accent-orange{color:var(--ap-orange-lit)}
+.accent-sand{color:var(--ap-sand)}
+
+/* ---------- NAV ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:transparent;transition:background .35s var(--ap-ease),backdrop-filter .35s,border-color .35s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(11,21,18,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom-color:var(--ap-border)}
+.nav-in{width:min(100% - 48px,var(--ap-max));margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;flex:none}
+.brand-mark{width:38px;height:38px;border-radius:50%;flex:none;position:relative;
+  background:radial-gradient(circle at 34% 30%,#1a7f78,#0c3b39 62%,#06201f);
+  box-shadow:0 0 0 1.5px rgba(13,110,106,.7),0 0 18px rgba(193,68,14,.28)}
+.brand-mark::after{content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 68% 72%,rgba(193,68,14,.75),transparent 46%)}
+.brand-txt .n{font-size:16px;font-weight:600;letter-spacing:.05em;color:var(--ap-white);line-height:1.15}
+.brand-txt .s{font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ap-silver);line-height:1.3}
+.nav-links{display:flex;gap:26px;list-style:none}
+.nav-links a{color:var(--ap-silver);text-decoration:none;font-size:14px;font-weight:400;padding:6px 0;transition:color .25s;position:relative}
+.nav-links a:hover,.nav-links a[aria-current="true"]{color:var(--ap-white)}
+.nav-links a[aria-current="true"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ap-orange);border-radius:2px}
+.nav-act{display:flex;align-items:center;gap:12px;flex:none}
+.mode-toggle{display:inline-flex;padding:3px;border-radius:999px;background:rgba(216,224,220,.06);border:1px solid var(--ap-border);gap:2px;flex:none}
+.mt-btn{border:none;background:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--ap-white);opacity:.55;padding:7px 12px;border-radius:999px;transition:all .2s;min-height:30px}
+.mt-btn.active{background:var(--ap-teal);color:#fff;opacity:1}
+.mt-btn:not(.active):hover{opacity:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 24px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .22s var(--ap-ease),background .25s,box-shadow .25s}
+.btn-primary{background:var(--ap-orange);color:#fff;box-shadow:0 0 22px rgba(193,68,14,.26)}
+.btn-primary:hover{background:var(--ap-orange-lit);transform:translateY(-2px);box-shadow:0 0 30px rgba(193,68,14,.4)}
+.btn-secondary{background:transparent;color:var(--ap-white);border-color:var(--ap-teal)}
+.btn-secondary:hover{background:rgba(13,110,106,.18);transform:translateY(-2px)}
+.nav-burger{display:none;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:19px;align-items:center;justify-content:center}
+#mnav{display:none;position:fixed;inset:0;z-index:210;background:rgba(8,17,15,.97);backdrop-filter:blur(10px);padding:96px 28px 40px;flex-direction:column;gap:6px}
+#mnav.open{display:flex}
+#mnav a{color:var(--ap-white);text-decoration:none;font-size:19px;font-weight:500;padding:15px 0;border-bottom:1px solid var(--ap-border);min-height:44px}
+#mnav .btn{margin-top:18px}
+.mnav-close{position:absolute;top:22px;right:24px;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;font-size:20px;cursor:pointer}
+@media(max-width:1080px){.nav-links{display:none}.nav-burger{display:inline-flex}.nav-act .btn-secondary{display:none}}
+@media(max-width:640px){.nav-act .btn-primary{display:none}.mt-btn{padding:6px 8px;font-size:9.5px}}
+
+/* ---------- HERO ---------- */
+.hero{padding-block:150px 78px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,55%) minmax(0,45%);gap:56px;align-items:center}
+@media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:46px}}
+.rotator{display:grid;margin:22px 0 26px;min-height:calc(1.14em * 2)}
+.rot{grid-area:1/1;font-size:clamp(28px,3.05vw,46px);font-weight:600;line-height:1.14;letter-spacing:-.015em;
+  opacity:0;transform:translateY(12px);transition:opacity .7s var(--ap-ease),transform .7s var(--ap-ease);
+  visibility:hidden;align-self:start;
+  background:linear-gradient(96deg,var(--ap-sand) 0%,#e8c9a8 34%,var(--ap-orange-lit) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.rot.on{opacity:1;transform:none;visibility:visible}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.trustline{font-size:13.5px;color:var(--ap-silver);display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.trustline .dot{width:6px;height:6px;border-radius:50%;background:var(--ap-green);flex:none}
+.cap-row{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;padding-top:26px;border-top:1px solid var(--ap-border)}
+.cap{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ap-silver)}
+.cap svg{width:19px;height:19px;flex:none;stroke:var(--ap-teal-lit);fill:none;stroke-width:1.6}
+
+/* orb */
+.orb-wrap{position:relative;display:grid;place-items:center;min-height:400px}
+.orb-video{width:min(470px,96%);aspect-ratio:1;object-fit:cover;mix-blend-mode:screen;
+  filter:contrast(1.14) brightness(1.04) saturate(1.05);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%);
+  mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%)}
+.orb{width:min(340px,74%);aspect-ratio:1;border-radius:50%;position:relative;
+  background:
+    radial-gradient(circle at 33% 28%,rgba(60,190,180,.95),rgba(10,70,66,.9) 46%,rgba(5,30,29,.98) 76%),
+    radial-gradient(circle at 70% 76%,rgba(193,68,14,.85),transparent 44%);
+  box-shadow:0 0 0 1px rgba(13,110,106,.55),0 0 62px rgba(13,110,106,.34),0 0 110px rgba(193,68,14,.2),inset 0 0 60px rgba(0,0,0,.5);
+  animation:orbGlow 6s ease-in-out infinite}
+.orb::before{content:'';position:absolute;inset:9%;border-radius:50%;border:1.5px solid rgba(216,224,220,.14);
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(60,190,180,.3) 60deg,transparent 130deg,rgba(224,86,27,.34) 220deg,transparent 300deg);
+  animation:orbSpin 20s linear infinite}
+.orb::after{content:'';position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  border:1px solid rgba(13,110,106,.2);pointer-events:none}
+@keyframes orbSpin{to{transform:rotate(360deg)}}
+@keyframes orbGlow{0%,100%{box-shadow:0 0 0 1px rgba(13,110,106,.55),0 0 62px rgba(13,110,106,.34),0 0 110px rgba(193,68,14,.2),inset 0 0 60px rgba(0,0,0,.5)}50%{box-shadow:0 0 0 1px rgba(13,110,106,.7),0 0 78px rgba(13,110,106,.44),0 0 132px rgba(193,68,14,.28),inset 0 0 60px rgba(0,0,0,.5)}}
+.pills{position:absolute;inset:0;pointer-events:none}
+.pill{position:absolute;background:rgba(11,24,21,.9);border:1px solid var(--ap-border);border-radius:999px;padding:8px 15px;font-size:12.5px;font-weight:500;color:var(--ap-white);white-space:nowrap;backdrop-filter:blur(6px)}
+.pill:nth-child(1){left:-2%;top:14%}.pill:nth-child(2){left:-6%;top:34%}.pill:nth-child(3){left:-1%;top:55%}
+.pill:nth-child(4){right:-2%;top:16%}.pill:nth-child(5){right:-5%;top:37%}.pill:nth-child(6){right:0;top:58%}
+@media(max-width:1024px){.pills{display:none}.orb-wrap{min-height:300px}}
+
+/* ---------- CARDS ---------- */
+.card{position:relative;background:var(--ap-card);border:1px solid var(--ap-border);border-radius:var(--ap-radius);padding:28px;
+  transition:transform .28s var(--ap-ease),border-color .28s;overflow:hidden}
+.card:hover{transform:translateY(-4px);border-color:var(--ap-border-lit)}
+.card h3{margin-bottom:9px;font-size:19px}
+.card p{font-size:14.8px;line-height:1.6;color:var(--ap-silver)}
+.card-ico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:16px;
+  background:rgba(13,110,106,.14);border:1px solid rgba(13,110,106,.3)}
+.card-ico svg{width:22px;height:22px;stroke:var(--ap-teal-lit);fill:none;stroke-width:1.6}
+.card-ico.warm{background:rgba(193,68,14,.13);border-color:rgba(193,68,14,.32)}
+.card-ico.warm svg{stroke:var(--ap-orange-lit)}
+.card-ico.green{background:rgba(104,190,35,.12);border-color:rgba(104,190,35,.3)}
+.card-ico.green svg{stroke:var(--ap-green)}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+@media(max-width:1024px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- OPERATIONS ---------- */
+.ops-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative}
+@media(max-width:900px){.ops-grid{grid-template-columns:1fr}}
+.ops-card{padding:32px}
+.ops-flag{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;margin-bottom:16px;
+  background:rgba(216,224,220,.06);border:1px solid var(--ap-border)}
+.ops-card h3{font-size:21px;margin-bottom:5px}
+.ops-role{font-size:13.5px;color:var(--ap-teal-lit);font-weight:500;margin-bottom:16px}
+.ops-list{list-style:none;display:grid;gap:9px;margin-top:16px}
+.ops-list li{font-size:14.2px;color:var(--ap-silver);display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.ops-list li::before{content:'';width:15px;height:15px;flex:none;margin-top:4px;border-radius:50%;
+  background:rgba(104,190,35,.16);border:1px solid rgba(104,190,35,.5);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2368BE23' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+  background-size:9px;background-position:center;background-repeat:no-repeat}
+
+/* ---------- PROBLEM ROWS ---------- */
+.prow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:center;padding:20px 0;border-bottom:1px solid var(--ap-border)}
+.prow:first-of-type{border-top:1px solid var(--ap-border)}
+@media(max-width:768px){.prow{grid-template-columns:1fr;gap:9px}}
+.prow .p-q{font-size:16.5px;font-weight:500;color:var(--ap-white);display:flex;gap:12px;align-items:flex-start}
+.prow .p-q span{color:var(--ap-orange-lit);flex:none;font-weight:600}
+.prow .p-a{font-size:15px;color:var(--ap-silver);padding-left:18px;border-left:2px solid rgba(13,110,106,.55)}
+.prow .p-a b{color:var(--ap-teal-lit);font-weight:500;display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+
+/* ---------- LIVE EXPERIENCE ---------- */
+.live-frame{border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);overflow:hidden;background:#050f0e;
+  box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.live-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(216,224,220,.05);border-bottom:1px solid var(--ap-border)}
+.live-bar i{width:10px;height:10px;border-radius:50%;background:rgba(216,224,220,.22);display:block}
+.live-bar .u{margin-left:12px;font-size:12px;color:var(--ap-silver)}
+.live-note{margin-top:20px;font-size:14px;color:var(--ap-silver);padding:16px 20px;border-radius:16px;
+  background:rgba(13,110,106,.09);border:1px solid rgba(13,110,106,.26)}
+
+/* gallery — next/next carousel viewer */
+.csl-main{position:relative;margin-top:34px;max-width:1138px}
+.csl-stage{display:grid;place-items:center;width:100%;aspect-ratio:16/9;background:#050f0e;border:1px solid var(--ap-border);border-radius:var(--ap-radius);overflow:hidden;cursor:zoom-in;padding:0}
+.csl-stage img{width:100%;height:100%;object-fit:cover;display:block}
+.csl-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:50px;height:50px;border-radius:50%;background:rgba(5,15,14,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid var(--ap-border);color:var(--ap-white);font-size:22px;cursor:pointer;transition:background .25s,border-color .25s;display:grid;place-items:center}
+.csl-nav:hover{background:rgba(13,110,106,.5);border-color:var(--ap-teal)}
+#cslPrev{left:14px}#cslNext{right:14px}
+.csl-bar{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:16px}
+.csl-count{font-size:12px;font-weight:500;letter-spacing:.14em;color:var(--ap-teal-lit)}
+.csl-tag{font-size:10.5px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--ap-green);margin-left:12px}
+.csl-title{font-size:16.5px;font-weight:500;color:var(--ap-white);margin-top:6px}
+.csl-desc{font-size:13.5px;color:var(--ap-silver);line-height:1.5;margin-top:3px;max-width:760px}
+.csl-thumbs{display:flex;gap:10px;overflow-x:auto;padding:16px 2px 6px;scrollbar-width:thin;max-width:1138px}
+.csl-thumb{flex:none;width:96px;height:60px;border-radius:10px;border:1.5px solid var(--ap-border);overflow:hidden;background:#050f0e;cursor:pointer;padding:0;opacity:.6;transition:opacity .25s,border-color .25s}
+.csl-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.csl-thumb[aria-current="true"]{border-color:var(--ap-teal);opacity:1}
+.csl-thumb:hover{opacity:1}
+@media(max-width:640px){.csl-nav{width:44px;height:44px}#cslPrev{left:8px}#cslNext{right:8px}}
+
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;background:rgba(6,14,12,.94);backdrop-filter:blur(8px);padding:26px}
+#lb.open{display:flex}
+.lb-in{width:min(1180px,100%);max-height:90vh;display:flex;flex-direction:column;gap:14px}
+.lb-stage{border:1px solid var(--ap-border);border-radius:18px;overflow:auto;background:#050f0e;max-height:76vh}
+.lb-stage img{width:100%;height:auto}
+.lb-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.lb-t{font-size:16px;font-weight:500;color:var(--ap-white)}
+.lb-d{font-size:13.5px;color:var(--ap-silver)}
+.lb-btn{background:rgba(216,224,220,.07);border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:18px}
+.lb-btn:hover{background:rgba(13,110,106,.25);border-color:var(--ap-teal)}
+
+/* ---------- STEPS ---------- */
+.steps{display:grid;gap:0;max-width:900px}
+.step{display:grid;grid-template-columns:60px minmax(0,1fr);gap:20px;position:relative;padding-bottom:30px}
+.step:not(:last-child)::before{content:'';position:absolute;left:25px;top:54px;bottom:0;width:1px;
+  background:linear-gradient(to bottom,rgba(13,110,106,.6),rgba(13,110,106,.08))}
+.step-n{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:600;
+  color:var(--ap-teal-lit);background:rgba(11,24,21,.9);border:1.5px solid var(--ap-teal);flex:none}
+.step h3{font-size:18px;margin-bottom:6px}
+.step p{font-size:14.8px;color:var(--ap-silver);line-height:1.6}
+.proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;counter-reset:pc}
+.proc-item{display:flex;gap:13px;align-items:flex-start;padding:16px 18px;border:1px solid var(--ap-border);border-radius:15px;background:rgba(12,24,21,.5)}
+.proc-item span{font-size:12px;font-weight:600;color:var(--ap-orange-lit);flex:none;min-width:20px}
+.proc-item p{font-size:14.2px;color:var(--ap-silver);line-height:1.45}
+
+/* ---------- LEADERSHIP ---------- */
+.leader{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:40px;align-items:start;
+  padding:38px;border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);background:var(--ap-card)}
+@media(max-width:840px){.leader{grid-template-columns:1fr;gap:26px;padding:28px}}
+.leader-av{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;font-size:33px;font-weight:600;
+  color:var(--ap-sand);background:radial-gradient(circle at 34% 30%,rgba(13,110,106,.5),rgba(8,26,24,.95));
+  border:1.5px solid rgba(217,176,140,.45);margin-bottom:18px}
+.leader-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.leader-tags span{font-size:12px;padding:7px 13px;border-radius:999px;color:var(--ap-silver);
+  background:rgba(216,224,220,.05);border:1px solid var(--ap-border)}
+
+/* ---------- FAQ ---------- */
+.faq{max-width:940px;border-top:1px solid var(--ap-border)}
+.faq-item{border-bottom:1px solid var(--ap-border)}
+.faq-q{width:100%;background:transparent;border:none;color:var(--ap-white);font-family:inherit;font-size:17px;font-weight:500;
+  text-align:left;padding:22px 46px 22px 0;cursor:pointer;position:relative;min-height:44px;line-height:1.45}
+.faq-q:hover{color:var(--ap-sand)}
+.faq-q::after{content:'';position:absolute;right:10px;top:50%;width:13px;height:13px;margin-top:-6px;
+  border-right:2px solid var(--ap-orange-lit);border-bottom:2px solid var(--ap-orange-lit);
+  transform:rotate(45deg);transition:transform .3s var(--ap-ease)}
+.faq-q[aria-expanded="true"]::after{transform:rotate(-135deg)}
+.faq-a{display:none;padding:0 0 24px;font-size:15.5px;line-height:1.65;color:var(--ap-silver);max-width:820px}
+.faq-a.open{display:block}
+
+/* ---------- IMPLEMENTATION ---------- */
+.impl{padding:30px}
+.impl h3{font-size:20px;margin-bottom:8px}
+.impl>p{font-size:14.8px;color:var(--ap-silver);margin-bottom:18px}
+.impl ul{list-style:none;display:grid;gap:8px;padding-top:16px;border-top:1px solid var(--ap-border)}
+.impl li{font-size:13.8px;color:var(--ap-silver);display:flex;gap:9px}
+.impl li::before{content:'—';color:var(--ap-teal-lit);flex:none}
+
+/* ---------- FORM ---------- */
+.form-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media(max-width:768px){.form-wrap{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:13.5px;font-weight:500;color:var(--ap-white)}
+.field .req{color:var(--ap-orange-lit)}
+.field input,.field select,.field textarea{background:rgba(216,224,220,.05);border:1px solid var(--ap-border);border-radius:13px;
+  padding:13px 15px;color:var(--ap-white);font-family:inherit;font-size:15px;min-height:46px;transition:border-color .25s}
+.field textarea{min-height:120px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ap-teal);outline:none;box-shadow:0 0 0 3px rgba(13,110,106,.22)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"],.field textarea[aria-invalid="true"]{border-color:#e0561b}
+.field .err{font-size:12.5px;color:#ff8a5c;display:none}
+.field .err.show{display:block}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8C0BC' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:17px;padding-right:42px}
+.consent{display:flex;gap:12px;align-items:flex-start;grid-column:1/-1}
+.consent input{width:21px;height:21px;min-height:21px;flex:none;margin-top:2px;accent-color:var(--ap-teal)}
+.consent label{font-size:13.5px;color:var(--ap-silver);font-weight:400;line-height:1.55}
+.form-msg{grid-column:1/-1;padding:15px 18px;border-radius:14px;font-size:14.5px;display:none}
+.form-msg.ok{display:block;background:rgba(104,190,35,.12);border:1px solid rgba(104,190,35,.42);color:#c9f0a4}
+.form-msg.bad{display:block;background:rgba(193,68,14,.12);border:1px solid rgba(193,68,14,.42);color:#ffb494}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--ap-border);background:rgba(8,17,15,.6);padding:56px 0 28px;position:relative;z-index:1}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.7fr) repeat(3,minmax(0,1fr));gap:34px}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.foot-grid{grid-template-columns:1fr}}
+footer h4{font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--ap-silver);margin-bottom:14px}
+footer a{display:block;color:var(--ap-silver);text-decoration:none;font-size:14px;margin-bottom:9px;transition:color .25s;min-height:24px}
+footer a:hover{color:var(--ap-white)}
+.foot-desc{font-size:14px;color:var(--ap-silver);margin-top:14px;max-width:400px;line-height:1.6}
+.foot-ops{display:flex;gap:26px;flex-wrap:wrap;margin-top:16px;font-size:13.5px;color:var(--ap-silver)}
+.foot-bottom{margin-top:36px;padding-top:22px;border-top:1px solid var(--ap-border);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--ap-silver)}
+
+/* ---------- REVEAL ---------- */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .55s var(--ap-ease),transform .55s var(--ap-ease)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .orb-video{animation:none}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="page-bg"></div>
+<div class="page-grid"></div>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="AI Presenter by CS Media &amp; Production — home">
+      <img src="/ai-presenter/media/logo-horizontal-alpha.png" alt="AI Presenter by CS Media &amp; Production" width="1250" height="430" style="height:48px;width:auto">
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#live">Live Experience</a></li>
+        <li><a href="#operations">Global Operations</a></li>
+        <li><a href="#leadership">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-act">
+      <div class="mode-toggle" role="group" aria-label="Site version">
+        <button type="button" class="mt-btn active" data-mode="aipresenter">AI Presenter</button>
+        <button type="button" class="mt-btn" data-mode="professional">Professional</button>
+        <button type="button" class="mt-btn" data-mode="casual">Casual</button>
+      </div>
+      <a class="btn btn-secondary" href="#platform">Explore the Platform</a>
+      <a class="btn btn-primary" href="#contact" data-ap="ap_hero_demo_click" data-label="Nav — Book a Business Demo">Book a Business Demo</a>
+      <button class="nav-burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">☰</button>
+    </div>
+  </div>
+</header>
+
+<div id="mnav" role="dialog" aria-modal="true" aria-label="Menu">
+  <button class="mnav-close" id="mnavClose" aria-label="Close menu">✕</button>
+  <a href="#platform">Platform</a>
+  <a href="#capabilities">Capabilities</a>
+  <a href="#industries">Industries</a>
+  <a href="#live">Live Experience</a>
+  <a href="#operations">Global Operations</a>
+  <a href="#leadership">About</a>
+  <a href="#contact">Contact</a>
+  <a class="btn btn-primary" href="#contact">Book a Business Demo</a>
+</div>
+
+<main id="main">
+<div id="top"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="shell hero-grid">
+    <div>
+      <span class="eyebrow">AI Sales • Presentation • Automation</span>
+      <h1 class="h1">Your Business,<br><span class="accent-sand">Presented by Intelligence.</span></h1>
+
+      <div class="rotator" id="rotator" aria-live="off"></div>
+
+      <p class="lead" style="margin-bottom:14px">AI Presenter combines intelligent presentation, live conversation, visual exploration, lead qualification, CRM automation and personalised follow-up into one connected customer experience.</p>
+      <p class="body" style="margin-bottom:30px">Operate continuously. Communicate consistently. Scale without losing the human connection.</p>
+
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#live" data-ap="ap_live_experience_click" data-label="Hero — Experience AI Presenter">Experience AI Presenter</a>
+        <a class="btn btn-secondary" href="#contact" data-ap="ap_hero_contact_click" data-label="Hero — Talk to Our Team">Talk to Our Team</a>
+      </div>
+
+      <p class="trustline"><span class="dot" aria-hidden="true"></span> Mumbai, India • Brampton, Ontario, Canada • Serving India, Canada, USA and international markets</p>
+
+      <div class="cap-row">
+        <span class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Present</span>
+        <span class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Answer</span>
+        <span class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Qualify</span>
+        <span class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Follow Up</span>
+      </div>
+    </div>
+
+    <div class="orb-wrap">
+      <div class="pills" aria-hidden="true">
+        <span class="pill">Real Estate</span><span class="pill">Healthcare</span><span class="pill">Education</span>
+        <span class="pill">Finance</span><span class="pill">Hospitality</span><span class="pill">B2B Services</span>
+      </div>
+      <video class="orb-video" src="/ai-presenter/media/orb-loop.mp4" poster="/ai-presenter/media/orb-poster.jpg" autoplay muted loop playsinline aria-label="AI Presenter orb animation"></video>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GLOBAL OPERATIONS TRUST STRIP ============ -->
+<section id="operations" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Global Presence</span>
+    <h2 class="h2">One International Team.<br>Two Operational Bases. Global Delivery.</h2>
+    <p class="lead" style="margin-bottom:38px">AI Presenter combines a dedicated technology and production operation in India with direct North American business representation in Canada.</p>
+
+    <div class="ops-grid">
+      <article class="card ops-card">
+        <div class="ops-flag" aria-hidden="true">🇮🇳</div>
+        <h3 class="h3">Mumbai, Maharashtra, India</h3>
+        <p class="ops-role">Technology, AI Development, Creative Production and Global Delivery</p>
+        <p>Our India operation designs, builds, trains, customises and supports the AI Presenter platform for clients across all markets.</p>
+        <ul class="ops-list">
+          <li>AI platform development</li><li>Knowledge architecture</li><li>Interface and product experience design</li>
+          <li>AI Navigator development</li><li>CRM and automation</li><li>Website and application integrations</li>
+          <li>Voice and chat configuration</li><li>Creative production</li><li>Technical testing</li><li>Deployment and optimisation</li>
+        </ul>
+      </article>
+      <article class="card ops-card">
+        <div class="ops-flag" aria-hidden="true">🇨🇦</div>
+        <h3 class="h3">Brampton, Ontario, Canada</h3>
+        <p class="ops-role">North American Business Development, Client Representation and Regional Expansion</p>
+        <p>Our Canadian operation supports businesses, agencies and strategic partners across Canada and the United States.</p>
+        <ul class="ops-list">
+          <li>Canada and USA business development</li><li>Local client meetings</li><li>Product demonstrations</li>
+          <li>Strategic partnerships</li><li>Commercial coordination</li><li>Regional onboarding</li>
+          <li>Agency relationships</li><li>Agent and sub-agent network development</li>
+          <li>Client-to-technology-team coordination</li><li>North American expansion</li>
+        </ul>
+      </article>
+    </div>
+    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Local representation. Connected execution. One consistent standard.</p>
+  </div>
+</section>
+
+<!-- ============ WHAT AI PRESENTER DOES ============ -->
+<section id="platform" class="rv">
+  <div class="shell">
+    <span class="eyebrow">What It Does</span>
+    <h2 class="h2">Your Presentation No Longer Has to Be One-Way</h2>
+    <p class="lead" style="margin-bottom:16px">Traditional websites wait for visitors to search. Videos play the same message for everyone. Sales teams cannot remain available at every hour or repeat the same information without variation.</p>
+    <p class="body" style="max-width:920px;margin-bottom:44px">AI Presenter creates a guided, two-way business experience. It introduces your company, presents your offering, answers questions, understands requirements and moves each customer toward the correct next step.</p>
+
+    <div class="g4">
+      <article class="card"><div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3 class="h3">Presents</h3><p>Explains your business, project, product or service using approved information, visuals and a consistent brand voice.</p></article>
+      <article class="card"><div class="card-ico warm" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3 class="h3">Converses</h3><p>Responds through natural voice or text interaction and supports multilingual customer communication.</p></article>
+      <article class="card"><div class="card-ico green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h3 class="h3">Qualifies</h3><p>Understands customer requirements, identifies buying intent and captures useful lead information before human follow-up.</p></article>
+      <article class="card"><div class="card-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></div><h3 class="h3">Continues</h3><p>Records conversations, supports CRM workflows and triggers relevant follow-up without repetitive manual work.</p></article>
+    </div>
+    <p class="lead" style="margin-top:30px;font-weight:500;color:var(--ap-white)">Every conversation is guided by your business knowledge, your brand standards and your approved customer journey.</p>
+  </div>
+</section>
+
+<!-- ============ ECOSYSTEM ============ -->
+<section id="capabilities" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">The Ecosystem</span>
+    <h2 class="h2">More Than an Avatar.<br>A Complete Customer Experience System.</h2>
+    <p class="lead" style="margin-bottom:44px">AI Presenter brings presentation, conversation, navigation, lead intelligence and follow-up into one connected platform.</p>
+    <div class="g4">
+      <article class="card"><h3 class="h3">AI Presenter</h3><p>A responsive digital representative that introduces, explains and communicates through voice, text and visual content.</p></article>
+      <article class="card"><h3 class="h3">AI Navigator</h3><p>An interactive visual exploration layer for properties, locations, products, facilities, services and customer journeys.</p></article>
+      <article class="card"><h3 class="h3">Knowledge Intelligence</h3><p>A controlled business knowledge system trained on approved documents, FAQs, product information and sales guidance.</p></article>
+      <article class="card"><h3 class="h3">Lead Qualification</h3><p>Requirement capture, enquiry classification, intent recognition and structured handover to the human sales team.</p></article>
+      <article class="card"><h3 class="h3">CRM and Conversation Records</h3><p>Centralised lead information, conversation history, customer stage tracking and better visibility for the sales team.</p></article>
+      <article class="card"><h3 class="h3">Automated Follow-Up</h3><p>Personalised, knowledge-led follow-up based on customer interest, behaviour and the approved sales process.</p></article>
+      <article class="card"><h3 class="h3">Multilingual Interaction</h3><p>Serve customers in the language they are most comfortable using while maintaining consistent business information.</p></article>
+      <article class="card"><h3 class="h3">Analytics and Optimisation</h3><p>Understand what customers ask, where they hesitate and which information helps them move forward.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BUSINESS PROBLEM ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">The Real Problem</span>
+    <h2 class="h2">Most Businesses Do Not Have a Lead Problem.<br>They Have a <span class="accent-orange">Response Problem.</span></h2>
+    <p class="lead" style="margin-bottom:14px">Potential customers arrive at different times, ask different questions and expect immediate clarity. Delayed responses, inconsistent explanations and disconnected follow-up cause genuine opportunities to disappear.</p>
+    <p class="body" style="max-width:920px;margin-bottom:40px">AI Presenter creates one reliable system that remains available, informed and consistent across every interaction.</p>
+    <div id="problemRows"></div>
+  </div>
+</section>
+
+<!-- ============ LIVE EXPERIENCE ============ -->
+<section id="live" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Live Experience</span>
+    <h2 class="h2">Do Not Just Read About It. Experience It.</h2>
+    <p class="lead" style="margin-bottom:30px">Meet Maya, the conversational face of AI Presenter. Ask questions, explore a project, navigate locations and experience how a customer interacts with a business through an intelligent guided interface.</p>
+
+    <div class="live-frame">
+      <div class="live-bar" aria-hidden="true"><i></i><i></i><i></i><span class="u">AI Presenter — live interface</span></div>
+      <img src="/ai-presenter/media/08_skyhawks_investor_presentation.jpg" width="1536" height="864"
+           alt="AI Presenter delivering a full investor deck with Maya answering questions in a live Q&A panel alongside the slides.">
+    </div>
+
+    <div class="hero-ctas" style="margin-top:26px">
+      <a class="btn btn-primary" href="#contact" data-ap="ap_live_experience_click" data-label="Live — Launch Live Experience">Launch Live Experience</a>
+      <a class="btn btn-secondary" href="#gallery" data-ap="ap_product_overview_click" data-label="Live — Watch Product Overview">Watch Product Overview</a>
+    </div>
+    <p class="live-note">Client implementations are trained and configured using approved business information, defined workflows and agreed response guidelines.</p>
+
+    <div id="gallery">
+      <h3 class="h3" style="margin-top:52px">One Platform. Every Format.</h3>
+      <p class="body" style="margin-top:8px;max-width:820px">A quick visual tour of AI Presenter. Flip through with the arrows or the strip below — tap any image to view it full-size.</p>
+      <div class="csl-main">
+        <button type="button" class="csl-stage" id="cslStage" aria-label="Open current image full-size"><img id="cslImg" alt=""></button>
+        <button type="button" class="csl-nav" id="cslPrev" aria-label="Previous image">‹</button>
+        <button type="button" class="csl-nav" id="cslNext" aria-label="Next image">›</button>
+      </div>
+      <div class="csl-bar">
+        <div><span class="csl-count" id="cslCount"></span><span class="csl-tag" id="cslTag"></span></div>
+      </div>
+      <div class="csl-title" id="cslTitle"></div>
+      <div class="csl-desc" id="cslDesc"></div>
+      <div class="csl-thumbs" id="cslThumbs" role="tablist" aria-label="All images"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">How It Works</span>
+    <h2 class="h2">From Business Knowledge to a Working AI Experience</h2>
+    <div class="steps" style="margin-top:40px" id="howSteps"></div>
+    <p class="lead" style="font-weight:500;color:var(--ap-sand)">Every implementation is reviewed before launch and remains connected to an ongoing optimisation process.</p>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIES ============ -->
+<section id="industries" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Industries Served</span>
+    <h2 class="h2">Built for Businesses That Need to Explain Before They Can Sell</h2>
+    <div class="g3" style="margin-top:40px" id="industryGrid"></div>
+    <div style="margin-top:32px"><a class="btn btn-primary" href="#contact" data-ap="ap_industry_solution_click" data-label="Industries — Explore a Solution">Explore a Solution for Your Industry</a></div>
+  </div>
+</section>
+
+<!-- ============ INDIA & NORTH AMERICA OPERATIONS ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">Operations</span>
+    <h2 class="h2">Global Capability. Local Accountability.</h2>
+    <p class="lead" style="margin-bottom:38px">AI Presenter operates through formally established business operations in India and Canada. This structure connects a dedicated technology and production team with direct North American market representation.</p>
+    <div class="ops-grid">
+      <article class="card ops-card">
+        <h3 class="h3">Mumbai, Maharashtra, India</h3>
+        <p class="ops-role">Technology, Product Development and Global Delivery</p>
+        <p>Our Mumbai operation leads the design, development, customisation and deployment of the AI Presenter platform.</p>
+        <ul class="ops-list">
+          <li>AI platform and product development</li><li>Business knowledge architecture</li><li>User experience and interface design</li>
+          <li>AI Navigator development</li><li>CRM and workflow automation</li><li>Voice and chat systems</li>
+          <li>Multilingual configuration</li><li>Creative and content production</li>
+          <li>Website and application integration</li><li>Testing, deployment and optimisation</li>
+        </ul>
+      </article>
+      <article class="card ops-card">
+        <h3 class="h3">Brampton, Ontario, Canada</h3>
+        <p class="ops-role">Business Development, Representation and Regional Expansion</p>
+        <p>Our Brampton operation represents AI Presenter across Canada and the United States and coordinates local business relationships with the India technology team.</p>
+        <ul class="ops-list">
+          <li>Business development across Canada and the USA</li><li>Client meetings and local representation</li>
+          <li>Product demonstrations</li><li>Strategic partnerships</li><li>Agency and enterprise relationships</li>
+          <li>Regional onboarding</li><li>Commercial coordination</li><li>Agent and sub-agent network development</li>
+          <li>North American market expansion</li><li>Implementation coordination with the India team</li>
+        </ul>
+      </article>
+    </div>
+    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-white)">Clients receive one connected delivery system—local business support backed by a dedicated international technology operation.</p>
+  </div>
+</section>
+
+<!-- ============ BUSINESS OUTCOMES ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">Business Outcomes</span>
+    <h2 class="h2">Designed to Improve the First Half of the Sales Journey</h2>
+    <div class="g4" style="margin-top:40px" id="outcomeGrid"></div>
+  </div>
+</section>
+
+<!-- ============ LEADERSHIP ============ -->
+<section id="leadership" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">North America Leadership</span>
+    <h2 class="h2">Dennis Raphel</h2>
+    <div class="leader" style="margin-top:26px">
+      <div>
+        <div class="leader-av" aria-hidden="true">DR</div>
+        <h3 class="h3">Managing Director — North America</h3>
+        <p class="body" style="margin-top:6px;font-size:14.5px">Brampton, Ontario, Canada</p>
+      </div>
+      <div>
+        <p class="body" style="margin-bottom:14px">Dennis Raphel leads AI Presenter’s North American operations from Brampton, Ontario, Canada.</p>
+        <p class="body" style="margin-bottom:14px">He is responsible for regional business development, strategic partnerships, client representation and the structured expansion of AI Presenter across Canada and the United States. His role includes developing relationships with businesses and agencies, coordinating local client requirements, supporting product demonstrations and building the regional agent and sub-agent network.</p>
+        <p class="body">Dennis works directly with the India technology and production operation to ensure North American clients receive clear local coordination, structured implementation and access to AI Presenter’s complete AI, automation, product and creative capabilities.</p>
+        <div class="leader-tags">
+          <span>Brampton, Ontario, Canada</span><span>Canada and USA Operations</span><span>Business Development</span>
+          <span>Strategic Partnerships</span><span>Regional Network Development</span><span>Client Representation</span>
+        </div>
+        <div style="margin-top:24px"><a class="btn btn-primary" href="#contact" data-ap="ap_north_america_contact_click" data-label="Leadership — Connect With North America">Connect With Our North America Team</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IMPLEMENTATION OPTIONS ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">Implementation Options</span>
+    <h2 class="h2">Built Around Your Business, Not Forced Into a Template</h2>
+    <div class="g4" style="margin-top:40px" id="implGrid"></div>
+    <p class="lead" style="margin-top:28px">Pricing is based on scope, knowledge complexity, integrations, languages, content requirements and deployment needs.</p>
+    <div style="margin-top:22px"><a class="btn btn-primary" href="#contact" data-ap="ap_solution_plan_click" data-label="Implementation — Request Custom Plan">Request a Custom Solution Plan</a></div>
+  </div>
+</section>
+
+<!-- ============ PARTNER / AGENT ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Partners &amp; Agents</span>
+    <h2 class="h2">Build the AI Presenter Market With Us</h2>
+    <p class="lead" style="margin-bottom:14px">AI Presenter works with agencies, consultants, technology partners, regional representatives and business development professionals who want to introduce intelligent presentation and automation solutions to their markets.</p>
+    <p class="body" style="max-width:920px;margin-bottom:34px">Our North America operation is developing a structured network of regional agents and sub-agents across Canada and the United States, supported by the platform, production and implementation capabilities of the India operation.</p>
+    <div class="g4" id="partnerGrid"></div>
+    <div style="margin-top:30px"><a class="btn btn-primary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Partner — Discuss Partnership">Discuss a Regional or Agency Partnership</a></div>
+  </div>
+</section>
+
+<!-- ============ IMPLEMENTATION PROCESS ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">Process</span>
+    <h2 class="h2">A Clear Process From Discovery to Deployment</h2>
+    <div class="proc-grid" style="margin-top:36px" id="procGrid"></div>
+    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Every client implementation is built using approved information, defined escalation rules and a structured review process.</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Questions</span>
+    <h2 class="h2">Frequently Asked Questions</h2>
+    <div class="faq" style="margin-top:34px" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="rv">
+  <div class="shell">
+    <div class="card" style="padding:clamp(34px,5vw,64px);border-color:rgba(193,68,14,.3);background:radial-gradient(ellipse 70% 130% at 0% 0%,rgba(193,68,14,.13),rgba(12,24,21,.7) 68%)">
+      <h2 class="h2">Your Customers Are Ready to Ask.<br>Is Your Business Ready to <span class="accent-orange">Answer?</span></h2>
+      <p class="lead" style="margin-bottom:30px">Create an AI-powered presentation and sales experience that remains available, informed and consistent across every market you serve.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#contact" data-ap="ap_hero_demo_click" data-label="Final — Book a Demo">Book an AI Presenter Demo</a>
+        <a class="btn btn-secondary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Final — Discuss a Partnership">Discuss a Partnership</a>
+      </div>
+      <p class="trustline" style="margin-top:24px"><span class="dot" aria-hidden="true"></span> Mumbai, India • Brampton, Ontario, Canada • Serving India, Canada, USA and global markets</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT FORM ============ -->
+<section id="contact" class="rv">
+  <div class="shell">
+    <span class="eyebrow">Contact</span>
+    <h2 class="h2">Tell Us What You Want AI Presenter to Do</h2>
+    <form class="form-wrap" id="apForm" style="margin-top:36px" novalidate>
+      <div class="field"><label for="f-name">Full name <span class="req" aria-hidden="true">*</span></label><input id="f-name" name="name" type="text" autocomplete="name" required><span class="err" id="e-name">Please enter your full name.</span></div>
+      <div class="field"><label for="f-company">Company name</label><input id="f-company" name="company" type="text" autocomplete="organization"></div>
+      <div class="field"><label for="f-email">Work email <span class="req" aria-hidden="true">*</span></label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="err" id="e-email">Please enter a valid work email address.</span></div>
+      <div class="field"><label for="f-phone">Phone or WhatsApp</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="f-country">Country <span class="req" aria-hidden="true">*</span></label>
+        <select id="f-country" name="country" required>
+          <option value="">Select a country</option><option>India</option><option>Canada</option><option>United States</option><option>United Arab Emirates</option><option>United Kingdom</option><option>Australia</option><option>Other</option>
+        </select><span class="err" id="e-country">Please select your country.</span></div>
+      <div class="field"><label for="f-industry">Industry</label>
+        <select id="f-industry" name="industry">
+          <option value="">Select an industry</option><option>Real Estate</option><option>Financial Services and Insurance</option><option>Healthcare and Wellness</option><option>Education</option><option>Hospitality</option><option>Retail and Premium Products</option><option>B2B and Professional Services</option><option>Agency or Channel Partner</option><option>Other</option>
+        </select></div>
+      <div class="field"><label for="f-website">Website</label><input id="f-website" name="website" type="url" inputmode="url" placeholder="https://"></div>
+      <div class="field"><label for="f-contactpref">Preferred contact method</label>
+        <select id="f-contactpref" name="contactPreference"><option>Email</option><option>Phone</option><option>WhatsApp</option><option>Video call</option></select></div>
+      <div class="field full"><label for="f-goal">What would you like AI Presenter to present, automate or improve? <span class="req" aria-hidden="true">*</span></label><textarea id="f-goal" name="goal" required></textarea><span class="err" id="e-goal">Please tell us briefly what you would like AI Presenter to do.</span></div>
+      <div class="field"><label for="f-language">Preferred language</label>
+        <select id="f-language" name="language"><option>English</option><option>Hindi</option><option>Marathi</option><option>Punjabi</option><option>Gujarati</option><option>Tamil</option><option>Telugu</option><option>French</option><option>Other</option></select></div>
+      <div class="consent"><input id="f-consent" name="consent" type="checkbox" required><label for="f-consent">By submitting this form, you agree that CS Media &amp; Production and AI Presenter may contact you regarding your enquiry. Your information will be handled according to our Privacy Policy.</label></div>
+      <span class="err" id="e-consent" style="grid-column:1/-1">Please accept the consent statement to continue.</span>
+      <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+      <div class="field full"><button class="btn btn-primary" type="submit" style="justify-self:start;width:fit-content">Send Enquiry</button></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="AI Presenter home">
+          <img src="/ai-presenter/media/logo-horizontal-alpha.png" alt="AI Presenter by CS Media &amp; Production" width="1250" height="430" style="height:52px;width:auto">
+        </a>
+        <p class="foot-desc">AI Presenter is an international AI presentation, sales and automation platform developed by CS Media &amp; Production, with operations in Mumbai, India and Brampton, Ontario, Canada.</p>
+        <div class="foot-ops"><span><strong style="color:var(--ap-white);font-weight:500">India</strong><br>Mumbai, Maharashtra</span><span><strong style="color:var(--ap-white);font-weight:500">North America</strong><br>Brampton, Ontario, Canada</span></div>
+      </div>
+      <div><h4>Platform</h4>
+        <a href="#capabilities">AI Presenter</a><a href="#capabilities">AI Navigator</a><a href="#capabilities">Knowledge Intelligence</a>
+        <a href="#capabilities">Lead Qualification</a><a href="#capabilities">CRM and Follow-Up</a><a href="#capabilities">Multilingual Interaction</a></div>
+      <div><h4>Solutions</h4>
+        <a href="#industries">Real Estate</a><a href="#industries">Financial Services</a><a href="#industries">Healthcare</a><a href="#industries">Education</a>
+        <a href="#industries">Hospitality</a><a href="#industries">Retail</a><a href="#industries">B2B</a><a href="#industries">Agency Partnerships</a></div>
+      <div><h4>Company</h4>
+        <a href="#leadership">About</a><a href="#operations">Global Operations</a><a href="#leadership">Leadership</a>
+        <a href="#contact">Contact</a><a href="/professional.html">CS Media &amp; Production</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 CS Media &amp; Production. AI Presenter. All rights reserved.</span>
+      <span>Mumbai, India • Brampton, Ontario, Canada</span>
+    </div>
+  </div>
+</footer>
+
+<div id="lb" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-in">
+    <div class="lb-bar"><div><div class="lb-t" id="lbT"></div><div class="lb-d" id="lbD"></div></div>
+      <div style="display:flex;gap:8px"><button class="lb-btn" id="lbPrev" aria-label="Previous image">‹</button><button class="lb-btn" id="lbNext" aria-label="Next image">›</button><button class="lb-btn" id="lbClose" aria-label="Close viewer">✕</button></div>
+    </div>
+    <div class="lb-stage" id="lbStage"></div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://csmediaandproduction.in/#organization","name":"CS Media & Production","url":"https://csmediaandproduction.in","description":"AI Presenter is an international AI presentation, sales and automation platform developed by CS Media & Production, with operations in Mumbai, India and Brampton, Ontario, Canada.","contactPoint":[
+{"@type":"ContactPoint","contactType":"sales","areaServed":"IN","availableLanguage":["en","hi","mr"],"email":"info@csmediaandproduction.in"},
+{"@type":"ContactPoint","contactType":"sales","areaServed":["CA","US"],"availableLanguage":["en","fr"],"email":"info@csmediaandproduction.in"}]},
+{"@type":"SoftwareApplication","name":"AI Presenter","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://csmediaandproduction.in/ai-presenter","description":"AI Presenter helps businesses present, explain, qualify and follow up through intelligent voice, chat, visuals and automation.","publisher":{"@id":"https://csmediaandproduction.in/#organization"}},
+{"@type":"Person","name":"Dennis Raphel","jobTitle":"Managing Director — North America","worksFor":{"@id":"https://csmediaandproduction.in/#organization"},"address":{"@type":"PostalAddress","addressLocality":"Brampton","addressRegion":"Ontario","addressCountry":"CA"}},
+{"@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"CS Media & Production","item":"https://csmediaandproduction.in/professional.html"},
+{"@type":"ListItem","position":2,"name":"AI Presenter","item":"https://csmediaandproduction.in/ai-presenter"}]}
+]}
+</script>
+<script type="application/ld+json" id="faqSchema"></script>
+
+<script>
+/* ================== CONTENT DATA ================== */
+var HERO_STATEMENTS = [
+ "AI-Powered Growth Across India, Canada & the USA",
+ "A 24/7 AI Sales Team That Presents, Explains and Converts",
+ "Built in India. Represented in Canada. Ready for Global Markets",
+ "Transform Every Enquiry Into a Guided Sales Experience",
+ "One Intelligent Platform for Presentation, Qualification and Follow-Up",
+ "Give Every Prospect the Right Answer at the Right Moment",
+ "Global AI Technology With Local Business Representation",
+ "From Mumbai to Brampton—Powering Smarter Customer Journeys",
+ "Multilingual AI Conversations Designed Around Your Business",
+ "The Future of Sales Is Personal, Interactive and Always Available"
+];
+
+var PROBLEMS = [
+ ["Enquiries arrive outside office hours","An always-available guided business presentation."],
+ ["Different salespeople provide different information","One controlled and approved business knowledge system."],
+ ["Customers do not understand the complete offer","Interactive explanation based on individual interest and questions."],
+ ["Teams repeat the same basic information","AI handles early-stage education while the team focuses on serious conversations."],
+ ["Leads are captured without useful context","Conversation-led requirement capture and qualification."],
+ ["Follow-up becomes irregular or too aggressive","Structured, relevant and knowledge-based follow-up."],
+ ["International customers need confidence and accountability","India technology delivery connected to local North American representation."]
+];
+
+var HOW_STEPS = [
+ ["Understand","We study your business, sales process, audience, products, services and existing customer journey."],
+ ["Structure","We organise approved information, FAQs, visual assets, qualification logic, escalation rules and desired outcomes."],
+ ["Build","We create the AI Presenter interface, knowledge system, visual experience, CRM workflow and required integrations."],
+ ["Train and Test","We test responses, languages, customer scenarios, edge cases, performance and brand consistency."],
+ ["Launch","The experience is deployed through your website, campaign, landing page, direct link, QR code or approved communication workflow."],
+ ["Improve","Conversation insights, customer questions and real usage help improve the experience over time."]
+];
+
+var INDUSTRIES = [
+ ["Real Estate","Project presentation, location intelligence, amenities, plans, buyer qualification, site-visit guidance and follow-up."],
+ ["Financial Services and Insurance","Plan education, eligibility guidance, product comparison, documentation support and consultation booking."],
+ ["Healthcare and Wellness","Service education, patient guidance, pre-consultation information, enquiry capture and appointment pathways."],
+ ["Education","Course presentation, admissions guidance, programme comparison, eligibility questions and counselling support."],
+ ["Hospitality","Property presentation, room and venue exploration, service discovery, booking assistance and guest communication."],
+ ["Retail and Premium Products","Interactive product explanation, recommendation, feature comparison, lead capture and assisted buying."],
+ ["B2B and Professional Services","Capability presentation, solution discovery, requirement collection, meeting qualification and proposal support."],
+ ["Agencies and Channel Partners","Partner-led or white-label deployment across multiple clients, industries, regions and campaigns."]
+];
+
+var OUTCOMES = [
+ ["Always available","Present your business beyond working hours, time zones and team availability."],
+ ["Always consistent","Every prospect receives information based on the same approved business knowledge."],
+ ["More informed leads","Human teams receive customers who already understand the offering and have shared relevant requirements."],
+ ["Greater customer confidence","Interactive explanations reduce confusion and support more informed decisions."],
+ ["Scalable presentation","Use the same platform across campaigns, branches, agents, languages, regions and product categories."],
+ ["Less repetitive work","Allow teams to focus on relationships, negotiation and closing instead of repeating the same basic information."],
+ ["Better follow-up","Continue conversations using context, interest and approved knowledge rather than generic reminders."],
+ ["International readiness","Serve customers across India, Canada, the United States and global markets through one connected experience."]
+];
+
+var IMPL_OPTIONS = [
+ ["Starter Experience","A focused AI Presenter for one business, product, service, campaign or property.",["Single service","Single campaign","Product launch","Demonstration experience","Focused lead-generation page"]],
+ ["Professional Experience","AI Presenter with structured knowledge, multilingual interaction, qualification logic and CRM workflow.",["Growing businesses","Real estate projects","Financial services","Education and healthcare","Multi-step customer journeys"]],
+ ["Interactive Experience","AI Presenter combined with AI Navigator, advanced visual exploration, project information and richer content.",["Property and destination presentation","Premium products","Large information environments","Interactive sales centres","High-consideration purchases"]],
+ ["Enterprise Experience","Custom integrations, multiple locations, partner networks, advanced automation and dedicated workflows.",["Enterprise deployment","Multi-branch operations","Agency networks","International campaigns","Multi-product or multi-region use"]]
+];
+
+var PARTNER_ADV = ["International product and delivery support","Local market development","Product demonstrations","Structured onboarding","Sales and presentation resources","Implementation coordination","Opportunities across multiple industries","Long-term account and relationship potential"];
+
+var PROCESS = ["Business discovery session","Customer journey and objective mapping","Content and asset collection","Knowledge architecture","Experience and interface design","AI configuration and response rules","CRM and automation connection","Internal testing","Client review and approval","Launch","Monitoring and optimisation"];
+
+var FAQS = [
+ ["Is AI Presenter only a chatbot?","No. AI Presenter combines presentation, conversation, visuals, navigation, qualification, CRM workflows and follow-up into one connected customer experience."],
+ ["Can AI Presenter be trained on our business information?","Yes. The platform is configured using approved business documents, FAQs, product details, sales information, media assets and response rules supplied or approved by the client."],
+ ["Can it communicate in multiple languages?","Yes. Language support depends on the selected experience, voice configuration and implementation scope."],
+ ["Can it work with our CRM?","AI Presenter can be connected to CRM and lead-management workflows depending on the client’s system, available integrations and implementation requirements."],
+ ["Can customers speak instead of typing?","Yes. Experiences can support voice and text interaction, subject to the selected configuration, browser support and device permissions."],
+ ["Where can the experience be used?","It can be deployed through websites, campaign landing pages, direct links, QR codes, events, presentations and approved communication workflows."],
+ ["Does AI Presenter replace the sales team?","AI Presenter is designed to support the sales team by handling presentation, early-stage questions, qualification and structured follow-up. Human teams remain essential for relationships, negotiation and closing."],
+ ["Which markets do you serve?","AI Presenter operates from Mumbai, India and Brampton, Ontario, Canada, serving clients across India, Canada, the United States and international markets."],
+ ["Who leads North American operations?","Dennis Raphel, Managing Director — North America, leads business development, strategic partnerships, regional representation and network expansion from Brampton, Ontario."],
+ ["How long does implementation take?","The timeline depends on knowledge volume, languages, visual content, integrations and approval requirements. A scoped implementation plan is provided after the discovery session."],
+ ["How do we begin?","Book a business demo. The team will understand your use case and recommend the appropriate experience, workflow and implementation scope."]
+];
+
+var MEDIA = [
+ {src:"/ai-presenter/media/08_skyhawks_investor_presentation.jpg",tag:"Deck + Q&A",title:"Full deck with live Q&A",desc:"A 24-slide investor deck presented alongside Maya answering investor questions in real time.",w:1536,h:864},
+ {src:"/ai-presenter/media/09_skyhawks_topic_interface.jpg",tag:"Topic Navigator",title:"Navigator around your brand",desc:"Topic pills orbit the client logo — running live on the client's own domain.",w:1536,h:864}
+];
+
+/* ================== ANALYTICS ================== */
+window.dataLayer = window.dataLayer || [];
+function apTrack(evt, extra){
+  try{
+    var d = {event: evt, page_section: (extra&&extra.section)||'', cta_label: (extra&&extra.label)||'',
+      country: (document.getElementById('f-country')||{}).value || '',
+      industry: (document.getElementById('f-industry')||{}).value || '',
+      traffic_source: document.referrer ? new URL(document.referrer).hostname : 'direct',
+      device_category: window.matchMedia('(max-width:640px)').matches ? 'mobile' : (window.matchMedia('(max-width:1024px)').matches ? 'tablet' : 'desktop')};
+    window.dataLayer.push(d);
+  }catch(e){}
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-ap]'); if(!t) return;
+  apTrack(t.getAttribute('data-ap'),{label:t.getAttribute('data-label')||t.textContent.trim(),section:(t.closest('section')||{}).id||''});
+});
+
+/* ================== HERO ROTATOR ================== */
+(function(){
+  var wrap=document.getElementById('rotator'); if(!wrap) return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  HERO_STATEMENTS.forEach(function(txt,n){
+    var p=document.createElement('p'); p.className='rot'+(n===0?' on':''); p.textContent=txt;
+    p.setAttribute('aria-hidden', n===0?'false':'true');
+    wrap.appendChild(p);
+  });
+  if(reduce) return;                      // show first statement only, no cycling
+  var lines=wrap.querySelectorAll('.rot'), i=0, timer=null;
+  function go(n){
+    lines[i].classList.remove('on'); lines[i].setAttribute('aria-hidden','true');
+    i=n; lines[i].classList.add('on'); lines[i].setAttribute('aria-hidden','false');
+  }
+  function start(){ if(timer) return; timer=setInterval(function(){ go((i+1)%lines.length); },5000); }
+  function stop(){ clearInterval(timer); timer=null; }
+  document.addEventListener('visibilitychange',function(){ document.visibilityState==='visible' ? start() : stop(); });
+  start();
+})();
+
+/* ================== RENDER SECTIONS ================== */
+function el(tag,cls,html){var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e;}
+
+(function(){ // problem rows
+  var w=document.getElementById('problemRows');
+  PROBLEMS.forEach(function(p){
+    var r=el('div','prow');
+    r.appendChild(el('div','p-q','<span aria-hidden="true">✕</span><span>'+p[0]+'</span>'));
+    r.appendChild(el('div','p-a','<b>AI Presenter response</b>'+p[1]));
+    w.appendChild(r);
+  });
+})();
+
+(function(){ // how it works
+  var w=document.getElementById('howSteps');
+  HOW_STEPS.forEach(function(s,n){
+    var d=el('article','step');
+    d.appendChild(el('div','step-n',String(n+1).padStart(2,'0')));
+    d.appendChild(el('div',null,'<h3 class="h3">'+s[0]+'</h3><p>'+s[1]+'</p>'));
+    w.appendChild(d);
+  });
+})();
+
+(function(){ // industries
+  var w=document.getElementById('industryGrid');
+  INDUSTRIES.forEach(function(s){ w.appendChild(el('article','card','<h3 class="h3">'+s[0]+'</h3><p>'+s[1]+'</p>')); });
+})();
+
+(function(){ // outcomes
+  var w=document.getElementById('outcomeGrid');
+  OUTCOMES.forEach(function(s){ w.appendChild(el('article','card','<h3 class="h3">'+s[0]+'</h3><p>'+s[1]+'</p>')); });
+})();
+
+(function(){ // implementation options
+  var w=document.getElementById('implGrid');
+  IMPL_OPTIONS.forEach(function(o){
+    w.appendChild(el('article','card impl','<h3 class="h3">'+o[0]+'</h3><p>'+o[1]+'</p><ul>'+o[2].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'));
+  });
+})();
+
+(function(){ // partner advantages
+  var w=document.getElementById('partnerGrid');
+  PARTNER_ADV.forEach(function(s){ w.appendChild(el('article','card','<p style="color:var(--ap-white);font-size:15px;font-weight:500">'+s+'</p>')); });
+})();
+
+(function(){ // process
+  var w=document.getElementById('procGrid');
+  PROCESS.forEach(function(s,n){ w.appendChild(el('div','proc-item','<span>'+String(n+1).padStart(2,'0')+'</span><p>'+s+'</p>')); });
+})();
+
+(function(){ // FAQ + schema
+  var w=document.getElementById('faqList');
+  FAQS.forEach(function(f,n){
+    var item=el('div','faq-item');
+    var btn=el('button','faq-q',f[0]);
+    btn.type='button'; btn.id='faq-q-'+n; btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-controls','faq-a-'+n);
+    var ans=el('div','faq-a',f[1]); ans.id='faq-a-'+n; ans.setAttribute('role','region'); ans.setAttribute('aria-labelledby','faq-q-'+n);
+    btn.addEventListener('click',function(){
+      var open=btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded',String(!open)); ans.classList.toggle('open',!open);
+      if(!open) apTrack('ap_faq_open',{label:f[0],section:'faq'});
+    });
+    item.appendChild(btn); item.appendChild(ans); w.appendChild(item);
+  });
+  document.getElementById('faqSchema').textContent = JSON.stringify({
+    "@context":"https://schema.org","@type":"FAQPage",
+    "mainEntity":FAQS.map(function(f){return {"@type":"Question","name":f[0],"acceptedAnswer":{"@type":"Answer","text":f[1]}};})
+  });
+})();
+
+/* ================== NEXT/NEXT VIEWER + LIGHTBOX ================== */
+/* CREATIVES: drop campaign files in media/creatives/ and list them here —
+   when this array has entries it replaces the product screenshots below.
+   { src:"media/creatives/creative-01.png", tag:"Campaign", title:"…", desc:"…" }        */
+var CREATIVES = [];
+
+(function(){
+  var VIEW = CREATIVES.length ? CREATIVES : MEDIA;
+  var img=document.getElementById('cslImg'), count=document.getElementById('cslCount'),
+      tag=document.getElementById('cslTag'), title=document.getElementById('cslTitle'),
+      desc=document.getElementById('cslDesc'), thumbs=document.getElementById('cslThumbs'),
+      stageBtn=document.getElementById('cslStage'), idx=0;
+
+  VIEW.forEach(function(m,n){
+    var b=document.createElement('button'); b.type='button'; b.className='csl-thumb';
+    b.setAttribute('role','tab'); b.setAttribute('aria-label',(m.title||'Image ')+' '+(n+1));
+    b.innerHTML='<img src="'+m.src+'" alt="" loading="lazy">';
+    b.addEventListener('click',function(){show(n);});
+    thumbs.appendChild(b);
+  });
+
+  function show(n){
+    idx=(n+VIEW.length)%VIEW.length;
+    var m=VIEW[idx];
+    img.src=m.src; img.alt=m.title||('Image '+(idx+1));
+    count.textContent=(idx+1)+' / '+VIEW.length;
+    tag.textContent=m.tag||''; title.textContent=m.title||''; desc.textContent=m.desc||'';
+    Array.prototype.forEach.call(thumbs.children,function(x,i){x.setAttribute('aria-current',String(i===idx));});
+    var t=thumbs.children[idx]; if(t&&t.scrollIntoView) t.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+    var pre=new Image(); pre.src=VIEW[(idx+1)%VIEW.length].src;
+  }
+  document.getElementById('cslPrev').addEventListener('click',function(){show(idx-1);});
+  document.getElementById('cslNext').addEventListener('click',function(){show(idx+1);});
+
+  /* lightbox (full-size) */
+  var lb=document.getElementById('lb'), stage=document.getElementById('lbStage'),
+      lbT=document.getElementById('lbT'), lbD=document.getElementById('lbD'), lastFocus=null;
+  function lbShow(){var m=VIEW[idx]; if(!m)return; stage.innerHTML='<img src="'+m.src+'" alt="'+(m.title||'')+'">'; lbT.textContent=m.title||''; lbD.textContent=m.desc||'';}
+  function lbOpen(){lastFocus=document.activeElement; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; lbShow(); document.getElementById('lbClose').focus();}
+  function lbClose(){lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; stage.innerHTML=''; if(lastFocus)lastFocus.focus();}
+  stageBtn.addEventListener('click',lbOpen);
+  document.getElementById('lbClose').addEventListener('click',lbClose);
+  document.getElementById('lbPrev').addEventListener('click',function(){show(idx-1);lbShow();});
+  document.getElementById('lbNext').addEventListener('click',function(){show(idx+1);lbShow();});
+  lb.addEventListener('click',function(e){if(e.target===lb)lbClose();});
+  document.addEventListener('keydown',function(e){
+    if(lb.classList.contains('open')){
+      if(e.key==='Escape')lbClose();
+      if(e.key==='ArrowLeft'){show(idx-1);lbShow();}
+      if(e.key==='ArrowRight'){show(idx+1);lbShow();}
+      return;
+    }
+    var g=document.getElementById('gallery'); if(!g) return;
+    var r=g.getBoundingClientRect();
+    if(r.top<innerHeight&&r.bottom>0){
+      if(e.key==='ArrowLeft')show(idx-1);
+      if(e.key==='ArrowRight')show(idx+1);
+    }
+  });
+  show(0);
+})();
+
+/* ================== ORB VIDEO KEEPALIVE ================== */
+(function(){
+  var v=document.querySelector('.orb-video'); if(!v) return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ v.removeAttribute('autoplay'); v.pause(); return; }
+  function nudge(){ if(v.paused) v.play().catch(function(){}); }
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') nudge(); });
+  new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting) nudge(); }); },{threshold:.15}).observe(v);
+  setTimeout(nudge,800);
+})();
+
+/* ============ MODE TOGGLE ============ */
+document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='aipresenter')?'/ai-presenter':'/';});});
+
+/* ================== NAV ================== */
+(function(){
+  var nav=document.getElementById('nav'), burger=document.getElementById('burger'), mnav=document.getElementById('mnav');
+  window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
+  function openM(){mnav.classList.add('open');burger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';document.getElementById('mnavClose').focus();}
+  function closeM(){mnav.classList.remove('open');burger.setAttribute('aria-expanded','false');document.body.style.overflow='';burger.focus();}
+  burger.addEventListener('click',openM);
+  document.getElementById('mnavClose').addEventListener('click',closeM);
+  mnav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeM);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mnav.classList.contains('open'))closeM();});
+  // active section
+  var links=Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  var so=new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(!en.isIntersecting) return;
+      links.forEach(function(a){a.removeAttribute('aria-current');});
+      var m=links.find(function(a){return a.getAttribute('href')==='#'+en.target.id;});
+      if(m)m.setAttribute('aria-current','true');
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(function(s){so.observe(s);});
+})();
+
+/* ================== REVEALS ================== */
+(function(){
+  var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');o.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -5% 0px'});
+  document.querySelectorAll('.rv').forEach(function(e){o.observe(e);});
+  var ops=document.getElementById('operations');
+  if(ops){var oo=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){apTrack('ap_global_operations_view',{section:'operations'});oo.disconnect();}});},{threshold:.3});oo.observe(ops);}
+})();
+
+/* ================== FORM ================== */
+(function(){
+  var form=document.getElementById('apForm'), msg=document.getElementById('formMsg'), started=false;
+  form.addEventListener('input',function(){ if(!started){started=true;apTrack('ap_form_start',{section:'contact'});} });
+  document.getElementById('f-country').addEventListener('change',function(){apTrack('ap_country_select',{label:this.value,section:'contact'});});
+
+  function setErr(id,errId,bad){
+    var f=document.getElementById(id), e=document.getElementById(errId);
+    f.setAttribute('aria-invalid',String(bad)); e.classList.toggle('show',bad);
+    if(bad) f.setAttribute('aria-describedby',errId); else f.removeAttribute('aria-describedby');
+    return !bad;
+  }
+  form.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var ok=true, first=null;
+    if(!setErr('f-name','e-name',!document.getElementById('f-name').value.trim())){ok=false;first=first||'f-name';}
+    var em=document.getElementById('f-email').value.trim();
+    if(!setErr('f-email','e-email',!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))){ok=false;first=first||'f-email';}
+    if(!setErr('f-country','e-country',!document.getElementById('f-country').value)){ok=false;first=first||'f-country';}
+    if(!setErr('f-goal','e-goal',!document.getElementById('f-goal').value.trim())){ok=false;first=first||'f-goal';}
+    var consent=document.getElementById('f-consent');
+    var cbad=!consent.checked; document.getElementById('e-consent').classList.toggle('show',cbad);
+    consent.setAttribute('aria-invalid',String(cbad)); if(cbad){ok=false;first=first||'f-consent';}
+
+    if(!ok){
+      msg.className='form-msg bad'; msg.textContent='We could not submit your enquiry. Please check the highlighted fields or contact us directly.';
+      apTrack('ap_form_error',{section:'contact'});
+      if(first)document.getElementById(first).focus();
+      return;
+    }
+    // Regional routing per brief: India -> India team, Canada/USA -> North America team
+    var country=document.getElementById('f-country').value;
+    var region = country==='India' ? 'India Business Team'
+               : (country==='Canada'||country==='United States') ? 'North America Team'
+               : 'International Team';
+    var body=[
+      'Routing: '+region, 'Country: '+country,
+      'Name: '+document.getElementById('f-name').value.trim(),
+      'Company: '+document.getElementById('f-company').value.trim(),
+      'Email: '+em,
+      'Phone/WhatsApp: '+document.getElementById('f-phone').value.trim(),
+      'Industry: '+document.getElementById('f-industry').value,
+      'Website: '+document.getElementById('f-website').value.trim(),
+      'Preferred contact: '+document.getElementById('f-contactpref').value,
+      'Preferred language: '+document.getElementById('f-language').value,
+      '', 'What they want AI Presenter to do:', document.getElementById('f-goal').value.trim(),
+      '', 'Source: '+location.href
+    ].join('\n');
+    apTrack('ap_form_submit',{section:'contact',label:region});
+    msg.className='form-msg ok'; msg.textContent='Thank you. Your enquiry has been received. A member of the appropriate regional team will contact you shortly.';
+    window.location.href='mailto:info@csmediaandproduction.in?subject='+encodeURIComponent('AI Presenter enquiry — '+region+' — '+country)+'&body='+encodeURIComponent(body);
+  });
+})();
+</script>
+
+<!-- ===== BendyButton 3D key — CS Media & Production ===== -->
+<link rel="stylesheet" href="/bendy3d.css">
+<link rel="stylesheet" href="/csmedia-bendy.css">
+<script src="/bendy3d.js"></script>
+<script src="/csmedia-bendy-init.js" data-mode="3d"></script>
+<!-- ===================================================== -->
+</body>
+</html>

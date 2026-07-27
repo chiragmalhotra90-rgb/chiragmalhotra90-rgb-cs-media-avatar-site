@@ -1,0 +1,328 @@
+/*!
+ * CS Media & Production — BendyButton brand themes
+ * Load AFTER bendy-button.css.
+ *
+ * Three themes, matched to the live tokens on csmediaandproduction.in:
+ *   [data-cs-bendy="pro"]        professional.html   cyan  #00eaf4 · IBM Plex Mono · uppercase
+ *   [data-cs-bendy="presenter"]  /ai-presenter       orange #C1440E + teal #0D6E6A · Poppins
+ *   [data-cs-bendy="casual"]     /  (home)           lime  #C6FF00 · Archivo/Montserrat
+ *
+ * csmedia-bendy-init.js sets the data-cs-bendy attribute on <html> automatically.
+ * All three are tuned for dark backgrounds: the "shadow" is a coloured glow, not black.
+ */
+
+/* ═══════════════════════════════════════════════════ PROFESSIONAL (cyan) ══ */
+/* Feel: tight and expensive. Bends a little, barely wobbles.                 */
+
+[data-cs-bendy="pro"] .bendy,
+.bendy--cs-pro {
+  --bendy-bg: #00eaf4;
+  --bendy-fg: #00131a;
+  --bendy-border: transparent;
+  --bendy-border-width: 0;
+  --bendy-radius: 999px;
+  --bendy-shadow-x: 0;
+  --bendy-shadow-y: 0;
+  --bendy-shadow-blur: 26px;
+  --bendy-shadow-color: rgba(0, 234, 244, .30);
+  --bendy-font: "IBM Plex Mono", "Space Grotesk", monospace;
+  --bendy-size: 13px;
+  --bendy-weight: 600;
+  --bendy-tracking: .05em;
+  --bendy-pad-y: 16px;
+  --bendy-pad-x: 38px;
+  --bendy-ring: #00f3ff;
+  text-transform: uppercase;
+  --bendy-depth-color: #00464f;
+}
+
+/* Ghost / secondary on the near-black #020506 page */
+[data-cs-bendy="pro"] .bendy.btn-secondary,
+[data-cs-bendy="pro"] .bendy.btn-ghost,
+[data-cs-bendy="pro"] .bendy.is-ghost,
+.bendy--cs-pro-ghost {
+  --bendy-bg: transparent;
+  --bendy-fg: #f5f5f2;
+  --bendy-border: #43bde2;
+  --bendy-border-width: 1;
+  --bendy-shadow-color: rgba(67, 189, 226, .16);
+  --bendy-ring: #43bde2;
+}
+
+/* Accent alternates, if you want a second colour in the same section */
+.bendy--cs-lime { --bendy-bg: #b8ec35; --bendy-fg: #0a1400; --bendy-shadow-color: rgba(184,236,53,.28); --bendy-ring:#b8ec35; }
+.bendy--cs-pink { --bendy-bg: #ff006c; --bendy-fg: #ffffff; --bendy-shadow-color: rgba(255,0,108,.30);  --bendy-ring:#ff006c; }
+
+/* ═════════════════════════════════════════ AI PRESENTER (orange + teal) ══ */
+/* Feel: confident but alive. This is Maya's page — it should feel responsive. */
+
+[data-cs-bendy="presenter"] .bendy,
+.bendy--cs-presenter {
+  --bendy-bg: #C1440E;
+  --bendy-fg: #ffffff;
+  --bendy-border: transparent;
+  --bendy-border-width: 0;
+  --bendy-radius: 999px;
+  --bendy-shadow-x: 0;
+  --bendy-shadow-y: 0;
+  --bendy-shadow-blur: 24px;
+  --bendy-shadow-color: rgba(193, 68, 14, .32);
+  --bendy-font: "Poppins", system-ui, -apple-system, sans-serif;
+  --bendy-size: 14px;
+  --bendy-weight: 500;
+  --bendy-tracking: 0;
+  --bendy-pad-y: 13px;
+  --bendy-pad-x: 24px;
+  --bendy-ring: #e0561b;
+  min-height: 44px;
+  --bendy-depth-color: #5E2007;
+}
+
+/* Secondary: teal outline on forest #0F1A17 */
+[data-cs-bendy="presenter"] .bendy.btn-secondary,
+[data-cs-bendy="presenter"] .bendy.is-ghost,
+.bendy--cs-presenter-ghost {
+  --bendy-bg: transparent;
+  --bendy-fg: #F8F8F4;
+  --bendy-border: #0D6E6A;
+  --bendy-border-width: 1;
+  --bendy-shadow-color: rgba(13, 110, 106, .22);
+  --bendy-ring: #12938d;
+}
+
+/* Solid teal — good for "Watch the Maya demo" next to an orange primary */
+.bendy--cs-teal {
+  --bendy-bg: #0D6E6A;
+  --bendy-fg: #F8F8F4;
+  --bendy-shadow-color: rgba(13, 110, 106, .38);
+  --bendy-ring: #12938d;
+}
+
+/* Cream on dark — for pricing tiers (Maya Starter / Growth) */
+.bendy--cs-cream {
+  --bendy-bg: #F5F0E8;
+  --bendy-fg: #082B27;
+  --bendy-shadow-color: rgba(245, 240, 232, .20);
+  --bendy-ring: #D9B08C;
+}
+
+/* ══════════════════════════════════════════════════ CASUAL HOME (lime) ══ */
+/* Feel: playful. Bends far, bounces twice before it settles.                 */
+
+[data-cs-bendy="casual"] .bendy,
+.bendy--cs-casual {
+  --bendy-bg: #C6FF00;
+  --bendy-fg: #090d01;
+  --bendy-border: transparent;
+  --bendy-border-width: 0;
+  --bendy-radius: 999px;
+  --bendy-shadow-x: 0;
+  --bendy-shadow-y: 0;
+  --bendy-shadow-blur: 30px;
+  --bendy-shadow-color: rgba(198, 255, 0, .30);
+  --bendy-font: "Archivo", "Montserrat", system-ui, sans-serif;
+  --bendy-size: 14px;
+  --bendy-weight: 700;
+  --bendy-tracking: .01em;
+  --bendy-pad-y: 14px;
+  --bendy-pad-x: 30px;
+  --bendy-ring: #C6FF00;
+  --bendy-depth-color: #3A5200;
+}
+
+[data-cs-bendy="casual"] .bendy.btn-secondary,
+[data-cs-bendy="casual"] .bendy.ch-ghost,
+[data-cs-bendy="casual"] .bendy.ghost,
+[data-cs-bendy="casual"] .bendy.is-ghost,
+.bendy--cs-casual-ghost {
+  --bendy-bg: transparent;
+  --bendy-fg: #d3ff38;
+  --bendy-border: #C6FF00;
+  --bendy-border-width: 1;
+  --bendy-shadow-color: rgba(198, 255, 0, .14);
+}
+
+/* ═══════════════════════════════════ existing-class bridge (no HTML edits) ══ */
+/* Your buttons already carry their own classes — .btn, .ch-primary, .ghost,
+   .btn-primary. Once the engine marks one .bendy-ready, that element's own
+   fill and shadow must step aside so the SVG shape is the only thing painting.
+   These are the only !importants in the kit, and they only fire after the
+   engine has taken over — so if the JS never loads, your buttons look normal. */
+
+.bendy-ready:not(.bendy--jelly) {
+  background: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+/* Your CSS nudges transform on :hover (translateY(-2px), scale(1.04)).
+   Harmless in bend mode. In jelly mode the spring needs to own transform.   */
+.bendy--jelly.bendy-ready,
+.bendy--jelly.bendy-ready:hover,
+.bendy--jelly.bendy-ready:focus {
+  transform: var(--bendy-tf) !important;
+}
+
+/* ─────────────────────────────────────────────── optional 3D key look ──── */
+/* Each theme above already carries a matching --bendy-depth-color, so all a
+   button needs is data-depth. 8–10px is subtle; 14px+ reads as a real key.
+     <button class="btn btn-primary" data-depth="10">Build my AI presenter →</button>
+   The face sinks into the base on press, so it feels physically clicked.     */
+
+.bendy--cs-teal  { --bendy-depth-color: #063d3a; }
+.bendy--cs-cream { --bendy-depth-color: #C4B49E; }
+.bendy--cs-lime  { --bendy-depth-color: #4e6b0c; }
+.bendy--cs-pink  { --bendy-depth-color: #7a0034; }
+
+/* Keep the arrow glyph in "Start Project →" from wrapping away from the text */
+.bendy__label { white-space: nowrap; }
+
+/* Anything the site renders inside a button (icon spans, arrows) keeps its size */
+.bendy__label > span { display: inline-flex; align-items: center; }
+
+/* ═══════════════════════════════════════════════ 3D KEY MODE (bendy3d) ══ */
+/* This is the technique the michalmalewicz demo actually uses: a layered
+   surface that tilts toward the cursor over a solid depth wall.
+   Needs bendy3d.css + bendy3d.js, and mode="3d" on the init script.        */
+
+[data-cs-bendy="pro"] .b3d,
+.b3d--cs-pro {
+  --b3d-surface: #00eaf4;
+  --b3d-depth: #00646e;
+  --b3d-fg: #00131a;
+  --b3d-radius: 999px;
+  --b3d-shadow-color: rgba(0, 234, 244, .22);
+  --b3d-font: "IBM Plex Mono", "Space Grotesk", monospace;
+  --b3d-size: 13px;
+  --b3d-weight: 600;
+  --b3d-tracking: .05em;
+  --b3d-pad-y: 16px;
+  --b3d-pad-x: 38px;
+  --b3d-edge: rgba(255, 255, 255, .28);
+  --b3d-gloss: .07;
+  text-transform: uppercase;
+}
+
+[data-cs-bendy="presenter"] .b3d,
+.b3d--cs-presenter {
+  --b3d-surface: #C1440E;
+  --b3d-depth: #5E2007;
+  --b3d-fg: #ffffff;
+  --b3d-radius: 999px;
+  --b3d-shadow-color: rgba(193, 68, 14, .26);
+  --b3d-font: "Poppins", system-ui, -apple-system, sans-serif;
+  --b3d-size: 14px;
+  --b3d-weight: 500;
+  --b3d-pad-y: 14px;
+  --b3d-pad-x: 26px;
+  --b3d-edge: rgba(255, 255, 255, .16);
+  --b3d-gloss: .10;
+}
+
+[data-cs-bendy="casual"] .b3d,
+.b3d--cs-casual {
+  --b3d-surface: #C6FF00;
+  --b3d-depth: #3A5200;
+  --b3d-fg: #090d01;
+  --b3d-radius: 999px;
+  --b3d-shadow-color: rgba(198, 255, 0, .22);
+  --b3d-font: "Archivo", "Montserrat", system-ui, sans-serif;
+  --b3d-size: 14px;
+  --b3d-weight: 700;
+  --b3d-pad-y: 15px;
+  --b3d-pad-x: 30px;
+  --b3d-edge: rgba(255, 255, 255, .30);
+  --b3d-gloss: .12;
+}
+
+/* fun.html is monochrome — white on near-black, Inter. A white key with a
+   grey wall is the only thing that belongs on that page. */
+[data-cs-bendy="fun"] .b3d,
+.b3d--cs-fun {
+  --b3d-surface: #ffffff;
+  --b3d-depth: #6d6d6d;
+  --b3d-fg: #0C0C0C;
+  --b3d-radius: 999px;
+  --b3d-shadow-color: rgba(255, 255, 255, .18);
+  --b3d-font: "Inter", system-ui, -apple-system, sans-serif;
+  --b3d-size: 14px;
+  --b3d-weight: 600;
+  --b3d-pad-y: 14px;
+  --b3d-pad-x: 28px;
+  --b3d-edge: rgba(255, 255, 255, .55);
+  --b3d-gloss: .14;
+}
+
+/* The gallery runs cyan (#00E5FF) on near-black, Inter + JetBrains Mono. */
+[data-cs-bendy="gallery"] .b3d,
+.b3d--cs-gallery {
+  --b3d-surface: #00E5FF;
+  --b3d-depth: #0b6b76;
+  --b3d-fg: #04090c;
+  --b3d-radius: 10px;
+  --b3d-shadow-color: rgba(0, 229, 255, .20);
+  --b3d-font: "Inter", system-ui, sans-serif;
+  --b3d-size: 13px;
+  --b3d-weight: 600;
+  --b3d-pad-y: 10px;
+  --b3d-pad-x: 18px;
+  --b3d-edge: rgba(255, 255, 255, .26);
+  --b3d-gloss: .08;
+}
+
+/* The category filter pills are spans, and there are eleven of them in a row.
+   Solid keys would shout over the grid they filter, so they get a hollow
+   surface and a low wall — still a key, just a quiet one. The active pill
+   fills in, which is how the page already signalled selection. */
+[data-cs-bendy="gallery"] .b3d.chip {
+  --b3d-surface: rgba(0, 229, 255, .07);
+  --b3d-depth: #0b3d45;
+  --b3d-fg: #eafdff;
+  --b3d-radius: 999px;
+  --b3d-size: 12px;
+  --b3d-weight: 500;
+  --b3d-pad-y: 7px;
+  --b3d-pad-x: 14px;
+  --b3d-gloss: .05;
+  --b3d-shadow-color: transparent;
+}
+[data-cs-bendy="gallery"] .b3d.chip.active {
+  --b3d-surface: #00E5FF;
+  --b3d-depth: #0b6b76;
+  --b3d-fg: #04090c;
+  --b3d-weight: 700;
+  --b3d-shadow-color: rgba(0, 229, 255, .20);
+}
+
+/* The gallery's own variants: .solid is the primary, .danger is destructive. */
+[data-cs-bendy="gallery"] .b3d.danger {
+  --b3d-surface: #ff5470;
+  --b3d-depth: #7a1f30;
+  --b3d-fg: #1a0308;
+  --b3d-shadow-color: rgba(255, 84, 112, .22);
+}
+
+/* Secondary buttons: hollow surface, coloured wall, so they still read as keys */
+[data-cs-bendy="pro"]       .b3d.btn-secondary,
+[data-cs-bendy="presenter"] .b3d.btn-secondary,
+[data-cs-bendy="casual"]    .b3d.ch-ghost,
+[data-cs-bendy="casual"]    .b3d.ghost {
+  --b3d-surface: rgba(255, 255, 255, .05);
+  --b3d-fg: #f5f5f2;
+  --b3d-gloss: .05;
+  --b3d-shadow-color: transparent;
+}
+[data-cs-bendy="pro"]       .b3d.btn-secondary { --b3d-depth: #1d3f49; }
+[data-cs-bendy="presenter"] .b3d.btn-secondary { --b3d-depth: #0D6E6A; }
+[data-cs-bendy="casual"]    .b3d.ch-ghost,
+[data-cs-bendy="casual"]    .b3d.ghost         { --b3d-depth: #4e6b0c; --b3d-fg: #d3ff38; }
+
+/* Bridge for 3D: the host becomes a frame, the surface layer does the painting.
+   Padding moves off the host or the button would double up on spacing.       */
+.b3d-ready {
+  background: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
