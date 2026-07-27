@@ -1,0 +1,232 @@
+/*!
+ * Bendy3D v1.0.0 — the layered 3D-key button. Zero dependencies.
+ * A rounded surface that tilts toward the cursor over a solid depth layer,
+ * with specular light/dark that track the pointer, and a dent on press.
+ *
+ * Every colour and dimension is a CSS variable. Override on :root, a class,
+ * or inline: style="--b3d-surface:#C1440E; --b3d-depth:#5E2007".
+ */
+
+.b3d {
+  /* ---- the ones you'll actually change ---- */
+  --b3d-surface: #424242;             /* the top face */
+  --b3d-depth: #282828;               /* the extruded side wall */
+  --b3d-fg: #ffffff;                  /* label */
+  --b3d-radius: 16px;
+  --b3d-depth-size: 4px;              /* how tall the wall is */
+  --b3d-tilt: 11deg;                  /* max tilt (visual only, JS reads it too) */
+  --b3d-persp: 600px;
+  --b3d-shadow-color: rgba(0, 0, 0, .15);
+  --b3d-shadow-blur: 16px;
+  --b3d-pad-y: 18px;
+  --b3d-pad-x: 34px;
+  --b3d-size: 15px;                   /* font size */
+  --b3d-weight: 600;
+  --b3d-tracking: .01em;
+  --b3d-font: inherit;
+  --b3d-edge: rgba(255, 255, 255, .10);   /* inner top edge highlight */
+  --b3d-sheen: .03;                       /* top-to-bottom gradient strength */
+  --b3d-gloss: .05;                       /* static reflection strength */
+  --b3d-ring: var(--b3d-surface);
+  /* ----------------------------------------- */
+
+  /* driven by JS — don't set these by hand */
+  --b3d-rx: 0deg;
+  --b3d-ry: 0deg;
+  --b3d-scale: 1;
+  --b3d-sink: 0px;
+  --b3d-wall: var(--b3d-depth-size);
+  --b3d-px: 50%;
+  --b3d-py: 50%;
+  --b3d-press: 0;
+
+  position: relative;
+  display: inline-flex;
+  perspective: var(--b3d-persp);
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  color: var(--b3d-fg);
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ------------------------------------------------------------------ layers */
+
+.b3d__shadow,
+.b3d__depth {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--b3d-radius);
+  pointer-events: none;
+}
+
+.b3d__shadow {
+  background: var(--b3d-shadow-color);
+  filter: blur(var(--b3d-shadow-blur));
+  transform: translate3d(var(--b3d-shx, 0px), calc(var(--b3d-depth-size) * 2), 0)
+             scale(var(--b3d-scale));
+  will-change: transform, filter;
+}
+
+.b3d__depth {
+  background: var(--b3d-depth);
+  transform: translate3d(0, var(--b3d-wall), 0)
+             rotateX(var(--b3d-rx)) rotateY(var(--b3d-ry))
+             scale(var(--b3d-scale));
+  will-change: transform;
+}
+
+/* The surface sits in normal flow, so its padding sizes the whole button.
+   pointer-events: none is deliberate and load-bearing: it guarantees that any
+   click's `e.target` is the button element itself, not one of these inner
+   layers. Delegated handlers that read e.target directly (analytics, modal
+   openers, tracking pixels) keep working untouched. The host still receives
+   every pointer event, so the effect is unaffected. */
+.b3d__surface {
+  pointer-events: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55em;
+  padding: var(--b3d-pad-y) var(--b3d-pad-x);
+
+  background: var(--b3d-surface);
+  border-radius: var(--b3d-radius);
+  overflow: hidden;
+
+  transform: translate3d(0, var(--b3d-sink), 0)
+             rotateX(var(--b3d-rx)) rotateY(var(--b3d-ry))
+             scale(var(--b3d-scale));
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------- overlays */
+
+.b3d__sheen,
+.b3d__reflect,
+.b3d__dark,
+.b3d__light,
+.b3d__edge,
+.b3d__dent {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Top-lit body: subtly lighter at the top, darker at the bottom. */
+.b3d__sheen {
+  background: linear-gradient(rgba(255, 255, 255, var(--b3d-sheen)),
+                              rgba(0, 0, 0, var(--b3d-sheen)));
+}
+
+/* A fixed soft reflection near the top — reads as a glossy moulded surface. */
+.b3d__reflect {
+  background: radial-gradient(100px at 50% 35%,
+              rgba(255, 255, 255, var(--b3d-gloss)) 10%, transparent 100%);
+}
+
+/* These two track the pointer and are mirrored around the centre: the surface
+   darkens where the finger pushes in and catches light on the far side. */
+.b3d__dark {
+  background: radial-gradient(60px at var(--b3d-px) var(--b3d-py),
+              rgba(0, 0, 0, var(--b3d-dark-a, 0)) 0%, transparent 100%);
+}
+
+.b3d__light {
+  background: radial-gradient(80px at calc(100% - var(--b3d-px)) calc(100% - var(--b3d-py)),
+              rgba(255, 255, 255, var(--b3d-light-a, 0)) 0%, transparent 100%);
+}
+
+/* A tight dark blob right under the cursor, faded in only while held down. */
+.b3d__dent {
+  background: radial-gradient(34px at var(--b3d-px) var(--b3d-py),
+              rgba(0, 0, 0, .22) 0%, transparent 100%);
+  opacity: var(--b3d-press);
+}
+
+/* Hairline inner highlight along the top edge. */
+.b3d__edge {
+  box-shadow: inset 0 1px 0 var(--b3d-edge);
+}
+
+/* ------------------------------------------------------------------- label */
+
+.b3d__label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  white-space: nowrap;
+  pointer-events: none;
+
+  font-family: var(--b3d-font);
+  font-size: var(--b3d-size);
+  font-weight: var(--b3d-weight);
+  letter-spacing: var(--b3d-tracking);
+  line-height: 1.15;
+  color: var(--b3d-fg);
+}
+
+.b3d__label svg,
+.b3d__label img { width: 1.15em; height: 1.15em; flex: none; }
+
+/* --------------------------------------------------------- states & a11y */
+
+/* Before the JS runs it's already a solid, correct-looking button. */
+.b3d:not(.b3d-ready) {
+  padding: var(--b3d-pad-y) var(--b3d-pad-x);
+  background: var(--b3d-surface);
+  border-radius: var(--b3d-radius);
+  font-family: var(--b3d-font);
+  font-size: var(--b3d-size);
+  font-weight: var(--b3d-weight);
+  letter-spacing: var(--b3d-tracking);
+}
+
+.b3d:focus-visible { outline: none; }
+
+.b3d:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: calc(var(--b3d-radius) + 6px);
+  border: 2px solid var(--b3d-ring);
+  pointer-events: none;
+}
+
+.b3d[disabled],
+.b3d[aria-disabled="true"] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .b3d__surface,
+  .b3d__depth,
+  .b3d__shadow { transform: none !important; }
+  .b3d__depth  { transform: translate3d(0, var(--b3d-depth-size), 0) !important; }
+  .b3d__dark,
+  .b3d__light,
+  .b3d__dent   { display: none; }
+}
+
+/* ------------------------------------------------------------- variations */
+
+.b3d--sm { --b3d-pad-y: 12px; --b3d-pad-x: 22px; --b3d-size: 13px; --b3d-radius: 13px; }
+.b3d--lg { --b3d-pad-y: 21px; --b3d-pad-x: 42px; --b3d-size: 17px; --b3d-radius: 20px; }
+.b3d--pill { --b3d-radius: 999px; }
+
+/* Chunky physical key — more wall, softer tilt. */
+.b3d--key { --b3d-depth-size: 10px; --b3d-tilt: 9deg; }
+
+/* Flat-ish: a hint of dimension only. */
+.b3d--flat { --b3d-depth-size: 2px; --b3d-sheen: .02; --b3d-gloss: .03; --b3d-tilt: 7deg; }
