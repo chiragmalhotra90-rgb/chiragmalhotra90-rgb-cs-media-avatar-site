@@ -78,6 +78,8 @@
 
   /* billowing smoke masks — fractal noise turned into soft alpha */
   --cloud-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.018' numOctaves='5' seed='11' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='2.6' amplitude='1.7'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
+  --bank-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0062 0.0125' numOctaves='6' seed='5' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='4.2' amplitude='2.6'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
+  --bank-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0048 0.0104' numOctaves='5' seed='41' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='4.6' amplitude='2.9'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
   --cloud-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0042 0.0095' numOctaves='4' seed='29' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='3' amplitude='1.9'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
 }
 
@@ -179,7 +181,7 @@ body{
   -webkit-mask-size: 100% 100%;                mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;              mask-repeat: no-repeat;
   filter: blur(16px);
-  opacity:.5;
+  opacity:.40;
   animation: cloudA 78s linear infinite;
 }
 .clouds--b{
@@ -189,7 +191,7 @@ body{
   -webkit-mask-size: 100% 100%;                mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;              mask-repeat: no-repeat;
   filter: blur(26px);
-  opacity:.42;
+  opacity:.34;
   animation: cloudB 116s linear infinite;
 }
 @keyframes cloudA{
@@ -201,6 +203,78 @@ body{
   0%   { transform: translate3d( 4%,-3%, 0) scale(1.1) ; }
   50%  { transform: translate3d(-6%, 4%, 0) scale(1.02); }
   100% { transform: translate3d( 4%,-3%, 0) scale(1.1) ; }
+}
+
+/* --- THICK BANKS ---------------------------------------------
+   Same masks, same palette, but dense and barely blurred so the
+   structure reads as solid cloud. A second gradient mask fades
+   each bank toward the middle of the frame, so the headline sits
+   in clear air between a floor bank and a ceiling bank.
+   -------------------------------------------------------------- */
+.clouds--thick{
+  z-index:2;
+  opacity:.95;
+  -webkit-mask-repeat: no-repeat;   mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+}
+.clouds--floor{
+  inset:auto -22% -26% -22%;
+  height:78%;
+  background: linear-gradient(96deg,
+      rgba(58,134,255,1) 0%, rgba(62,94,242,.78) 26%,
+      rgba(130,74,222,.66) 48%, rgba(232,42,68,.82) 70%, rgba(255,48,66,1) 100%);
+  -webkit-mask-image: var(--bank-a),
+      linear-gradient(to top, #000 8%, rgba(0,0,0,.86) 38%, rgba(0,0,0,.3) 66%, transparent 88%);
+          mask-image: var(--bank-a),
+      linear-gradient(to top, #000 8%, rgba(0,0,0,.86) 38%, rgba(0,0,0,.3) 66%, transparent 88%);
+  -webkit-mask-size: 106% 118%, 100% 100%;  mask-size: 106% 118%, 100% 100%;
+  filter: blur(4px);
+  animation: bankFloor 94s ease-in-out infinite;
+}
+.clouds--ceiling{
+  inset:-24% -22% auto -22%;
+  height:62%;
+  background: linear-gradient(84deg,
+      rgba(44,110,240,.95) 0%, rgba(84,80,226,.66) 34%,
+      rgba(158,58,162,.58) 56%, rgba(222,34,60,.76) 78%, rgba(255,62,80,.98) 100%);
+  -webkit-mask-image: var(--bank-b),
+      linear-gradient(to bottom, #000 6%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.24) 66%, transparent 90%);
+          mask-image: var(--bank-b),
+      linear-gradient(to bottom, #000 6%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.24) 66%, transparent 90%);
+  -webkit-mask-size: 118% 126%, 100% 100%;  mask-size: 118% 126%, 100% 100%;
+  filter: blur(6px);
+  opacity:.8;
+  animation: bankCeiling 128s ease-in-out infinite;
+}
+@keyframes bankFloor{
+  0%   { transform: translate3d(-3%, 1%, 0) scale(1.02); }
+  50%  { transform: translate3d( 4%,-2%, 0) scale(1.09); }
+  100% { transform: translate3d(-3%, 1%, 0) scale(1.02); }
+}
+@keyframes bankCeiling{
+  0%   { transform: translate3d( 3%,-1%, 0) scale(1.06); }
+  50%  { transform: translate3d(-5%, 2%, 0) scale(1.01); }
+  100% { transform: translate3d( 3%,-1%, 0) scale(1.06); }
+}
+
+/* --- storm: bolts, cloud illumination and sparks ------------- */
+#storm{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:3;
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+/* whole-frame flash. Capped low on purpose — see CONFIG.storm. */
+.flash{
+  position:absolute; inset:0;
+  z-index:33;
+  pointer-events:none;
+  opacity:0;
+  mix-blend-mode:screen;
+  background: radial-gradient(120% 100% at var(--fx, 50%) var(--fy, 18%),
+      rgba(196,220,255,.85) 0%, rgba(120,150,255,.42) 34%,
+      rgba(70,60,140,.14) 62%, transparent 82%);
 }
 
 /* --- floating embers / dust -------------------------------- */
@@ -529,6 +603,8 @@ body{
   .line--sub{ font-size: clamp(1.3rem, 7.4vw, 2.6rem); }
   .kicker{ letter-spacing:.3em; }
   .marks{ display:none; }
+  .clouds--floor{ filter: blur(3px); }
+  .clouds--ceiling{ filter: blur(4px); }
   .actions{ flex-direction:column; width:min(340px, 86vw); }
   .btn{ justify-content:center; }
   #smoke{ filter: blur(20px) saturate(135%); }
@@ -542,6 +618,7 @@ body{
    ============================================================ */
 @media (prefers-reduced-motion: reduce){
   .haze, .clouds, .dust i, .grain{ animation:none !important; }
+  .flash{ display:none !important; }
   .glyph{ transition-duration:.001s !important; transition-delay:0s !important; }
   .kicker,.lede,.actions{ transition-duration:.001s !important; transition-delay:0s !important; }
   .btn{ transition:none; }
@@ -561,6 +638,9 @@ body{
   <div class="haze haze--red"  aria-hidden="true"></div>
   <div class="clouds clouds--a" aria-hidden="true"></div>
   <div class="clouds clouds--b" aria-hidden="true"></div>
+  <div class="clouds clouds--thick clouds--ceiling" aria-hidden="true"></div>
+  <div class="clouds clouds--thick clouds--floor"   aria-hidden="true"></div>
+  <canvas id="storm" aria-hidden="true"></canvas>
   <div class="dust" id="dust"  aria-hidden="true"></div>
 
   <div class="scene">
@@ -572,6 +652,7 @@ body{
     <button class="chip" id="replay" type="button" hidden>Replay</button>
   </div>
 
+  <div class="flash" id="flash" aria-hidden="true"></div>
   <div class="grain"    aria-hidden="true"></div>
   <div class="scan"     aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
@@ -611,7 +692,22 @@ const CONFIG = {
   dust: 26,            // floating ember count
   tilt: 9,             // max parallax tilt in degrees
   smokePuffs: 30,      // volumetric smoke sprite count
-  oncePerSession: true // seen the intro already? land on the last card
+  oncePerSession: true, // seen the intro already? land on the last card
+
+  /* Lightning. The flash is deliberately gentle and rate-limited:
+     at most two flashes per strike, never less than 190ms apart, and
+     capped in brightness — a strobing hero is a photosensitivity
+     hazard, not a mood. Set `on: false` to remove it entirely.      */
+  storm: {
+    on: true,
+    gapMin: 6500,      // ms between strikes, low end
+    gapMax: 15000,     // …and high end
+    flashPeak: 0.20,   // hard ceiling on the full-frame flash opacity
+    flashGap: 190,     // min ms between the two flashes of one strike
+    distantOdds: 0.35, // share of strikes that stay behind the clouds
+    sparksPerStrike: 16
+  },
+  sparks: 1            // ambient ember density, 0 turns them off
 };
 
 const $  = (s, r = document) => r.querySelector(s);
@@ -963,10 +1059,253 @@ function drawSmoke(dt){
   ctx.globalAlpha = 1;
 }
 
+/* ============================================================
+   8b. STORM — lightning, cloud illumination and sparks
+   One canvas, screen-blended, sitting behind the type so a strike
+   lights the scene without ever competing with the headline.
+   ============================================================ */
+const storm    = $('#storm');
+const sctx     = storm.getContext('2d');
+const flashEl  = $('#flash');
+const SDPR     = Math.min(2, devicePixelRatio || 1);
+const TINTS = [
+  { bolt: '150,195,255', glow: '47,123,255', side: 0.28 },  // blue, stage left
+  { bolt: '255,170,180', glow: '255,36,54',  side: 0.74 }   // red,  stage right
+];
+
+let SW = 0, SH = 0, strikes = [], sparks = [], nextStrike = 0, lastFlash = '0';
+const rnd = (a, b) => a + Math.random() * (b - a);
+
+/* one glow sprite per tint — drawImage is far cheaper than asking the
+   canvas for a shadowBlur on every ember, every frame */
+const sparkSprite = {};
+function makeSparkSprite(rgb){
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d').createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0.00, 'rgba(255,250,242,1)');
+  g.addColorStop(0.22, `rgba(${rgb},0.85)`);
+  g.addColorStop(0.55, `rgba(${rgb},0.22)`);
+  g.addColorStop(1.00, `rgba(${rgb},0)`);
+  const cc = c.getContext('2d');
+  cc.fillStyle = g; cc.fillRect(0, 0, 64, 64);
+  return c;
+}
+
+function sizeStorm(){
+  SW = storm.width  = Math.max(2, Math.round(innerWidth  * SDPR));
+  SH = storm.height = Math.max(2, Math.round(innerHeight * SDPR));
+}
+
+/* midpoint displacement — the classic jagged bolt */
+function boltPath(x0, y0, x1, y1, detail, spread){
+  let pts = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
+  for (let i = 0; i < detail; i++){
+    const next = [];
+    for (let j = 0; j < pts.length - 1; j++){
+      const a = pts[j], b = pts[j + 1];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const off = (Math.random() - 0.5) * len * spread;
+      next.push(a, { x: (a.x + b.x) / 2 - dy / len * off,
+                     y: (a.y + b.y) / 2 + dx / len * off });
+    }
+    next.push(pts[pts.length - 1]);
+    pts = next;
+    spread *= 0.62;
+  }
+  return pts;
+}
+
+function makeStrike(){
+  const S = CONFIG.storm;
+  const tint    = TINTS[Math.random() < 0.5 ? 0 : 1];
+  const distant = Math.random() < S.distantOdds;
+
+  const x0 = SW * (tint.side + rnd(-0.14, 0.14));
+  const y0 = SH * rnd(-0.04, 0.06);
+  const x1 = x0 + SW * rnd(-0.18, 0.18);
+  const y1 = SH * rnd(0.52, 0.86);
+
+  const main = distant ? null : boltPath(x0, y0, x1, y1, 6, 0.34);
+  const forks = [];
+  if (main){
+    const n = Math.round(rnd(2, 4));
+    for (let i = 0; i < n; i++){
+      const at = main[Math.floor(rnd(main.length * 0.3, main.length * 0.82))];
+      forks.push(boltPath(at.x, at.y,
+        at.x + SW * rnd(-0.13, 0.13), at.y + SH * rnd(0.06, 0.2), 4, 0.42));
+    }
+    // embers thrown off along the lower run of the bolt
+    burstSparks(main, S.sparksPerStrike, tint);
+  }
+
+  // the cloud illumination is one gradient, built once and faded with alpha
+  const gy = y0 + SH * 0.06;
+  const glowR = SW * (distant ? 0.55 : 0.42);
+  const grad = sctx.createRadialGradient(x0, gy, 0, x0, gy, glowR);
+  grad.addColorStop(0,   `rgba(${tint.glow},1)`);
+  grad.addColorStop(0.4, `rgba(${tint.glow},0.35)`);
+  grad.addColorStop(1,   `rgba(${tint.glow},0)`);
+
+  // two flashes maximum, spaced past the rate limit
+  const peak = S.flashPeak * (distant ? 0.5 : 1);
+  return {
+    tint, main, forks, distant, grad, glowR,
+    age: 0,
+    life: 900,
+    gx: x0, gy,
+    flashes: [
+      { at: 0,                        peak: peak,        fall: 150 },
+      { at: S.flashGap + rnd(0, 90),  peak: peak * 0.62, fall: 210 }
+    ]
+  };
+}
+
+/* Embers come off the whole lower run of the bolt, not one point, and
+   they arrive staggered at mixed speeds — a single radial burst from a
+   single instant reads as a firework, not a strike. */
+function burstSparks(pts, n, tint){
+  const from = Math.floor(pts.length * 0.5);
+  for (let i = 0; i < n; i++){
+    const o = pts[Math.floor(rnd(from, pts.length))];
+    const fast = Math.random() < 0.22;
+    const a = rnd(-Math.PI * 0.96, Math.PI * 0.16);   // mostly up and out
+    const v = (fast ? rnd(0.15, 0.30) : rnd(0.02, 0.11)) * SDPR;
+    sparks.push({
+      x: o.x + rnd(-4, 4) * SDPR, y: o.y + rnd(-4, 4) * SDPR,
+      vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+      life: fast ? rnd(480, 900) : rnd(700, 1700),
+      age: 0, delay: rnd(0, 160),
+      size: rnd(0.55, 1.5) * SDPR,
+      tint: tint.bolt, hot: 1, seed: Math.random() * 6.283
+    });
+  }
+}
+
+function ambientSpark(){
+  const tint = TINTS[Math.random() < 0.5 ? 0 : 1];
+  sparks.push({
+    x: rnd(0, SW), y: SH * rnd(0.86, 1.04),
+    vx: rnd(-0.02, 0.03) * SDPR, vy: -rnd(0.012, 0.05) * SDPR,
+    life: rnd(2600, 5200), age: 0, delay: 0,
+    size: rnd(0.7, 1.7) * SDPR,
+    tint: tint.bolt, hot: 0, seed: Math.random() * 6.283
+  });
+}
+
+function strokePath(pts, rgb, width, alpha, blur){
+  if (!pts) return;
+  sctx.beginPath();
+  sctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) sctx.lineTo(pts[i].x, pts[i].y);
+  sctx.strokeStyle = `rgba(${rgb},${alpha})`;
+  sctx.lineWidth   = width * SDPR;
+  sctx.shadowColor = `rgba(${rgb},0.9)`;
+  sctx.shadowBlur  = blur * SDPR;
+  sctx.stroke();
+}
+
+function drawStorm(dt, now){
+  sctx.clearRect(0, 0, SW, SH);
+  sctx.globalCompositeOperation = 'lighter';
+  sctx.lineCap = 'round';
+  sctx.lineJoin = 'round';
+
+  /* --- strikes ------------------------------------------------ */
+  let flashNow = 0;
+  for (let i = strikes.length - 1; i >= 0; i--){
+    const s = strikes[i];
+    s.age += dt;
+    if (s.age > s.life){ strikes.splice(i, 1); continue; }
+
+    // the clouds light from within, and fade over the whole life
+    const decay = Math.max(0, 1 - s.age / s.life);
+    sctx.shadowBlur = 0;
+    sctx.globalAlpha = decay * decay * (s.distant ? 0.5 : 0.42);
+    sctx.fillStyle = s.grad;
+    sctx.fillRect(s.gx - s.glowR, s.gy - s.glowR, s.glowR * 2, s.glowR * 2);
+    sctx.globalAlpha = 1;
+
+    // the bolt itself only exists during the flash windows
+    for (const f of s.flashes){
+      const t = s.age - f.at;
+      if (t < 0 || t > f.fall) continue;
+      const k = 1 - t / f.fall;
+      flashNow = Math.max(flashNow, f.peak * k * k);
+      if (!s.main) continue;
+      strokePath(s.main, s.tint.bolt, 9,   0.30 * k, 30);
+      strokePath(s.main, s.tint.bolt, 3.4, 0.62 * k, 16);
+      strokePath(s.main, '255,255,255',1.5, 0.95 * k, 9);
+      sctx.shadowBlur = 0;
+      for (const fk of s.forks){
+        strokePath(fk, s.tint.bolt, 2.2, 0.34 * k, 0);
+        strokePath(fk, '255,255,255', 0.9, 0.6 * k, 0);
+      }
+    }
+  }
+  sctx.shadowBlur = 0;
+  const fv = flashNow.toFixed(3);
+  if (fv !== lastFlash){ flashEl.style.opacity = fv; lastFlash = fv; }
+  if (flashNow > 0.001 && strikes.length){
+    const s = strikes[strikes.length - 1];
+    flashEl.style.setProperty('--fx', (s.gx / SW * 100).toFixed(1) + '%');
+    flashEl.style.setProperty('--fy', '14%');
+  }
+
+  /* --- sparks -------------------------------------------------- */
+  for (let i = sparks.length - 1; i >= 0; i--){
+    const p = sparks[i];
+    p.age += dt;
+    if (p.age > p.life){ sparks.splice(i, 1); continue; }
+
+    if (p.age < p.delay) continue;                       // staggered arrival
+
+    const px = p.x, py = p.y;
+    p.vy += 0.00007 * dt * SDPR * (p.hot ? 1 : 0.2);     // gravity
+    p.vx += Math.sin(p.age * 0.004 + p.seed) * 0.000018 * dt * SDPR;  // curl
+    p.vx *= 0.9985; p.vy *= 0.9985;                      // drag
+    p.x  += p.vx * dt;
+    p.y  += p.vy * dt;
+
+    const fade = 1 - (p.age - p.delay) / (p.life - p.delay);
+    const flick = 0.55 + 0.45 * Math.sin(p.age * 0.02 + p.seed);
+    const a = Math.max(0, fade) * flick * (p.hot ? 0.9 : 0.45);
+
+    // trail, clipped short so a fast ember streaks instead of drawing a ray
+    const dx = p.x - px, dy = p.y - py, d = Math.hypot(dx, dy);
+    if (d > 0.01){
+      const cap = Math.min(d, p.size * 5);
+      sctx.strokeStyle = `rgba(${p.tint},${(a * 0.4).toFixed(3)})`;
+      sctx.lineWidth = p.size * 0.7;
+      sctx.beginPath();
+      sctx.moveTo(p.x - dx / d * cap, p.y - dy / d * cap);
+      sctx.lineTo(p.x, p.y);
+      sctx.stroke();
+    }
+
+    const spr = sparkSprite[p.tint] || (sparkSprite[p.tint] = makeSparkSprite(p.tint));
+    const r = p.size * 6;
+    sctx.globalAlpha = a;
+    sctx.drawImage(spr, p.x - r, p.y - r, r * 2, r * 2);
+    sctx.globalAlpha = 1;
+  }
+
+  /* --- scheduling ---------------------------------------------- */
+  if (CONFIG.storm.on && now > nextStrike){
+    strikes.push(makeStrike());
+    nextStrike = now + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
+  }
+  if (CONFIG.sparks && sparks.length < 40 * CONFIG.sparks && Math.random() < 0.02 * CONFIG.sparks){
+    ambientSpark();
+  }
+}
+
 function smokeLoop(now){
   const dt = Math.min(64, now - tSmoke || 16);
   tSmoke = now;
   drawSmoke(dt);
+  drawStorm(dt, now);
   rafSmoke = requestAnimationFrame(smokeLoop);
 }
 
@@ -978,7 +1317,11 @@ addEventListener('pointermove', e => {
 /* pause the heavy loop when the tab is hidden */
 document.addEventListener('visibilitychange', () => {
   if (document.hidden){ cancelAnimationFrame(rafSmoke); rafSmoke = 0; }
-  else if (!rafSmoke && !reduced){ tSmoke = performance.now(); rafSmoke = requestAnimationFrame(smokeLoop); }
+  else if (!rafSmoke && !reduced){
+    tSmoke = performance.now();
+    nextStrike = tSmoke + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
+    rafSmoke = requestAnimationFrame(smokeLoop);
+  }
 });
 
 /* ============================================================
@@ -989,6 +1332,7 @@ function onResize(){
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     sizeSmoke();
+    sizeStorm();
     fitLines();
     paintGradients();
   }, 120);
@@ -1004,9 +1348,15 @@ function boot(){
   fitLines();
   paintGradients();
   sizeSmoke();
+  sizeStorm();
+  nextStrike = performance.now() + 2600;
 
-  if (!reduced) rafSmoke = requestAnimationFrame(smokeLoop);
-  else drawSmoke(16);       // one static frame — no animation loop
+  if (!reduced){
+    rafSmoke = requestAnimationFrame(smokeLoop);
+  } else {
+    CONFIG.storm.on = false;   // no flashing under reduced motion
+    drawSmoke(16);             // one static frame — no animation loop
+  }
 
   if (reduced || (CONFIG.oncePerSession && seenIntro())) skipToEnd();
   else play(0);

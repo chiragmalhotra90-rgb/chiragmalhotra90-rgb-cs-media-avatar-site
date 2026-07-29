@@ -52,10 +52,31 @@ All design tokens are CSS custom properties in `:root`:
 | `--extrude` / `--extrude-color` | depth and colour of the 3D extrusion |
 | `--bar` | letterbox height (set to `0` to remove the bars) |
 | `--title-font` / `--ui-font` | display and UI typefaces |
-| `--cloud-a` / `--cloud-b` | the fractal-noise masks the smoke is cut from |
+| `--cloud-a` / `--cloud-b` | the fractal-noise masks the drifting smoke is cut from |
+| `--bank-a` / `--bank-b` | the higher-contrast masks the thick cloud banks are cut from |
 
-Smoke density, parallax tilt and ember count live in `CONFIG`
-(`smokePuffs`, `tilt`, `dust`).
+Smoke density, parallax tilt, ember count and the storm live in `CONFIG`
+(`smokePuffs`, `tilt`, `dust`, `sparks`, `storm`).
+
+## The storm
+
+`CONFIG.storm` controls the lightning:
+
+| Key | |
+| --- | --- |
+| `on` | `false` removes lightning entirely |
+| `gapMin` / `gapMax` | ms between strikes (default 6.5–15s) |
+| `flashPeak` | hard ceiling on full-frame flash opacity |
+| `flashGap` | minimum ms between the two flashes of one strike |
+| `distantOdds` | share of strikes that stay behind the clouds — glow, no bolt |
+| `sparksPerStrike` | embers thrown off along the bolt |
+
+**The flash is deliberately restrained.** Each strike gets at most two
+flashes, never closer together than `flashGap`, and peak opacity is capped —
+a strobing hero is a photosensitivity hazard. Raising `flashPeak` or lowering
+`flashGap` past the defaults takes it toward territory WCAG 2.3.1 exists to
+prevent. Under `prefers-reduced-motion` the flash layer is removed outright
+and no strikes are scheduled.
 
 ## How the effects are built
 
@@ -66,9 +87,20 @@ Smoke density, parallax tilt and ember count live in `CONFIG`
   stack), `::before` is the gradient face on the front plane, `::after` prints a
   distress texture into it. The deck tilts on `pointermove` in a real 3D
   perspective.
-- **Smoke** — two layers: a canvas of additive soft sprites drifting and pulsing
-  (GPU-blurred), plus two coloured gradients seen through animated fractal-noise
-  masks for the billowing structure.
+- **Smoke** — three tiers: a canvas of additive soft sprites drifting and
+  pulsing (GPU-blurred); two coloured gradients seen through animated
+  fractal-noise masks for the billowing structure; and two *thick banks* — the
+  same noise recipe at higher gamma, so it resolves into defined cloud rather
+  than an even wash — pinned to the floor and ceiling of the frame and faded
+  toward the middle, leaving the headline in clear air.
+- **Lightning** — bolts are midpoint-displacement paths with 2–4 forks, drawn
+  in three passes (wide halo, mid, white core) on a screen-blended canvas
+  *behind* the type. Each strike also lights the cloud from within via a cached
+  radial gradient, and throws embers off its lower run.
+- **Sparks** — embers scatter along the bolt with staggered arrival, mixed
+  speeds, gravity and a slow curl, drawn as pre-rendered glow sprites with
+  clipped trails. Ambient embers rise continuously; `CONFIG.sparks: 0` stops
+  them.
 - **Film** — animated grain, scanlines, vignette, letterbox bars, corner marks.
 
 ## Typography
@@ -93,8 +125,10 @@ UI stack if that request fails.
 
 ## Known limitations
 
-- The heavy blur/mask layers are GPU work. On low-end phones drop
-  `CONFIG.smokePuffs` or the `.clouds` blur radii if you see frame drops.
+- The blur/mask layers and the two canvases are GPU work. Hot paths avoid
+  canvas `shadowBlur` (sprites and cached gradients instead), and phones get
+  smaller blur radii, but on low-end devices drop `CONFIG.smokePuffs`,
+  `CONFIG.sparks`, or set `CONFIG.storm.on = false` if you see frame drops.
 - Headlines are single-line by design (`white-space: nowrap`); very long strings
   shrink rather than wrap — split them across `lines` instead.
 - The CTA hrefs are placeholders until the target sections exist.
