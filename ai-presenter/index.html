@@ -80,34 +80,26 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 .brand-txt .n{font-size:16px;font-weight:600;letter-spacing:.05em;color:var(--ap-white);line-height:1.15}
 .brand-txt .s{font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ap-silver);line-height:1.3}
 .nav-links{display:flex;gap:26px;list-style:none}
-.nav-links a{color:var(--ap-silver);text-decoration:none;font-size:14px;font-weight:400;padding:6px 0;transition:color .25s;position:relative}
+.nav-links a{color:var(--ap-silver);text-decoration:none;font-size:14px;font-weight:400;padding:6px 0;transition:color .25s;position:relative;white-space:nowrap}
 .nav-links a:hover,.nav-links a[aria-current="true"]{color:var(--ap-white)}
 .nav-links a[aria-current="true"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ap-orange);border-radius:2px}
 .nav-act{display:flex;align-items:center;gap:12px;flex:none}
-.mode-toggle{display:inline-flex;padding:3px;border-radius:999px;background:rgba(216,224,220,.06);border:1px solid var(--ap-border);gap:2px;flex:none}
-.mt-btn{border:none;background:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--ap-white);opacity:.55;padding:7px 12px;border-radius:999px;transition:all .2s;min-height:30px}
-.mt-btn.active{background:var(--ap-teal);color:#fff;opacity:1}
-.mt-btn:not(.active):hover{opacity:1}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 24px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .22s var(--ap-ease),background .25s,box-shadow .25s}
 .btn-primary{background:var(--ap-orange);color:#fff;box-shadow:0 0 22px rgba(193,68,14,.26)}
 .btn-primary:hover{background:var(--ap-orange-lit);transform:translateY(-2px);box-shadow:0 0 30px rgba(193,68,14,.4)}
 .btn-secondary{background:transparent;color:var(--ap-white);border-color:var(--ap-teal)}
 .btn-secondary:hover{background:rgba(13,110,106,.18);transform:translateY(-2px)}
-.nav-burger{display:none;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:19px;align-items:center;justify-content:center}
-#mnav{display:none;position:fixed;inset:0;z-index:210;background:rgba(8,17,15,.97);backdrop-filter:blur(10px);padding:96px 28px 40px;flex-direction:column;gap:6px}
-#mnav.open{display:flex}
-#mnav a{color:var(--ap-white);text-decoration:none;font-size:19px;font-weight:500;padding:15px 0;border-bottom:1px solid var(--ap-border);min-height:44px}
-#mnav .btn{margin-top:18px}
-.mnav-close{position:absolute;top:22px;right:24px;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;font-size:20px;cursor:pointer}
+/* the version switcher and page-local mobile menu are gone — the shared
+   csmedia-menu.js burger (always visible, far right) carries all of it */
 @media(max-width:1500px){nav{gap:14px;padding-inline:20px}.nav-links{gap:16px}.nav-act .btn-secondary{display:none}}
-@media(max-width:1280px){.nav-links{display:none}.nav-burger{display:inline-flex}}
-@media(max-width:1080px){.nav-links{display:none}.nav-burger{display:inline-flex}.nav-act .btn-secondary{display:none}}
-@media(max-width:640px){.nav-act .btn-primary{display:none}.mt-btn{padding:6px 8px;font-size:9.5px}}
+@media(max-width:1360px){.nav-links{display:none}}
+@media(max-width:640px){.nav-act .btn-primary{display:none}}
 
 /* ---------- HERO ---------- */
 .hero{padding-block:150px 78px;position:relative;overflow:hidden}
 .hero-grid{display:grid;grid-template-columns:minmax(0,55%) minmax(0,45%);gap:56px;align-items:center}
 @media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:46px}}
+
 .rotator{display:grid;margin:22px 0 26px;min-height:calc(1.14em * 2)}
 .rot{grid-area:1/1;font-size:clamp(28px,3.05vw,46px);font-weight:600;line-height:1.14;letter-spacing:-.015em;
   opacity:0;transform:translateY(12px);transition:opacity .7s var(--ap-ease),transform .7s var(--ap-ease);
@@ -125,9 +117,13 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 /* orb */
 .orb-wrap{position:relative;display:grid;place-items:center;min-height:400px}
 .orb-video{width:min(470px,96%);aspect-ratio:1;object-fit:cover;mix-blend-mode:screen;
-  filter:contrast(1.14) brightness(1.04) saturate(1.05);
-  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%);
-  mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%)}
+  filter:contrast(1.22) brightness(1.05) saturate(1.05);
+  /* the video's backdrop is near-black, not black — on phones the screen
+     blend often doesn't apply to the accelerated video plane, so any mask
+     radius past the orb shows that backdrop as a dark disc. Fade out right
+     at the orb's edge so only the orb itself is ever visible. */
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 42%,transparent 61%);
+  mask-image:radial-gradient(circle at 50% 50%,#000 42%,transparent 61%)}
 .orb{width:min(340px,74%);aspect-ratio:1;border-radius:50%;position:relative;
   background:
     radial-gradient(circle at 33% 28%,rgba(60,190,180,.95),rgba(10,70,66,.9) 46%,rgba(5,30,29,.98) 76%),
@@ -371,7 +367,7 @@ footer{border-top:1px solid var(--ap-border);background:rgba(8,17,15,.6);padding
 @media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.foot-grid{grid-template-columns:1fr}}
 footer h4{font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--ap-silver);margin-bottom:14px}
-footer a{display:block;color:var(--ap-silver);text-decoration:none;font-size:14px;margin-bottom:9px;transition:color .25s;min-height:24px}
+footer a{display:block;color:var(--ap-silver);text-decoration:none;font-size:14px;padding-block:5px;margin-bottom:1px;transition:color .25s;min-height:32px}
 footer a:hover{color:var(--ap-white)}
 .foot-desc{font-size:14px;color:var(--ap-silver);margin-top:14px;max-width:400px;line-height:1.6}
 .foot-ops{display:flex;gap:26px;flex-wrap:wrap;margin-top:16px;font-size:13.5px;color:var(--ap-silver)}
@@ -408,30 +404,12 @@ footer a:hover{color:var(--ap-white)}
       </ul>
     </nav>
     <div class="nav-act">
-      <div class="mode-toggle" role="group" aria-label="Site version">
-        <button type="button" class="mt-btn active" data-mode="aipresenter">AI Presenter</button>
-        <button type="button" class="mt-btn" data-mode="professional">Professional</button>
-        <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
-        <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-      </div>
       <a class="btn btn-secondary" href="#platform">Explore the Platform</a>
       <a class="btn btn-primary" href="#contact" data-ap="ap_hero_demo_click" data-label="Nav — Book a Business Demo">Book a Business Demo</a>
-      <button class="nav-burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">☰</button>
+      <span class="cs-menu-slot"></span>
     </div>
   </div>
 </header>
-
-<div id="mnav" role="dialog" aria-modal="true" aria-label="Menu">
-  <button class="mnav-close" id="mnavClose" aria-label="Close menu">✕</button>
-  <a href="#watch">Watch</a>
-  <a href="#live">Experience It</a>
-  <a href="#platform">Platform</a>
-  <a href="#how">How It Works</a>
-  <a href="#industries">Industries</a>
-  <a href="#leadership">About</a>
-  <a href="#contact">Contact</a>
-  <a class="btn btn-primary" href="#contact">Book a Business Demo</a>
-</div>
 
 <main id="main">
 <div id="top"></div>
@@ -589,7 +567,7 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
-<section class="rv">
+<section id="outcomes" class="rv">
   <div class="shell">
     <span class="eyebrow">Business Outcomes</span>
     <h2 class="h2">Designed to Improve the First Half of the Sales Journey</h2>
@@ -659,7 +637,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ IMPLEMENTATION OPTIONS ============ -->
-<section class="rv">
+<section id="implementation" class="rv">
   <div class="shell">
     <span class="eyebrow">Implementation Options</span>
     <h2 class="h2">Built Around Your Business, Not Forced Into a Template</h2>
@@ -720,7 +698,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ PARTNER / AGENT ============ -->
-<section class="rv">
+<section id="partners" class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Partners &amp; Agents</span>
     <h2 class="h2">Build the AI Presenter Market With Us</h2>
@@ -778,7 +756,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ FAQ ============ -->
-<section class="rv">
+<section id="faq" class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Questions</span>
     <h2 class="h2">Frequently Asked Questions</h2>
@@ -1139,18 +1117,11 @@ var CREATIVES = [];
 })();
 
 /* ============ MODE TOGGLE ============ */
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
 
 /* ================== NAV ================== */
 (function(){
-  var nav=document.getElementById('nav'), burger=document.getElementById('burger'), mnav=document.getElementById('mnav');
+  var nav=document.getElementById('nav');
   window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
-  function openM(){mnav.classList.add('open');burger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';document.getElementById('mnavClose').focus();}
-  function closeM(){mnav.classList.remove('open');burger.setAttribute('aria-expanded','false');document.body.style.overflow='';burger.focus();}
-  burger.addEventListener('click',openM);
-  document.getElementById('mnavClose').addEventListener('click',closeM);
-  mnav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeM);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mnav.classList.contains('open'))closeM();});
   // active section
   var links=Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
   var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
@@ -1249,9 +1220,7 @@ document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('cli
   };
   give('.btn-primary', 'lgx--primary');
   give('.btn-secondary', 'lgx--teal');
-  give('.nav-burger, .mnav-close, .lb-btn, .csl-nav', 'lgx--quiet');
-  var mt = document.querySelector('.mode-toggle');
-  if (mt) mt.classList.add('lgx-track');
+  give('.lb-btn, .csl-nav', 'lgx--quiet');
 
   // the video facade: swap our poster for the embed only when asked.
   // youtube-nocookie + playsinline keeps the loaded player as quiet as the
@@ -1265,18 +1234,16 @@ document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('cli
     f.title='Maya explains AI Presenter';
     vs.innerHTML=''; vs.appendChild(f);
   });
-
-  // keep the active version visible inside the scrollable track on phones
-  var a = document.querySelector('.mode-toggle .mt-btn.active');
-  if (a){
-    var t = a.parentElement;
-    if (t && t.scrollWidth > t.clientWidth){
-      t.scrollLeft += a.getBoundingClientRect().left - t.getBoundingClientRect().left
-                      - (t.clientWidth - a.offsetWidth) / 2;
-    }
-  }
 })();
 </script>
+<script>window.CSMenuPage={current:'aipresenter',sections:[
+  ['Watch Maya Explain It','#watch'],['Live Experience','#live'],['What It Does','#platform'],
+  ['The Ecosystem','#capabilities'],['How It Works','#how'],['Industries','#industries'],
+  ['Business Outcomes','#outcomes'],['Leadership','#leadership'],
+  ['Implementation & Pricing','#implementation'],['Partners & Agents','#partners'],
+  ['FAQ','#faq'],['Contact','#contact']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 <!-- ===================================================== -->
 </body>
 </html>

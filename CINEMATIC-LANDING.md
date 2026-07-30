@@ -19,9 +19,10 @@ site's BendyButton stylesheet/engine and the `/api/chat` endpoint.
 
 `localStorage.cs_mode` remembers the visitor's choice, and `/` forwards them
 back to it. **Anyone arriving with no stored choice — organic search, a shared
-link, a new device — lands on Professional.** The cinematic page also carries
-`robots: noindex, follow` and a canonical pointing at `professional.html`, so
-it is reachable and shareable but never the page search results surface.
+link, a new device — lands on AI Presenter, the lightest version.** The
+cinematic page also carries `robots: noindex, follow` and a canonical pointing
+at `professional.html`, so it is reachable and shareable but never the page
+search results surface.
 
 ## What it does
 

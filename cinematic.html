@@ -608,7 +608,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
 .foot{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:44px }
 @media(max-width:800px){ .foot{ grid-template-columns:1fr; gap:32px } }
 .foot h4{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); margin-bottom:16px }
-.foot a{ display:block; color:var(--text-body); text-decoration:none; font-size:15px; font-weight:450; margin-bottom:11px; transition:color .25s }
+.foot a{ display:block; color:var(--text-body); text-decoration:none; font-size:15px; font-weight:450; padding-block:6px; margin-bottom:0; transition:color .25s; min-height:32px }
 .foot a:hover{ color:#fff }
 .foot > div:first-child p{ font-size:15px; line-height:1.68; font-weight:450; color:var(--text-body); max-width:46ch; margin-top:16px }
 .foot-logo{ font-family:var(--title-font); font-size:20px; letter-spacing:.02em; text-transform:uppercase; color:#fff }
@@ -714,13 +714,8 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
     <li><a href="#pricing">Pricing</a></li>
   </ul>
   <div class="nav-right">
-    <div class="mode-toggle" role="group" aria-label="Site mode">
-      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
-      <button type="button" class="mt-btn" data-mode="professional">Professional</button>
-      <button type="button" class="mt-btn active" data-mode="cinematic">Cinematic</button>
-      <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-    </div>
     <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
+    <span class="cs-menu-slot"></span>
   </div>
 </nav>
 
@@ -1010,9 +1005,6 @@ function goMode(m){
   try { localStorage.setItem('cs_mode', m); } catch(e){}
   location.href = ROUTES[m] || ROUTES.professional;
 }
-document.querySelectorAll('.mt-btn').forEach(b => {
-  b.addEventListener('click', () => goMode(b.dataset.mode));
-});
 document.querySelectorAll('[data-goto]').forEach(a => {
   a.addEventListener('click', e => { e.preventDefault(); goMode(a.dataset.goto); });
 });
@@ -1711,5 +1703,10 @@ if (document.fonts && document.fonts.ready){
 <script src="/bendy3d.js"></script>
 <script src="/csmedia-bendy-init.js" data-mode="3d"></script>
 <!-- ===================================================== -->
+<script>window.CSMenuPage={current:'cinematic',sections:[
+  ['Services','#services'],['Selected Work','#work'],['Process','#workflow'],
+  ['Pricing','#pricing'],['Start a Project','#cta']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 </body>
 </html>

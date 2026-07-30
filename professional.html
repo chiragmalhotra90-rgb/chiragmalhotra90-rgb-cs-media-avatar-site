@@ -28,7 +28,7 @@
   --border-soft:rgba(255,255,255,.09);--border-faint:rgba(255,255,255,.055);--grid-line:rgba(255,255,255,.026);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg-black);color:var(--white-soft);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
 /* ---------- PAGE BACKGROUND + GRID ---------- */
@@ -207,7 +207,7 @@ footer{border-top:1px solid var(--border-faint);padding:50px 0;background:rgba(0
 .footer-logo span{color:var(--cyan)}
 .footer-brand p{color:var(--text-body);font-size:.85rem;margin-top:10px;max-width:400px}
 footer h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
-footer a{display:block;color:var(--text-body);text-decoration:none;font-size:.85rem;margin-bottom:8px;transition:color .3s}
+footer a{display:block;color:var(--text-body);text-decoration:none;font-size:.85rem;padding-block:5px;margin-bottom:0;transition:color .3s;min-height:28px}
 footer a:hover{color:var(--cyan)}
 .footer-bottom{text-align:center;padding-top:24px;border-top:1px solid var(--border-faint);margin-top:30px;font-size:.8rem;color:var(--text-muted)}
 
@@ -292,16 +292,10 @@ footer a:hover{color:var(--cyan)}
     <li><a href="#work">Work</a></li>
     <li><a href="#workflow">Process</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="knowledge-hub.html">Knowledge Hub</a></li>
   </ul>
   <div class="nav-right">
-    <div class="mode-toggle" role="group" aria-label="Site mode">
-      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
-      <button type="button" class="mt-btn active" data-mode="professional">Professional</button>
-      <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
-      <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-    </div>
     <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
+    <span class="cs-menu-slot"></span>
   </div>
 </nav>
 
@@ -509,7 +503,6 @@ footer a:hover{color:var(--cyan)}
       <h4>Contact</h4>
       <a href="https://csmediaandproduction.in">csmediaandproduction.in</a>
       <a href="mailto:info@csmediaandproduction.in">info@csmediaandproduction.in</a>
-      <a href="knowledge-hub.html">Knowledge Hub</a>
       <a href="#" onclick="try{localStorage.setItem('cs_mode','casual')}catch(e){};location.href='index.html';return false;">Casual version →</a>
     </div>
   </div>
@@ -534,9 +527,6 @@ footer a:hover{color:var(--cyan)}
 </div>
 
 <script>
-// Mode toggle
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
-
 // Nav scroll effect
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)});
 
@@ -607,5 +597,10 @@ buttons.forEach(function(b){b.addEventListener('click',function(){var f=b.datase
 <script src="/bendy3d.js"></script>
 <script src="/csmedia-bendy-init.js" data-mode="3d"></script>
 <!-- ===================================================== -->
+<script>window.CSMenuPage={current:'professional',sections:[
+  ['Services','#services'],['Selected Work','#work'],['Process','#workflow'],
+  ['Pricing','#pricing'],['Start a Project','#cta']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 </body>
 </html>
