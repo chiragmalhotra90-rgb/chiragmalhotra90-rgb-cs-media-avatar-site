@@ -1,23 +1,47 @@
-# Cinematic landing page (`cinematic.html`)
+# Cinematic version (`cinematic.html`)
 
-A trailer-style title sequence: blue→red gradient display type, extruded 3D
-letters, volumetric smoke, film grain and letterbox framing. Live at
-`/cinematic.html` once deployed.
+The fourth version of the CS Media site. Same content system as the
+Professional version — every section, the case filter, the counters, the
+chatbot — rendered as a trailer: blue→red gradient display type, extruded 3D
+letters, volumetric smoke, lightning, film grain. Live at `/cinematic.html`.
 
-One self-contained file. No build step, no framework, no runtime dependency —
-drop `cinematic.html` into any site and it works.
+One self-contained file. No build step and no framework; it shares only the
+site's BendyButton stylesheet/engine and the `/api/chat` endpoint.
 
----
+## The four versions
+
+| Mode | URL | Switcher label |
+| --- | --- | --- |
+| AI Presenter | `/ai-presenter` | AI Presenter |
+| Professional | `/professional.html` | Professional |
+| **Cinematic** | `/cinematic.html` | Cinematic |
+| Casual | `/` | Casual |
+
+`localStorage.cs_mode` remembers the visitor's choice, and `/` forwards them
+back to it. **Anyone arriving with no stored choice — organic search, a shared
+link, a new device — lands on Professional.** The cinematic page also carries
+`robots: noindex, follow` and a canonical pointing at `professional.html`, so
+it is reachable and shareable but never the page search results surface.
 
 ## What it does
 
 1. Plays three short title cards (`NO STUDIO` → `NO CREW` → `NO RESHOOTS`),
    letters rising out of the smoke one at a time.
 2. Lands on the brand card — headline, sub-line, one sentence of copy and two
-   calls to action — and stays there.
+   calls to action — then the site scrolls on beneath it.
 3. **Skip** ends the intro immediately; **Replay** runs it again.
 4. Returning visitors in the same browsing session land straight on the brand
    card (`CONFIG.oncePerSession`).
+5. Once the hero is behind you a scrim drops the weather back so the content
+   sections stay readable; the smoke and storm keep running underneath.
+
+## Sections
+
+Ported verbatim from the Professional version — same copy, same numbers, same
+prices: The Problem · Services (12) · Selected Work (counters + case filter) ·
+Operating Workflow · Pricing (+ ₹999 trial) · Onboarding · Selected Clients ·
+CTA · footer · AI chatbot. **The Knowledge Hub is deliberately not included**
+and nothing on this page links to it.
 
 ## Changing the content
 
@@ -102,6 +126,20 @@ and no strikes are scheduled.
   clipped trails. Ambient embers rise continuously; `CONFIG.sparks: 0` stops
   them.
 - **Film** — animated grain, scanlines, vignette, letterbox bars, corner marks.
+
+## Buttons
+
+Buttons go through the site's shared BendyButton 3D engine like every other
+version. This version has its own theme — `[data-cs-bendy="cinematic"]` in
+`csmedia-bendy.css`, feel entries in `csmedia-bendy-init.js` — so the keys
+carry the trailer gradient instead of falling through to the casual lime.
+The page sets `data-cs-bendy="cinematic"` on `<html>` so detection cannot
+guess wrong.
+
+Because the engine paints from `--b3d-*` custom properties, anything that
+needs per-state colour has to express it through those vars at matching
+specificity — see the case-study filters, where a plain `.active` background
+was being overridden by the theme and every filter read as selected.
 
 ## Typography
 

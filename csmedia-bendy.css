@@ -6,6 +6,7 @@
  *   [data-cs-bendy="pro"]        professional.html   cyan  #00eaf4 · IBM Plex Mono · uppercase
  *   [data-cs-bendy="presenter"]  /ai-presenter       orange #C1440E + teal #0D6E6A · Poppins
  *   [data-cs-bendy="casual"]     /  (home)           lime  #C6FF00 · Archivo/Montserrat
+ *   [data-cs-bendy="cinematic"]  cinematic.html      blue→red gradient · IBM Plex Mono · uppercase
  *
  * csmedia-bendy-init.js sets the data-cs-bendy attribute on <html> automatically.
  * All three are tuned for dark backgrounds: the "shadow" is a coloured glow, not black.
@@ -108,6 +109,20 @@
 
 /* ══════════════════════════════════════════════════ CASUAL HOME (lime) ══ */
 /* Feel: playful. Bends far, bounces twice before it settles.                 */
+
+[data-cs-bendy="cinematic"] .bendy,
+.bendy--cs-cinematic {
+  --bendy-bg: linear-gradient(97deg, #4d93ff 0%, #2f7bff 18%, #7b46d6 48%, #e2263f 74%, #ff2436 100%);
+  --bendy-fg: #ffffff;
+  --bendy-radius: 999px;
+  --bendy-font: "IBM Plex Mono", ui-monospace, monospace;
+  --bendy-size: 12px;
+  --bendy-weight: 600;
+  --bendy-tracking: .06em;
+  --bendy-pad-y: 15px;
+  --bendy-pad-x: 32px;
+  text-transform: uppercase;
+}
 
 [data-cs-bendy="casual"] .bendy,
 .bendy--cs-casual {
@@ -219,6 +234,27 @@
   --b3d-gloss: .10;
 }
 
+/* The cinematic version runs the trailer gradient — blue through violet to
+   red — on near-black, Anton for the label. The key is the one lit object on
+   a page made of smoke, so the wall is deep and the gloss stays low. */
+[data-cs-bendy="cinematic"] .b3d,
+.b3d--cs-cinematic {
+  --b3d-surface: linear-gradient(97deg, #4d93ff 0%, #2f7bff 18%, #7b46d6 48%, #e2263f 74%, #ff2436 100%);
+  --b3d-depth: #14082c;
+  --b3d-fg: #ffffff;
+  --b3d-radius: 999px;
+  --b3d-shadow-color: rgba(90, 80, 220, .30);
+  --b3d-font: "IBM Plex Mono", ui-monospace, monospace;
+  --b3d-size: 12px;
+  --b3d-weight: 600;
+  --b3d-tracking: .06em;
+  --b3d-pad-y: 15px;
+  --b3d-pad-x: 32px;
+  --b3d-edge: rgba(255, 255, 255, .32);
+  --b3d-gloss: .06;
+  text-transform: uppercase;
+}
+
 [data-cs-bendy="casual"] .b3d,
 .b3d--cs-casual {
   --b3d-surface: #C6FF00;
@@ -325,4 +361,29 @@
   border-color: transparent !important;
   padding: 0 !important;
   min-height: 0 !important;
+}
+
+/* ═════════════════════════════════════════════════ SMALL SCREENS ══ */
+/* Each version already shrinks its own controls on phones, but those rules
+   set `padding` / `font-size` on the host — and once a button is a 3D key the
+   host is only a frame, so the page's mobile sizing had no effect and the
+   version switcher ran off the side of the nav. Size the key itself instead,
+   and let the switcher scroll if four labels still will not fit.
+   Placed last so it ties with the per-version themes on specificity.        */
+@media (max-width: 768px) {
+  [data-cs-bendy] .mt-btn,
+  [data-cs-bendy] .mode-toggle .b3d {
+    --b3d-pad-y: 8px;
+    --b3d-pad-x: 12px;
+    --b3d-size: 9.5px;
+    --b3d-tracking: .03em;
+  }
+  .mode-toggle {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mode-toggle::-webkit-scrollbar { display: none; }
+  .mode-toggle > * { flex: 0 0 auto; }
 }

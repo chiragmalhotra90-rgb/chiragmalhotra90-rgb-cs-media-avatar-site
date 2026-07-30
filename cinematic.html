@@ -1,22 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-cs-bendy="cinematic">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CS Media — Cinematic Landing</title>
-<meta name="description" content="Cinematic title-sequence landing page: blue-to-red gradient type, volumetric smoke, 3D parallax depth.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>try{localStorage.setItem('cs_mode','cinematic');}catch(e){}</script>
+<title>CS Media &amp; Production — Cinematic</title>
+<meta name="description" content="CS Media &amp; Production — AI-powered content, video, websites, CRM, branding and automation under one connected engine.">
 <meta name="theme-color" content="#05060c">
+
+<!-- Organic search should land on the Professional version. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://csmediaandproduction.in/professional.html">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305060c'/%3E%3Cpath d='M6 19V8h9v4H11v7h4v4H6zm11 4v-4h4v-3h-4V8h9v4h-4v3h4v8h-9z' fill='%232f7bff'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- UI text only. The display face below is embedded, so the headline
-     never depends on the network. -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 /* Display face: Anton — SIL Open Font License 1.1.
-   Latin subset embedded so the title renders instantly and offline;
-   the extended subset falls back to the local file, then the CDN.   */
+   Latin subset embedded so the title renders instantly and offline. */
 @font-face{
   font-family:'Anton';
   font-style:normal; font-weight:400; font-display:block;
@@ -34,14 +38,13 @@
 }
 
 /* ============================================================
-   CS MEDIA — CINEMATIC TITLE SEQUENCE
-   Single file. No dependencies. Drop anywhere.
-   Design tokens live in :root — change those, not the rules.
+   CS MEDIA & PRODUCTION — CINEMATIC VERSION
+   Same content system as the Professional version, rendered in
+   the trailer theme. Design tokens live in :root.
    ============================================================ */
-
 :root{
-  /* colour ------------------------------------------------- */
-  --ink:            #05060c;   /* deep cinema black            */
+  --ink:            #05060c;
+  --ink-raised:     #080a14;
   --blue:           #2f7bff;
   --blue-deep:      #0b2fa8;
   --violet:         #7b46d6;
@@ -49,697 +52,950 @@
   --red-deep:       #9c0713;
   --paper:          #f4f6ff;
 
-  /* the title gradient — blue left, violet crossover, red right */
-  --title-grad: linear-gradient(
-      97deg,
-      #4d93ff  0%,
-      #2f7bff 16%,
-      #3f63ef 30%,
-      #7b46d6 46%,
-      #e2263f 60%,
-      #ff2436 76%,
-      #ff4152 100%
-  );
+  --title-grad: linear-gradient(97deg,
+      #4d93ff 0%, #2f7bff 16%, #3f63ef 30%, #7b46d6 46%,
+      #e2263f 60%, #ff2436 76%, #ff4152 100%);
+  --grad-blue:  linear-gradient(97deg,#6fa9ff 0%,#2f7bff 55%,#4f63e8 100%);
+  --grad-red:   linear-gradient(97deg,#a052d8 0%,#ff2436 55%,#ff5566 100%);
 
-  /* depth / extrusion -------------------------------------- */
-  --extrude:        14;        /* layers of 3D depth          */
+  --text-body:  rgba(206,216,242,.72);
+  --text-muted: rgba(190,201,230,.54);
+  --text-faint: rgba(180,192,222,.38);
+  --line:       rgba(255,255,255,.10);
+  --line-soft:  rgba(255,255,255,.06);
+
+  --extrude:        14;
   --extrude-color:  #01020a;
 
-  /* rhythm ------------------------------------------------- */
-  --gut: clamp(20px, 4vw, 56px);
-  --bar: 4.2vh;                /* letterbox height             */
+  --page-max: 1360px;
+  --bar: 4.2vh;
+  --radius: 22px;
+  --ease: cubic-bezier(.22,1,.36,1);
 
-  /* type --------------------------------------------------- */
   --title-font: 'Anton', 'Haettenschweiler', 'Arial Narrow', Impact, sans-serif;
   --ui-font:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono-font:  'IBM Plex Mono', ui-monospace, monospace;
 
-  /* texture ------------------------------------------------- */
   --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='0.55'/></svg>");
-
-  /* billowing smoke masks — fractal noise turned into soft alpha */
-  --cloud-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.018' numOctaves='5' seed='11' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='2.6' amplitude='1.7'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
   --bank-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0062 0.0125' numOctaves='6' seed='5' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='4.2' amplitude='2.6'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
   --bank-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0048 0.0104' numOctaves='5' seed='41' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='4.6' amplitude='2.9'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
+  --cloud-a: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.009 0.018' numOctaves='5' seed='11' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='2.6' amplitude='1.7'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
   --cloud-b: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><filter id='c'><feTurbulence type='fractalNoise' baseFrequency='0.0042 0.0095' numOctaves='4' seed='29' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/><feComponentTransfer><feFuncA type='gamma' exponent='3' amplitude='1.9'/></feComponentTransfer></filter><rect width='1200' height='800' filter='url(%23c)'/></svg>");
 }
 
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
-
-html,body{ height:100%; }
+html{ scroll-behavior:smooth; }
 body{
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--ui-font);
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--ui-font);
+  line-height:1.6;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
 }
-
-.sr-only{
-  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
-  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
-}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
 /* ============================================================
-   STAGE — every layer stacks here
+   THE WEATHER — fixed behind the entire site
    ============================================================ */
-.stage{
-  /* a hero section: put your own content straight after it */
-  position:relative;
-  width:100%;
-  height:100vh;
-  height:100svh;
+.site-bg{
+  position:fixed; inset:0; z-index:0;
+  pointer-events:none;
   overflow:hidden;
-  display:grid; place-items:center;
-  isolation:isolate;
   background:
     radial-gradient(120% 90% at 50% 120%, #0b0f22 0%, transparent 60%),
     radial-gradient(100% 80% at 50% -10%, #0a0d1c 0%, transparent 55%),
     var(--ink);
 }
-
-/* --- volumetric smoke (canvas, blurred by the GPU) --------- */
 #smoke{
-  position:absolute; inset:-8%;
-  width:116%; height:116%;
-  z-index:0;
+  position:absolute; inset:-8%; width:116%; height:116%;
   filter: blur(26px) saturate(140%);
-  opacity:.92;
-  will-change: transform;
-  transform: translateZ(0);
+  opacity:.92; transform: translateZ(0);
 }
+.haze{ position:absolute; border-radius:50%; filter:blur(90px); mix-blend-mode:screen; will-change:transform,opacity; }
+.haze--blue{ left:-18%; top:8%; width:78vw; height:78vw;
+  background:radial-gradient(circle at 40% 45%, rgba(47,123,255,.42) 0%, rgba(11,47,168,.26) 38%, transparent 68%);
+  animation: driftA 24s ease-in-out infinite alternate; }
+.haze--red{ right:-20%; bottom:-6%; width:82vw; height:82vw;
+  background:radial-gradient(circle at 55% 50%, rgba(255,36,54,.40) 0%, rgba(156,7,19,.24) 40%, transparent 70%);
+  animation: driftB 29s ease-in-out infinite alternate; }
+@keyframes driftA{0%{transform:translate3d(0,0,0) scale(1);opacity:.85}50%{transform:translate3d(6%,-4%,0) scale(1.12);opacity:1}100%{transform:translate3d(-3%,5%,0) scale(1.04);opacity:.9}}
+@keyframes driftB{0%{transform:translate3d(0,0,0) scale(1.05);opacity:.9}50%{transform:translate3d(-7%,3%,0) scale(1);opacity:1}100%{transform:translate3d(4%,-6%,0) scale(1.14);opacity:.86}}
 
-/* --- coloured haze washes, left blue / right red ----------- */
-.haze{
-  position:absolute; z-index:1;
-  border-radius:50%;
-  filter: blur(90px);
-  pointer-events:none;
-  mix-blend-mode:screen;
-  will-change: transform, opacity;
-}
-.haze--blue{
-  left:-18%; top:8%;
-  width:78vw; height:78vw;
-  background: radial-gradient(circle at 40% 45%,
-      rgba(47,123,255,.42) 0%, rgba(11,47,168,.26) 38%, transparent 68%);
-  animation: driftA 24s ease-in-out infinite alternate;
-}
-.haze--red{
-  right:-20%; bottom:-6%;
-  width:82vw; height:82vw;
-  background: radial-gradient(circle at 55% 50%,
-      rgba(255,36,54,.40) 0%, rgba(156,7,19,.24) 40%, transparent 70%);
-  animation: driftB 29s ease-in-out infinite alternate;
-}
-@keyframes driftA{
-  0%   { transform: translate3d(0,0,0)          scale(1);    opacity:.85; }
-  50%  { transform: translate3d(6%,-4%,0)       scale(1.12); opacity:1;   }
-  100% { transform: translate3d(-3%,5%,0)       scale(1.04); opacity:.9;  }
-}
-@keyframes driftB{
-  0%   { transform: translate3d(0,0,0)          scale(1.05); opacity:.9;  }
-  50%  { transform: translate3d(-7%,3%,0)       scale(1);    opacity:1;   }
-  100% { transform: translate3d(4%,-6%,0)       scale(1.14); opacity:.86; }
-}
-
-/* --- billowing smoke: a coloured gradient seen through a
-       fractal-noise mask, two layers drifting against each other --- */
-.clouds{
-  position:absolute; z-index:2;
-  inset:-30%;
-  pointer-events:none;
-  mix-blend-mode:screen;
-  will-change: transform;
-  backface-visibility:hidden;
-}
+.clouds{ position:absolute; inset:-30%; mix-blend-mode:screen; will-change:transform; backface-visibility:hidden; }
 .clouds--a{
-  background: linear-gradient(102deg,
-      rgba(47,123,255,.62) 0%, rgba(64,84,232,.40) 30%,
+  background:linear-gradient(102deg, rgba(47,123,255,.62) 0%, rgba(64,84,232,.40) 30%,
       rgba(123,70,214,.34) 50%, rgba(226,38,63,.44) 72%, rgba(255,36,54,.60) 100%);
-  -webkit-mask-image: var(--cloud-a);          mask-image: var(--cloud-a);
-  -webkit-mask-size: 100% 100%;                mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;              mask-repeat: no-repeat;
-  filter: blur(16px);
-  opacity:.40;
-  animation: cloudA 78s linear infinite;
+  -webkit-mask-image:var(--cloud-a); mask-image:var(--cloud-a);
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  filter:blur(16px); opacity:.40; animation:cloudA 78s linear infinite;
 }
 .clouds--b{
-  background: linear-gradient(88deg,
-      rgba(24,74,190,.5) 0%, rgba(90,60,190,.3) 46%, rgba(190,22,42,.5) 100%);
-  -webkit-mask-image: var(--cloud-b);          mask-image: var(--cloud-b);
-  -webkit-mask-size: 100% 100%;                mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;              mask-repeat: no-repeat;
-  filter: blur(26px);
-  opacity:.34;
-  animation: cloudB 116s linear infinite;
+  background:linear-gradient(88deg, rgba(24,74,190,.5) 0%, rgba(90,60,190,.3) 46%, rgba(190,22,42,.5) 100%);
+  -webkit-mask-image:var(--cloud-b); mask-image:var(--cloud-b);
+  -webkit-mask-size:100% 100%; mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  filter:blur(26px); opacity:.34; animation:cloudB 116s linear infinite;
 }
-@keyframes cloudA{
-  0%   { transform: translate3d(-4%, 2%, 0) scale(1.04); }
-  50%  { transform: translate3d( 5%,-4%, 0) scale(1.12); }
-  100% { transform: translate3d(-4%, 2%, 0) scale(1.04); }
-}
-@keyframes cloudB{
-  0%   { transform: translate3d( 4%,-3%, 0) scale(1.1) ; }
-  50%  { transform: translate3d(-6%, 4%, 0) scale(1.02); }
-  100% { transform: translate3d( 4%,-3%, 0) scale(1.1) ; }
-}
+@keyframes cloudA{0%{transform:translate3d(-4%,2%,0) scale(1.04)}50%{transform:translate3d(5%,-4%,0) scale(1.12)}100%{transform:translate3d(-4%,2%,0) scale(1.04)}}
+@keyframes cloudB{0%{transform:translate3d(4%,-3%,0) scale(1.1)}50%{transform:translate3d(-6%,4%,0) scale(1.02)}100%{transform:translate3d(4%,-3%,0) scale(1.1)}}
 
-/* --- THICK BANKS ---------------------------------------------
-   Same masks, same palette, but dense and barely blurred so the
-   structure reads as solid cloud. A second gradient mask fades
-   each bank toward the middle of the frame, so the headline sits
-   in clear air between a floor bank and a ceiling bank.
-   -------------------------------------------------------------- */
+/* thick banks — same recipe, higher gamma, so it reads as cloud not wash */
 .clouds--thick{
-  z-index:2;
   opacity:.95;
-  -webkit-mask-repeat: no-repeat;   mask-repeat: no-repeat;
-  -webkit-mask-composite: source-in; mask-composite: intersect;
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-composite:source-in; mask-composite:intersect;
 }
 .clouds--floor{
-  inset:auto -22% -26% -22%;
-  height:78%;
-  background: linear-gradient(96deg,
-      rgba(58,134,255,1) 0%, rgba(62,94,242,.78) 26%,
+  inset:auto -22% -26% -22%; height:78%;
+  background:linear-gradient(96deg, rgba(58,134,255,1) 0%, rgba(62,94,242,.78) 26%,
       rgba(130,74,222,.66) 48%, rgba(232,42,68,.82) 70%, rgba(255,48,66,1) 100%);
-  -webkit-mask-image: var(--bank-a),
-      linear-gradient(to top, #000 8%, rgba(0,0,0,.86) 38%, rgba(0,0,0,.3) 66%, transparent 88%);
-          mask-image: var(--bank-a),
-      linear-gradient(to top, #000 8%, rgba(0,0,0,.86) 38%, rgba(0,0,0,.3) 66%, transparent 88%);
-  -webkit-mask-size: 106% 118%, 100% 100%;  mask-size: 106% 118%, 100% 100%;
-  filter: blur(4px);
-  animation: bankFloor 94s ease-in-out infinite;
+  -webkit-mask-image:var(--bank-a), linear-gradient(to top,#000 8%,rgba(0,0,0,.86) 38%,rgba(0,0,0,.3) 66%,transparent 88%);
+          mask-image:var(--bank-a), linear-gradient(to top,#000 8%,rgba(0,0,0,.86) 38%,rgba(0,0,0,.3) 66%,transparent 88%);
+  -webkit-mask-size:106% 118%, 100% 100%; mask-size:106% 118%, 100% 100%;
+  filter:blur(4px); animation:bankFloor 94s ease-in-out infinite;
 }
 .clouds--ceiling{
-  inset:-24% -22% auto -22%;
-  height:62%;
-  background: linear-gradient(84deg,
-      rgba(44,110,240,.95) 0%, rgba(84,80,226,.66) 34%,
+  inset:-24% -22% auto -22%; height:62%;
+  background:linear-gradient(84deg, rgba(44,110,240,.95) 0%, rgba(84,80,226,.66) 34%,
       rgba(158,58,162,.58) 56%, rgba(222,34,60,.76) 78%, rgba(255,62,80,.98) 100%);
-  -webkit-mask-image: var(--bank-b),
-      linear-gradient(to bottom, #000 6%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.24) 66%, transparent 90%);
-          mask-image: var(--bank-b),
-      linear-gradient(to bottom, #000 6%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.24) 66%, transparent 90%);
-  -webkit-mask-size: 118% 126%, 100% 100%;  mask-size: 118% 126%, 100% 100%;
-  filter: blur(6px);
-  opacity:.8;
-  animation: bankCeiling 128s ease-in-out infinite;
+  -webkit-mask-image:var(--bank-b), linear-gradient(to bottom,#000 6%,rgba(0,0,0,.8) 34%,rgba(0,0,0,.24) 66%,transparent 90%);
+          mask-image:var(--bank-b), linear-gradient(to bottom,#000 6%,rgba(0,0,0,.8) 34%,rgba(0,0,0,.24) 66%,transparent 90%);
+  -webkit-mask-size:118% 126%, 100% 100%; mask-size:118% 126%, 100% 100%;
+  filter:blur(6px); opacity:.8; animation:bankCeiling 128s ease-in-out infinite;
 }
-@keyframes bankFloor{
-  0%   { transform: translate3d(-3%, 1%, 0) scale(1.02); }
-  50%  { transform: translate3d( 4%,-2%, 0) scale(1.09); }
-  100% { transform: translate3d(-3%, 1%, 0) scale(1.02); }
-}
-@keyframes bankCeiling{
-  0%   { transform: translate3d( 3%,-1%, 0) scale(1.06); }
-  50%  { transform: translate3d(-5%, 2%, 0) scale(1.01); }
-  100% { transform: translate3d( 3%,-1%, 0) scale(1.06); }
-}
+@keyframes bankFloor{0%{transform:translate3d(-3%,1%,0) scale(1.02)}50%{transform:translate3d(4%,-2%,0) scale(1.09)}100%{transform:translate3d(-3%,1%,0) scale(1.02)}}
+@keyframes bankCeiling{0%{transform:translate3d(3%,-1%,0) scale(1.06)}50%{transform:translate3d(-5%,2%,0) scale(1.01)}100%{transform:translate3d(3%,-1%,0) scale(1.06)}}
 
-/* --- storm: bolts, cloud illumination and sparks ------------- */
-#storm{
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  z-index:3;
-  pointer-events:none;
-  mix-blend-mode:screen;
-}
-/* whole-frame flash. Capped low on purpose — see CONFIG.storm. */
-.flash{
-  position:absolute; inset:0;
-  z-index:33;
-  pointer-events:none;
-  opacity:0;
-  mix-blend-mode:screen;
-  background: radial-gradient(120% 100% at var(--fx, 50%) var(--fy, 18%),
-      rgba(196,220,255,.85) 0%, rgba(120,150,255,.42) 34%,
-      rgba(70,60,140,.14) 62%, transparent 82%);
-}
-
-/* --- floating embers / dust -------------------------------- */
-.dust{ position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; }
+#storm{ position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:screen; }
+.dust{ position:absolute; inset:0; overflow:hidden; }
 .dust i{
-  position:absolute; bottom:-12px;
-  width:2px; height:2px; border-radius:50%;
-  background: rgba(255,255,255,.65);
-  box-shadow: 0 0 8px rgba(160,190,255,.8);
-  opacity:0;
-  animation: rise linear infinite;
+  position:absolute; bottom:-12px; width:2px; height:2px; border-radius:50%;
+  background:rgba(255,255,255,.65); box-shadow:0 0 8px rgba(160,190,255,.8);
+  opacity:0; animation:rise linear infinite;
 }
-@keyframes rise{
-  0%   { transform: translate3d(0,0,0)      scale(.6); opacity:0;   }
-  12%  { opacity:.75; }
-  100% { transform: translate3d(28px,-102vh,0) scale(1.3); opacity:0; }
+@keyframes rise{0%{transform:translate3d(0,0,0) scale(.6);opacity:0}12%{opacity:.75}100%{transform:translate3d(28px,-102vh,0) scale(1.3);opacity:0}}
+
+/* scrim — the weather drops back once you are reading */
+.scrim{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(5,6,12,.80), rgba(5,6,12,.88));
+  opacity:0; transition:opacity .7s ease;
+}
+body.past-hero .scrim{ opacity:1; }
+
+/* flash + film layers, above content but never in the way */
+.flash{
+  position:fixed; inset:0; z-index:60; pointer-events:none; opacity:0; mix-blend-mode:screen;
+  background:radial-gradient(120% 100% at var(--fx,50%) var(--fy,18%),
+      rgba(196,220,255,.85) 0%, rgba(120,150,255,.42) 34%, rgba(70,60,140,.14) 62%, transparent 82%);
+}
+.grain{
+  position:fixed; inset:-120px; z-index:61; pointer-events:none;
+  background-image:var(--noise); background-size:240px 240px;
+  opacity:.12; mix-blend-mode:overlay; animation:grainShift .7s steps(1) infinite;
+}
+@keyframes grainShift{0%{transform:translate3d(0,0,0)}20%{transform:translate3d(-38px,26px,0)}40%{transform:translate3d(46px,-18px,0)}60%{transform:translate3d(-24px,-40px,0)}80%{transform:translate3d(30px,34px,0)}100%{transform:translate3d(0,0,0)}}
+.scan{
+  position:fixed; inset:0; z-index:62; pointer-events:none;
+  background:repeating-linear-gradient(180deg, rgba(255,255,255,.026) 0 1px, transparent 1px 3px);
+  opacity:.45; mix-blend-mode:overlay;
+}
+.vignette{
+  position:fixed; inset:0; z-index:63; pointer-events:none;
+  background:radial-gradient(130% 100% at 50% 50%, transparent 48%, rgba(0,0,0,.44) 82%, rgba(0,0,0,.72) 100%);
 }
 
 /* ============================================================
-   3D SCENE
+   NAV
    ============================================================ */
-.scene{
-  position:relative; z-index:5;
-  width:100%; height:100%;
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:18px 40px;
+  background:rgba(5,6,12,.55);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid transparent;
+  transition:padding .3s, background .3s, border-color .3s;
+}
+nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-color:var(--line-soft); }
+.logo{
+  font-family:var(--title-font); font-size:19px; letter-spacing:.02em;
+  text-transform:uppercase; color:#fff; text-decoration:none; white-space:nowrap;
+}
+.logo span{
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+}
+.nav-links{ display:flex; gap:26px; list-style:none; }
+.nav-links a{
+  color:var(--text-body); text-decoration:none; font-size:13px; font-weight:500;
+  letter-spacing:.02em; transition:color .3s;
+}
+.nav-links a:hover{ color:#fff; }
+.nav-right{ display:flex; align-items:center; gap:12px; }
+.mode-toggle{ display:inline-flex; padding:3px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid var(--line); gap:2px; }
+.mt-btn{
+  border:none; background:none; cursor:pointer;
+  font-family:var(--mono-font); font-size:10.5px; font-weight:600; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--paper); opacity:.55; padding:6px 13px;
+  border-radius:999px; transition:all .2s;
+}
+.mt-btn.active{ background:var(--title-grad); color:#fff; opacity:1; }
+.mt-btn:not(.active):hover{ opacity:1; }
+.start-btn{
+  border:none; cursor:pointer; padding:10px 20px; border-radius:999px;
+  background:var(--title-grad); background-size:180% 100%; background-position:0 0;
+  color:#fff; font-family:var(--mono-font); font-size:12px; font-weight:600;
+  letter-spacing:.05em; text-transform:uppercase;
+  box-shadow:0 10px 26px rgba(24,58,180,.42), 0 10px 26px rgba(170,20,36,.26);
+  transition:transform .25s var(--ease), background-position .6s ease;
+}
+.start-btn:hover{ transform:translateY(-1px); background-position:100% 0; }
+@media(max-width:1080px){ .nav-links{ display:none } }
+@media(max-width:640px){
+  nav{ padding:12px 16px } nav.scrolled{ padding:9px 16px }
+  .mt-btn{ padding:5px 8px; font-size:9px }
+  .start-btn{ display:none }
+}
+
+/* ============================================================
+   HERO — the title sequence
+   ============================================================ */
+.stage{
+  position:relative; z-index:2;
+  width:100%; height:100vh; height:100svh;
   display:grid; place-items:center;
-  perspective: 1100px;
-  perspective-origin:50% 46%;
+  overflow:hidden;
 }
-.deck{
-  position:relative;
-  width:min(1500px, 92vw);
-  height: calc(100% - (var(--bar) * 2) - 24px);
-  transform-style:preserve-3d;
-  transition: transform .5s cubic-bezier(.2,.7,.2,1);
-  will-change: transform;
-}
+.bar{ position:absolute; left:0; right:0; z-index:40; height:var(--bar); background:#000; pointer-events:none; box-shadow:0 0 40px rgba(0,0,0,.9) }
+.bar--t{ top:0 } .bar--b{ bottom:0 }
+.marks{ position:absolute; inset:calc(var(--bar) + 18px) 18px; z-index:41; pointer-events:none; opacity:.22 }
+.marks i{ position:absolute; width:26px; height:26px; border:1px solid rgba(255,255,255,.85) }
+.marks i:nth-child(1){ left:0; top:0; border-right:0; border-bottom:0 }
+.marks i:nth-child(2){ right:0; top:0; border-left:0; border-bottom:0 }
+.marks i:nth-child(3){ left:0; bottom:0; border-right:0; border-top:0 }
+.marks i:nth-child(4){ right:0; bottom:0; border-left:0; border-top:0 }
 
-/* --- a title card ------------------------------------------ */
-.card{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column;
-  justify-content:center; align-items:center;
-  transform-style:preserve-3d;
-  pointer-events:none;
-  /* letters carry their own opacity, so an idle card only needs to
-     be non-interactive — never visibility:hidden, which would stop
-     the entrance transitions from ever starting */
-  opacity:0;
-}
-.card.is-live{ opacity:1; }
-.card.is-final.is-live{ pointer-events:auto; }
+.scene{ position:relative; z-index:5; width:100%; height:100%; display:grid; place-items:center; perspective:1100px; perspective-origin:50% 46% }
+.deck{ position:relative; width:min(1500px,92vw); height:calc(100% - (var(--bar) * 2) - 24px); transform-style:preserve-3d; transition:transform .5s var(--ease); will-change:transform }
+.card{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; transform-style:preserve-3d; pointer-events:none; opacity:0 }
+.card.is-live{ opacity:1 }
+.card.is-final.is-live{ pointer-events:auto }
 
-/* --- headline lines ---------------------------------------- */
 .line{
-  position:relative;
-  display:flex; flex-wrap:nowrap; justify-content:center; align-items:baseline;
-  font-family: var(--title-font);
-  font-weight:400;
-  font-size: clamp(2.9rem, 12.2vw, 11.5rem);
-  line-height:.95;
-  letter-spacing: .012em;
-  white-space:nowrap;
-  transform-style:preserve-3d;
-  filter:
-    drop-shadow(0 10px 26px rgba(0,0,0,.85))
-    drop-shadow(0 0 42px rgba(60,110,255,.26))
-    drop-shadow(0 0 56px rgba(255,44,62,.20));
+  position:relative; display:flex; flex-wrap:nowrap; justify-content:center; align-items:baseline;
+  font-family:var(--title-font); font-weight:400;
+  font-size:clamp(2.9rem,12.2vw,11.5rem); line-height:.95; letter-spacing:.012em;
+  white-space:nowrap; transform-style:preserve-3d;
+  filter:drop-shadow(0 10px 26px rgba(0,0,0,.85)) drop-shadow(0 0 42px rgba(60,110,255,.26)) drop-shadow(0 0 56px rgba(255,44,62,.20));
 }
-.line + .line{ margin-top:.06em; }
-.line--sub{
-  font-size: clamp(1.35rem, 5.2vw, 4.1rem);
-  letter-spacing:.055em;
-  margin-top:.34em;
-}
+.line + .line{ margin-top:.06em }
+.line--sub{ font-size:clamp(1.35rem,5.2vw,4.1rem); letter-spacing:.055em; margin-top:.34em }
 
-/* --- a single letter ----------------------------------------
-   Three stacked layers, painted back to front:
-     .glyph          → the solid extruded body (3D depth)
-     .glyph::before  → the blue→red gradient face
-     .glyph::after   → concrete/distress texture, overlay-blended
-   -------------------------------------------------------------- */
 .glyph{
-  position:relative;
-  display:inline-block;
-  transform-style:preserve-3d;
-
-  color: var(--extrude-color);
-  -webkit-text-fill-color: var(--extrude-color);
-  text-shadow: var(--depth);
-
-  /* entrance state */
+  position:relative; display:inline-block; transform-style:preserve-3d;
+  color:var(--extrude-color); -webkit-text-fill-color:var(--extrude-color);
+  text-shadow:var(--depth);
   opacity:0;
-  transform: translate3d(0,.34em,-140px) rotateX(-62deg) scale(.94);
-  filter: blur(16px);
-  transition:
-    opacity   .78s cubic-bezier(.16,.84,.28,1),
-    transform .92s cubic-bezier(.16,.84,.28,1),
-    filter    .78s cubic-bezier(.16,.84,.28,1);
-  transition-delay: calc(var(--i) * 34ms);
-  will-change: transform, opacity, filter;
+  transform:translate3d(0,.34em,-140px) rotateX(-62deg) scale(.94);
+  filter:blur(16px);
+  transition:opacity .78s cubic-bezier(.16,.84,.28,1), transform .92s cubic-bezier(.16,.84,.28,1), filter .78s cubic-bezier(.16,.84,.28,1);
+  transition-delay:calc(var(--i) * 34ms);
+  will-change:transform,opacity,filter;
 }
-
-/* the gradient face, sitting on the front plane of the extrusion.
-   --bg-w / --bg-x are written by JS so the sweep runs unbroken
-   across the whole line instead of restarting on every letter.   */
 .glyph::before{
-  content: attr(data-char);
-  position:absolute; left:0; top:0;
-  transform: translateZ(1px);
-  background-image: var(--title-grad);
-  background-repeat:no-repeat;
-  background-size: var(--bg-w, 100%) 100%;
-  background-position: var(--bg-x, 0) 0;
-  -webkit-background-clip:text;
-          background-clip:text;
-  color:transparent;
-  -webkit-text-fill-color:transparent;
-  text-shadow:none;
-  pointer-events:none;
+  content:attr(data-char); position:absolute; left:0; top:0; transform:translateZ(1px);
+  background-image:var(--title-grad); background-repeat:no-repeat;
+  background-size:var(--bg-w,100%) 100%; background-position:var(--bg-x,0) 0;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent; text-shadow:none; pointer-events:none;
 }
-
-/* concrete / distress texture printed into the letter */
 .glyph::after{
-  content: attr(data-char);
-  position:absolute; left:0; top:0;
-  transform: translateZ(2px);
-  background-image: var(--noise);
-  background-size: 128px 128px;
-  -webkit-background-clip:text;
-          background-clip:text;
-  color:transparent;
-  -webkit-text-fill-color:transparent;
-  text-shadow:none;
-  opacity:.42;
-  mix-blend-mode:overlay;
-  pointer-events:none;
+  content:attr(data-char); position:absolute; left:0; top:0; transform:translateZ(2px);
+  background-image:var(--noise); background-size:128px 128px;
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent; text-shadow:none;
+  opacity:.42; mix-blend-mode:overlay; pointer-events:none;
 }
+.sp{ display:inline-block; width:.3em }
+.card.is-in .glyph{ opacity:1; transform:translate3d(0,0,0) rotateX(0) scale(1); filter:blur(0) }
+.card.is-out .glyph{ opacity:0; transform:translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06); filter:blur(20px); transition-duration:.5s,.5s,.5s; transition-delay:calc(var(--i) * 12ms) }
 
-.sp{ display:inline-block; width:.3em; }
-
-/* live state — letters land */
-.card.is-in .glyph{
-  opacity:1;
-  transform: translate3d(0,0,0) rotateX(0deg) scale(1);
-  filter: blur(0);
-}
-/* exit — letters push back into the smoke */
-.card.is-out .glyph{
-  opacity:0;
-  transform: translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06);
-  filter: blur(20px);
-  transition-duration: .5s, .5s, .5s;
-  transition-delay: calc(var(--i) * 12ms);
-}
-
-/* ============================================================
-   FINAL CARD — brand, kicker, CTA
-   ============================================================ */
 .kicker{
-  font-family: var(--ui-font);
-  font-size: clamp(.72rem, 1.5vw, .96rem);
-  letter-spacing:.42em;
-  text-transform:uppercase;
-  color: rgba(216,226,255,.62);
-  margin-bottom:.9em;
-  opacity:0; transform: translateY(14px);
-  transition: opacity .9s ease .15s, transform .9s cubic-bezier(.16,.84,.28,1) .15s;
+  font-size:clamp(.72rem,1.5vw,.96rem); letter-spacing:.42em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:.9em;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .9s ease .15s, transform .9s var(--ease) .15s;
 }
-.kicker b{ font-weight:600; color:#fff; }
-
 .lede{
-  max-width: 62ch;
-  margin-top: clamp(26px, 2.6vw, 34px);
-  text-align:center;
-  font-size: clamp(.98rem, 1.55vw, 1.18rem);
-  line-height:1.62;
-  color: rgba(214,224,248,.78);
-  opacity:0; transform: translateY(18px);
-  transition: opacity .9s ease .5s, transform .9s cubic-bezier(.16,.84,.28,1) .5s;
+  max-width:64ch; margin-top:clamp(26px,2.6vw,34px); text-align:center;
+  font-size:clamp(.98rem,1.55vw,1.18rem); line-height:1.62; color:var(--text-body);
+  opacity:0; transform:translateY(18px);
+  transition:opacity .9s ease .5s, transform .9s var(--ease) .5s;
 }
-
 .actions{
   display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
-  margin-top: clamp(26px, 3.4vw, 44px);
-  opacity:0; transform: translateY(20px);
-  transition: opacity .9s ease .68s, transform .9s cubic-bezier(.16,.84,.28,1) .68s;
+  margin-top:clamp(26px,3.4vw,44px);
+  opacity:0; transform:translateY(20px);
+  transition:opacity .9s ease .68s, transform .9s var(--ease) .68s;
   transform-style:preserve-3d;
 }
+.card.is-in .kicker,.card.is-in .lede,.card.is-in .actions{ opacity:1; transform:translateY(0) }
 
-.card.is-in .kicker,
-.card.is-in .lede,
-.card.is-in .actions{ opacity:1; transform: translateY(0); }
-
-/* --- 3D buttons -------------------------------------------- */
 .btn{
-  position:relative;
-  display:inline-flex; align-items:center; gap:.7em;
-  padding: 1.02em 1.9em;
-  border-radius:999px;
-  font-family: var(--ui-font);
-  font-size: clamp(.82rem, 1.15vw, .95rem);
-  font-weight:600;
-  letter-spacing:.11em;
-  text-transform:uppercase;
-  text-decoration:none;
-  color:#fff;
+  position:relative; display:inline-flex; align-items:center; gap:.7em;
+  padding:1.02em 1.9em; border-radius:999px;
+  font-size:clamp(.82rem,1.15vw,.95rem); font-weight:600; letter-spacing:.11em;
+  text-transform:uppercase; text-decoration:none; color:#fff; cursor:pointer;
   border:1px solid rgba(255,255,255,.16);
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+  backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%);
   transform-style:preserve-3d;
-  transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease, border-color .32s ease;
-  box-shadow: 0 12px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.16);
-  cursor:pointer;
+  transition:transform .32s var(--ease), box-shadow .32s ease, border-color .32s ease;
+  box-shadow:0 12px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.16);
 }
-.btn:hover{
-  transform: translateZ(26px) translateY(-3px);
-  border-color: rgba(255,255,255,.3);
-  box-shadow: 0 24px 50px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.24);
-}
-.btn:active{ transform: translateZ(6px) translateY(0); }
-.btn:focus-visible{ outline:2px solid #8fb4ff; outline-offset:4px; }
-
+.btn:hover{ transform:translateZ(26px) translateY(-3px); border-color:rgba(255,255,255,.3); box-shadow:0 24px 50px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.24) }
+.btn:active{ transform:translateZ(6px) translateY(0) }
+.btn:focus-visible,.start-btn:focus-visible,.chip:focus-visible,.mt-btn:focus-visible{ outline:2px solid #8fb4ff; outline-offset:4px }
 .btn--primary{
-  border:none;
-  background: var(--title-grad);
-  background-size:180% 100%;
-  background-position: 0% 0%;
-  box-shadow:
-    0 14px 34px rgba(24,58,180,.5),
-    0 14px 34px rgba(170,20,36,.32),
-    inset 0 1px 0 rgba(255,255,255,.34);
-  transition: transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease, background-position .7s ease;
+  border:none; background:var(--title-grad); background-size:180% 100%; background-position:0 0;
+  box-shadow:0 14px 34px rgba(24,58,180,.5), 0 14px 34px rgba(170,20,36,.32), inset 0 1px 0 rgba(255,255,255,.34);
+  transition:transform .32s var(--ease), box-shadow .32s ease, background-position .7s ease;
 }
-.btn--primary:hover{ background-position: 100% 0%; }
+.btn--primary:hover{ background-position:100% 0 }
+.btn .dot{ width:7px; height:7px; border-radius:50%; background:#fff; box-shadow:0 0 12px rgba(255,255,255,.9) }
 
-.btn .dot{
-  width:7px; height:7px; border-radius:50%;
-  background:#fff; box-shadow:0 0 12px rgba(255,255,255,.9);
+.cue{
+  position:absolute; z-index:20; left:50%; bottom:calc(var(--bar) + 20px); transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  font-size:.62rem; letter-spacing:.4em; text-transform:uppercase; color:var(--text-faint);
+  opacity:0; transition:opacity 1s ease 1.1s; text-decoration:none;
 }
+.cue.is-on{ opacity:1 }
+.cue span{ display:block; width:1px; height:44px; background:linear-gradient(180deg,rgba(255,255,255,.5),transparent); animation:cueMove 2.4s ease-in-out infinite }
+@keyframes cueMove{0%,100%{transform:scaleY(.4);opacity:.3}50%{transform:scaleY(1);opacity:1}}
 
-
-/* ============================================================
-   FILM LAYERS — grain, scanlines, vignette, letterbox
-   ============================================================ */
-.grain{
-  position:absolute; inset:-120px; z-index:30;
-  background-image: var(--noise);
-  background-size: 240px 240px;
-  opacity:.14;
-  mix-blend-mode:overlay;
-  pointer-events:none;
-  animation: grainShift .7s steps(1) infinite;
-}
-@keyframes grainShift{
-  0%  { transform: translate3d(0,0,0) }
-  20% { transform: translate3d(-38px,26px,0) }
-  40% { transform: translate3d(46px,-18px,0) }
-  60% { transform: translate3d(-24px,-40px,0) }
-  80% { transform: translate3d(30px,34px,0) }
-  100%{ transform: translate3d(0,0,0) }
-}
-
-.scan{
-  position:absolute; inset:0; z-index:31; pointer-events:none;
-  background: repeating-linear-gradient(180deg,
-      rgba(255,255,255,.028) 0 1px, transparent 1px 3px);
-  opacity:.5; mix-blend-mode:overlay;
-}
-
-.vignette{
-  position:absolute; inset:0; z-index:32; pointer-events:none;
-  background:
-    radial-gradient(120% 95% at 50% 50%, transparent 42%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.9) 100%);
-}
-
-.bar{
-  position:absolute; left:0; right:0; z-index:40;
-  height: var(--bar);
-  background:#000;
-  pointer-events:none;
-  box-shadow: 0 0 40px rgba(0,0,0,.9);
-}
-.bar--t{ top:0; }
-.bar--b{ bottom:0; }
-
-/* --- corner framing marks ---------------------------------- */
-.marks{ position:absolute; inset:calc(var(--bar) + 18px) 18px; z-index:41; pointer-events:none;
-        opacity:.22; }
-.marks i{ position:absolute; width:26px; height:26px; border:1px solid rgba(255,255,255,.85); }
-.marks i:nth-child(1){ left:0;  top:0;    border-right:0; border-bottom:0; }
-.marks i:nth-child(2){ right:0; top:0;    border-left:0;  border-bottom:0; }
-.marks i:nth-child(3){ left:0;  bottom:0; border-right:0; border-top:0; }
-.marks i:nth-child(4){ right:0; bottom:0; border-left:0;  border-top:0; }
-
-/* --- replay / skip ----------------------------------------- */
-.tools{
-  position:absolute; right: clamp(16px, 3vw, 34px);
-  bottom: calc(var(--bar) + 18px);
-  z-index:42;
-  display:flex; gap:10px;
-}
+.tools{ position:absolute; right:clamp(16px,3vw,34px); bottom:calc(var(--bar) + 18px); z-index:42; display:flex; gap:10px }
 .chip{
-  font-family: var(--ui-font);
-  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase;
-  color: rgba(210,222,255,.6);
-  background: rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:999px;
-  padding:.62em 1.15em;
-  cursor:pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: color .25s, border-color .25s, background .25s, transform .25s;
+  font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:var(--text-muted);
+  background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:999px;
+  padding:.62em 1.15em; cursor:pointer;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  transition:color .25s, border-color .25s, background .25s, transform .25s;
 }
-.chip:hover{ color:#fff; border-color:rgba(255,255,255,.32); background:rgba(255,255,255,.1); transform:translateY(-2px); }
-.chip:focus-visible{ outline:2px solid #8fb4ff; outline-offset:3px; }
-.chip[hidden]{ display:none; }
+.chip:hover{ color:#fff; border-color:rgba(255,255,255,.32); background:rgba(255,255,255,.1); transform:translateY(-2px) }
+.chip[hidden]{ display:none }
 
 /* ============================================================
-   RESPONSIVE
+   CONTENT SHELL
    ============================================================ */
-@media (max-width: 720px){
-  :root{ --bar: 3vh; --extrude: 9; }
-  .line{ font-size: clamp(2.2rem, 13.5vw, 4.6rem); }
-  .line--sub{ font-size: clamp(1.3rem, 7.4vw, 2.6rem); }
-  .kicker{ letter-spacing:.3em; }
-  .marks{ display:none; }
-  .clouds--floor{ filter: blur(3px); }
-  .clouds--ceiling{ filter: blur(4px); }
-  .actions{ flex-direction:column; width:min(340px, 86vw); }
-  .btn{ justify-content:center; }
-  #smoke{ filter: blur(20px) saturate(135%); }
+main{ position:relative; z-index:2 }
+/* anchor targets clear the fixed nav */
+section[id], footer{ scroll-margin-top:96px }
+@media(max-width:640px){ section[id], footer{ scroll-margin-top:74px } }
+.shell{ width:min(100% - 48px, var(--page-max)); margin-inline:auto; position:relative }
+section.band{ padding-block:96px 108px; position:relative }
+@media(max-width:1024px){ section.band{ padding-block:74px 84px } }
+@media(max-width:640px){ .shell{ width:min(100% - 28px, var(--page-max)) } section.band{ padding-block:58px 66px } }
+
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .9s var(--ease), transform .9s var(--ease) }
+.reveal.in-view{ opacity:1; transform:none }
+
+.eyebrow{
+  display:flex; align-items:center; gap:12px;
+  font-family:var(--mono-font); font-size:11px; letter-spacing:.32em;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:22px;
 }
-@media (max-width: 380px){
-  .line{ font-size: clamp(1.9rem, 12.5vw, 3.4rem); }
+.eyebrow .idx{
+  min-width:30px; height:22px; padding-inline:8px; display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid rgba(47,123,255,.55); border-radius:999px; background:rgba(47,123,255,.12);
+  color:#8fb4ff; font-size:10px; letter-spacing:0;
 }
+.marker{ position:relative; display:inline-block; width:20px; height:20px; border:2px solid #6f9dff; border-radius:50%; box-shadow:0 0 0 1px rgba(0,0,0,.8), 0 0 12px rgba(47,123,255,.22); animation:markerPulse 2.6s ease-in-out infinite alternate; flex:none }
+.marker::before,.marker::after{ content:''; position:absolute; background:rgba(120,160,255,.6) }
+.marker::before{ width:8px; height:1px; left:-6px; top:50% }
+.marker::after{ width:1px; height:8px; left:50%; top:-6px }
+.marker i{ position:absolute; width:5px; height:5px; inset:0; margin:auto; border-radius:50%; background:#8fb4ff }
+@keyframes markerPulse{0%{opacity:.65;transform:scale(.94)}100%{opacity:1;transform:scale(1)}}
+
+/* section headings use the display face + the trailer gradient */
+h2.head{
+  font-family:var(--title-font); font-weight:400;
+  font-size:clamp(2rem,5vw,4.6rem); line-height:.98; letter-spacing:.008em;
+  text-transform:uppercase; margin-bottom:20px;
+  text-shadow:0 2px 0 rgba(0,0,0,.6), 0 12px 34px rgba(0,0,0,.5);
+}
+h2.head .w{ color:#fff }
+.grad{
+  display:inline-block; color:transparent; -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text; background-clip:text; background-image:var(--title-grad);
+}
+.grad-b{ background-image:var(--grad-blue) }
+.grad-r{ background-image:var(--grad-red) }
+
+.copy{ font-size:18px; line-height:1.6; color:var(--text-body); max-width:1000px }
+.copy b{ color:#fff; font-weight:600 }
+@media(max-width:640px){ .copy{ font-size:16px } }
+.cat{
+  font-family:var(--mono-font); font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--text-faint); margin:44px 0 18px; display:flex; align-items:center; gap:14px;
+}
+.cat::after{ content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent) }
+
+/* ---------- CARDS ---------- */
+.card-surface{
+  position:relative; overflow:hidden;
+  border:1px solid var(--line-soft); border-radius:var(--radius);
+  background:linear-gradient(150deg, rgba(12,16,30,.78), rgba(6,8,16,.66));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04), 0 22px 60px rgba(0,0,0,.4);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  transition:transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.card-surface:hover{ transform:translateY(-3px); border-color:rgba(255,255,255,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 30px 70px rgba(0,0,0,.5) }
+.glow-b::before{ content:''; position:absolute; width:340px; height:340px; left:-110px; top:-150px; background:radial-gradient(circle, rgba(47,123,255,.20), transparent 68%); filter:blur(18px); pointer-events:none }
+.glow-r::before{ content:''; position:absolute; width:360px; height:360px; right:-110px; bottom:-170px; background:radial-gradient(circle, rgba(255,36,54,.20), transparent 69%); filter:blur(20px); pointer-events:none }
+.glow-v::before{ content:''; position:absolute; width:340px; height:340px; right:-100px; top:-150px; background:radial-gradient(circle, rgba(123,70,214,.20), transparent 68%); filter:blur(20px); pointer-events:none }
+
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px }
+.grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px }
+@media(max-width:1024px){ .grid-3,.grid-4{ grid-template-columns:repeat(2,1fr) } }
+@media(max-width:620px){ .grid-3,.grid-4{ grid-template-columns:1fr } }
+
+.num{
+  font-family:var(--title-font); font-weight:400; font-size:clamp(42px,5vw,72px);
+  line-height:.9; letter-spacing:.01em;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 0 rgba(1,2,10,.8)) drop-shadow(0 8px 20px rgba(0,0,0,.6));
+}
+.num-b{ background-image:var(--grad-blue) } .num-r{ background-image:var(--grad-red) }
+.c-title{ font-size:15px; font-weight:600; line-height:1.35; color:rgba(255,255,255,.94) }
+.c-desc{ font-size:14px; line-height:1.6; color:var(--text-muted) }
+.pad{ padding:32px 30px 28px }
+.pad-lg{ padding:38px 34px 32px }
+
+/* ---------- SERVICES ---------- */
+.svc{ padding:28px 26px 26px }
+.svc .tag{ font-family:var(--mono-font); font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:#7fa6ff; margin-bottom:16px }
+.svc .no{ font-family:var(--title-font); font-size:30px; line-height:1; color:rgba(255,255,255,.14); position:absolute; right:22px; top:20px }
+.svc h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:8px; line-height:1.3 }
+.svc .sub{ font-size:13.5px; color:#9db4e8; margin-bottom:12px; line-height:1.5 }
+.svc p{ font-size:13.5px; line-height:1.6; color:var(--text-muted); margin-bottom:16px }
+.svc ul{ list-style:none; display:flex; flex-wrap:wrap; gap:7px }
+.svc li{ font-family:var(--mono-font); font-size:10.5px; letter-spacing:.04em; color:var(--text-faint); border:1px solid var(--line-soft); border-radius:999px; padding:4px 10px }
+
+/* ---------- WORK ---------- */
+.metric{ padding:34px 30px 30px }
+.m-label{ font-size:14px; font-weight:600; color:rgba(255,255,255,.9); margin-top:14px }
+.m-sub{ font-family:var(--mono-font); font-size:11px; letter-spacing:.06em; color:var(--text-faint); margin-top:5px }
+.filters{ display:flex; flex-wrap:wrap; gap:9px; margin:44px 0 22px }
+.filters button{
+  font-family:var(--mono-font); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--text-muted); background:rgba(255,255,255,.04); border:1px solid var(--line-soft);
+  border-radius:999px; padding:8px 16px; cursor:pointer; transition:all .25s;
+}
+.filters button:hover{ color:#fff; border-color:rgba(255,255,255,.2) }
+.filters button.active{ background:var(--title-grad); color:#fff; border-color:transparent }
+/* the 3D key engine paints from these vars, so state has to be expressed
+   through them or every filter reads as selected */
+/* the theme rule is [data-cs-bendy="cinematic"] .b3d, so these have to match
+   its specificity or the unselected filters keep the lit surface */
+[data-cs-bendy] .filters button{ --b3d-surface:linear-gradient(97deg,#1b2440,#241b33 52%,#3a1c26); --b3d-fg:rgba(214,224,248,.82); --b3d-depth:#0a0c18; --b3d-pad-y:11px; --b3d-pad-x:20px; --b3d-size:11px }
+[data-cs-bendy] .filters button.active{ --b3d-surface:var(--title-grad); --b3d-fg:#fff; --b3d-depth:#14082c }
+.case{ padding:26px 24px 24px }
+.case .badge{ font-family:var(--mono-font); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#ff8792; margin-bottom:14px }
+.case h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:9px }
+.case p{ font-size:13.5px; line-height:1.6; color:var(--text-muted); margin-bottom:14px }
+.case .out{ font-size:12.5px; color:#9db4e8; border-top:1px solid var(--line-soft); padding-top:12px }
+
+/* ---------- WORKFLOW ---------- */
+.flow{ display:flex; flex-direction:column; gap:2px; border-top:1px solid var(--line-soft) }
+.flow-item{ display:flex; gap:26px; padding:26px 6px; border-bottom:1px solid var(--line-soft); transition:background .3s, padding-left .3s }
+.flow-item:hover{ background:rgba(255,255,255,.02); padding-left:16px }
+.flow-no{ font-family:var(--title-font); font-size:34px; line-height:1; flex:none; width:64px;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
+.flow-item h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:7px }
+.flow-item p{ font-size:14.5px; line-height:1.6; color:var(--text-muted); max-width:820px }
+@media(max-width:640px){ .flow-item{ gap:16px } .flow-no{ width:44px; font-size:26px } }
+
+/* ---------- PRICING ---------- */
+.price-card{ padding:32px 28px 30px; display:flex; flex-direction:column }
+.price-card h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:14px }
+.price{
+  font-family:var(--title-font); font-size:40px; line-height:1; margin-bottom:12px;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+}
+.price-card > p{ font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.55 }
+.price-card ul{ list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:26px; flex:1 }
+.price-card li{ font-size:13.5px; color:var(--text-body); padding-left:20px; position:relative; line-height:1.5 }
+.price-card li::before{ content:''; position:absolute; left:0; top:.55em; width:8px; height:1px; background:linear-gradient(90deg,#4d93ff,#ff4152) }
+.price-card button{
+  width:100%; border:1px solid var(--line); background:rgba(255,255,255,.05); color:#fff;
+  font-family:var(--mono-font); font-size:11.5px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; padding:13px; border-radius:999px; cursor:pointer; transition:all .25s;
+}
+.price-card button:hover{ background:rgba(255,255,255,.11); transform:translateY(-2px) }
+.price-card.featured{ border-color:rgba(120,150,255,.36); box-shadow:inset 0 1px 0 rgba(255,255,255,.07), 0 26px 70px rgba(20,44,140,.34) }
+.price-card.featured button{ background:var(--title-grad); border-color:transparent }
+.popular{
+  position:absolute; top:0; right:24px; font-family:var(--mono-font); font-size:9.5px;
+  letter-spacing:.18em; text-transform:uppercase; color:#fff;
+  background:var(--title-grad); padding:5px 12px; border-radius:0 0 8px 8px;
+}
+.band-strip{
+  margin-top:34px; padding:28px 30px; border-radius:var(--radius);
+  border:1px solid var(--line-soft); background:linear-gradient(120deg, rgba(47,123,255,.10), rgba(255,36,54,.10));
+  display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+}
+.band-strip h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:7px }
+.band-strip p{ font-size:14px; color:var(--text-muted); max-width:74ch; line-height:1.6 }
+
+/* ---------- ONBOARDING / CLIENTS ---------- */
+.day{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#7fa6ff; margin-bottom:14px }
+.onboard h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:9px }
+.onboard p{ font-size:13.5px; line-height:1.6; color:var(--text-muted) }
+.clients{ display:flex; flex-wrap:wrap; gap:11px }
+.client-tag{
+  font-family:var(--mono-font); font-size:12px; letter-spacing:.04em; color:var(--text-body);
+  border:1px solid var(--line-soft); border-radius:999px; padding:11px 20px;
+  background:rgba(255,255,255,.03); transition:all .25s;
+}
+.client-tag:hover{ color:#fff; border-color:rgba(255,255,255,.2); transform:translateY(-2px) }
+
+/* ---------- CTA + FOOTER ---------- */
+.cta-panel{
+  padding:clamp(40px,6vw,74px); border-radius:calc(var(--radius) + 8px);
+  border:1px solid var(--line-soft); text-align:center;
+  background:linear-gradient(140deg, rgba(47,123,255,.13), rgba(10,12,24,.7) 46%, rgba(255,36,54,.13));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 30px 90px rgba(0,0,0,.5);
+}
+.cta-panel p{ font-size:17px; line-height:1.6; color:var(--text-body); max-width:70ch; margin:22px auto 30px }
+.contact-info{ display:flex; flex-wrap:wrap; gap:22px; justify-content:center; margin-top:30px; font-family:var(--mono-font); font-size:12.5px; letter-spacing:.03em }
+.contact-info a,.contact-info span{ color:var(--text-muted); text-decoration:none; transition:color .25s }
+.contact-info a:hover{ color:#fff }
+
+footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); padding:64px 0 34px; margin-top:40px }
+.foot{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:44px }
+@media(max-width:800px){ .foot{ grid-template-columns:1fr; gap:32px } }
+.foot h4{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); margin-bottom:16px }
+.foot a{ display:block; color:var(--text-muted); text-decoration:none; font-size:14px; margin-bottom:11px; transition:color .25s }
+.foot a:hover{ color:#fff }
+.foot > div:first-child p{ font-size:14px; line-height:1.65; color:var(--text-muted); max-width:46ch; margin-top:16px }
+.foot-logo{ font-family:var(--title-font); font-size:20px; letter-spacing:.02em; text-transform:uppercase; color:#fff }
+.foot-logo span{ background:var(--title-grad); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
+.foot-bottom{ margin-top:52px; padding-top:26px; border-top:1px solid var(--line-soft); font-family:var(--mono-font); font-size:11.5px; letter-spacing:.05em; color:var(--text-faint) }
+
+/* ---------- CHATBOT ---------- */
+.csai-launch{
+  position:fixed; right:22px; bottom:22px; z-index:90;
+  border:none; cursor:pointer; padding:14px 22px; border-radius:999px;
+  background:var(--title-grad); background-size:180% 100%; color:#fff;
+  font-family:var(--mono-font); font-size:12px; font-weight:600; letter-spacing:.06em;
+  box-shadow:0 16px 40px rgba(24,58,180,.44), 0 16px 40px rgba(170,20,36,.28);
+  transition:transform .25s var(--ease), background-position .6s ease;
+}
+.csai-launch:hover{ transform:translateY(-2px); background-position:100% 0 }
+#csai{ position:fixed; inset:0; z-index:120; display:none; align-items:flex-end; justify-content:flex-end; padding:22px; background:rgba(2,3,10,.55); backdrop-filter:blur(4px) }
+#csai.open{ display:flex }
+.csai-card{
+  width:min(410px,100%); height:min(560px,80vh); display:flex; flex-direction:column;
+  border:1px solid var(--line); border-radius:20px; overflow:hidden;
+  background:linear-gradient(160deg, rgba(14,18,34,.97), rgba(6,8,16,.97));
+  box-shadow:0 30px 90px rgba(0,0,0,.7);
+}
+.csai-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line-soft) }
+.csai-title{ display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:600; color:#fff }
+.csai-dot{ width:8px; height:8px; border-radius:50%; background:#4d93ff; box-shadow:0 0 10px #4d93ff }
+.csai-x{ background:none; border:none; color:var(--text-muted); font-size:15px; cursor:pointer }
+.csai-x:hover{ color:#fff }
+.csai-msgs{ flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:12px }
+.csai-m{ font-size:14px; line-height:1.55; padding:11px 14px; border-radius:14px; max-width:88% }
+.csai-m.bot{ background:rgba(255,255,255,.06); color:var(--text-body); align-self:flex-start }
+.csai-m.me{ background:var(--title-grad); color:#fff; align-self:flex-end }
+.csai-m a{ color:#8fb4ff }
+.csai-sugg{ display:flex; flex-wrap:wrap; gap:7px; padding:0 18px 12px }
+.csai-chip{ font-size:11.5px; color:var(--text-muted); background:rgba(255,255,255,.05); border:1px solid var(--line-soft); border-radius:999px; padding:7px 12px; cursor:pointer; transition:all .2s }
+.csai-chip:hover{ color:#fff; border-color:rgba(255,255,255,.22) }
+.csai-input{ display:flex; gap:9px; padding:14px 16px; border-top:1px solid var(--line-soft) }
+.csai-input input{ flex:1; background:rgba(255,255,255,.05); border:1px solid var(--line-soft); border-radius:999px; padding:11px 16px; color:#fff; font-family:inherit; font-size:14px }
+.csai-input input:focus{ outline:none; border-color:rgba(120,150,255,.5) }
+.csai-input button{ border:none; background:var(--title-grad); color:#fff; width:42px; border-radius:999px; cursor:pointer; font-size:14px }
 
 /* ============================================================
-   REDUCED MOTION — go straight to the final card, calm layers
+   REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion: reduce){
-  .haze, .clouds, .dust i, .grain{ animation:none !important; }
-  .flash{ display:none !important; }
-  .glyph{ transition-duration:.001s !important; transition-delay:0s !important; }
-  .kicker,.lede,.actions{ transition-duration:.001s !important; transition-delay:0s !important; }
-  .btn{ transition:none; }
+  html{ scroll-behavior:auto }
+  .haze,.clouds,.dust i,.grain,.cue span,.marker{ animation:none !important }
+  .flash{ display:none !important }
+  .glyph{ transition-duration:.001s !important; transition-delay:0s !important }
+  .kicker,.lede,.actions{ transition-duration:.001s !important; transition-delay:0s !important }
+  .reveal{ opacity:1; transform:none; transition:none }
+  .btn,.card-surface{ transition:none }
+}
+
+@media(max-width:720px){
+  :root{ --bar:3vh; --extrude:9 }
+  .line{ font-size:clamp(2.2rem,13.5vw,4.6rem) }
+  .line--sub{ font-size:clamp(1.3rem,7.4vw,2.6rem) }
+  .marks{ display:none }
+  .actions{ flex-direction:column; align-items:center; width:auto }
+  .btn{ justify-content:center }
+  nav{ gap:10px }
+  #smoke{ filter:blur(20px) saturate(135%) }
+  .clouds--floor{ filter:blur(3px) }
+  .clouds--ceiling{ filter:blur(4px) }
+  .csai-launch{ right:14px; bottom:14px; padding:12px 18px; font-size:11px }
 }
 </style>
 </head>
 
 <body>
+<h1 class="sr-only">CS Media &amp; Production — AI-powered content, video, websites, CRM, branding and automation under one connected engine.</h1>
 
-<!-- Real, indexable copy for search engines & screen readers -->
-<h1 class="sr-only">CS Media &amp; Production — the AI Avatar Engine. No studio. No crew. Your presenter, on demand.</h1>
+<!-- ===== the weather, fixed behind everything ===== -->
+<div class="site-bg" aria-hidden="true">
+  <canvas id="smoke"></canvas>
+  <div class="haze haze--blue"></div>
+  <div class="haze haze--red"></div>
+  <div class="clouds clouds--a"></div>
+  <div class="clouds clouds--b"></div>
+  <div class="clouds clouds--thick clouds--ceiling"></div>
+  <div class="clouds clouds--thick clouds--floor"></div>
+  <canvas id="storm"></canvas>
+  <div class="dust" id="dust"></div>
+</div>
+<div class="scrim" aria-hidden="true"></div>
 
-<main class="stage" id="stage">
+<nav id="nav">
+  <a class="logo" href="#top">CS_MEDIA<span>&amp;PROD</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#workflow">Process</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="mode-toggle" role="group" aria-label="Site mode">
+      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
+      <button type="button" class="mt-btn" data-mode="professional">Professional</button>
+      <button type="button" class="mt-btn active" data-mode="cinematic">Cinematic</button>
+      <button type="button" class="mt-btn" data-mode="casual">Casual</button>
+    </div>
+    <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
+  </div>
+</nav>
 
-  <canvas id="smoke" aria-hidden="true"></canvas>
-  <div class="haze haze--blue" aria-hidden="true"></div>
-  <div class="haze haze--red"  aria-hidden="true"></div>
-  <div class="clouds clouds--a" aria-hidden="true"></div>
-  <div class="clouds clouds--b" aria-hidden="true"></div>
-  <div class="clouds clouds--thick clouds--ceiling" aria-hidden="true"></div>
-  <div class="clouds clouds--thick clouds--floor"   aria-hidden="true"></div>
-  <canvas id="storm" aria-hidden="true"></canvas>
-  <div class="dust" id="dust"  aria-hidden="true"></div>
+<main id="top">
 
+<!-- ===== HERO: the title sequence ===== -->
+<section class="stage" id="stage">
   <div class="scene">
-    <div class="deck" id="deck"><!-- cards injected here --></div>
+    <div class="deck" id="deck"><!-- cards injected --></div>
   </div>
 
+  <a class="cue" id="cue" href="#problem"><span></span>Scroll</a>
+
   <div class="tools">
-    <button class="chip" id="skip"   type="button">Skip</button>
+    <button class="chip" id="skip" type="button">Skip</button>
     <button class="chip" id="replay" type="button" hidden>Replay</button>
   </div>
 
-  <div class="flash" id="flash" aria-hidden="true"></div>
-  <div class="grain"    aria-hidden="true"></div>
-  <div class="scan"     aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
   <div class="bar bar--t" aria-hidden="true"></div>
   <div class="bar bar--b" aria-hidden="true"></div>
   <div class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</section>
 
+<!-- ===== 01 THE PROBLEM ===== -->
+<section id="problem" class="band shell reveal">
+  <div class="eyebrow"><span class="idx">01</span><span>The Problem</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">Agencies sell hours.</span><br><span class="grad">You buy outcomes.</span></h2>
+  <p class="copy" style="margin-bottom:44px">Every business we meet has the same complaint — their last agency delivered posts, reels, and a website, but no system. No follow-up loop. No CRM. No way to know if a single reel converted a single customer. The work stops at the asset, the value never compounds.</p>
+  <div class="grid-3">
+    <article class="card-surface pad glow-r"><div class="num num-r">6 wks</div><div class="c-title" style="margin:14px 0 8px">avg. brief-to-launch at typical agencies</div><p class="c-desc">Strategy, design, content and CRM live with four different vendors. Six-week cycles before anything ships.</p></article>
+    <article class="card-surface pad glow-b"><div class="num num-b">4+</div><div class="c-title" style="margin:14px 0 8px">vendors to coordinate</div><p class="c-desc">Creative, dev, CRM, ads — each on their own clock. You become the project manager for vendors you pay.</p></article>
+    <article class="card-surface pad glow-v"><div class="num num-r">0</div><div class="c-title" style="margin:14px 0 8px">attribution loop on most client work</div><p class="c-desc">Posts get published. Patients or leads still get lost in scattered WhatsApps. No CRM. No reminders. No proof.</p></article>
+  </div>
+</section>
+
+<!-- ===== 02 SERVICES ===== -->
+<section id="services" class="band shell reveal">
+  <div class="eyebrow"><span class="idx">02</span><span>Services</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">Twelve services.</span> <span class="grad">One engine.</span></h2>
+  <p class="copy">Old school craft meets new-era tech. Photography, film, branding, marketing, websites, CRM, AI avatars, automation — built as one connected system.</p>
+
+  <div class="cat">Craft</div>
+  <div class="grid-3">
+    <article class="card-surface svc"><div class="no">01</div><div class="tag">Craft</div><h3>Photography &amp; Visual Storytelling</h3><div class="sub">Premium visuals that create trust fast.</div><p>Commercial, founder, product, venue, and campaign photography shaped for web and social conversion.</p><ul><li>Brand shoots</li><li>Product frames</li><li>Venue details</li><li>Campaign libraries</li></ul></article>
+    <article class="card-surface svc"><div class="no">02</div><div class="tag">Craft</div><h3>Videography &amp; Film Production</h3><div class="sub">Cinematic proof for high-trust brands.</div><p>Story-led production for launches, explainers, founder pieces, hospitality, healthcare, and sports.</p><ul><li>Campaign films</li><li>Founder videos</li><li>Event edits</li><li>Launch reels</li></ul></article>
+    <article class="card-surface svc"><div class="no">03</div><div class="tag">Craft</div><h3>Short-form Video &amp; Reels</h3><div class="sub">High-volume formats for daily attention.</div><p>Repeatable short-form systems that package hooks, proof, offers, and calls to action.</p><ul><li>Hook banks</li><li>Reel edits</li><li>Caption systems</li><li>Monthly calendars</li></ul></article>
+    <article class="card-surface svc"><div class="no">06</div><div class="tag">Craft</div><h3>Branding &amp; Brand Identity</h3><div class="sub">Identity systems that make every asset feel owned.</div><p>Logo, voice, palette, layout, campaign language, and collateral systems for consistent recall.</p><ul><li>Logo systems</li><li>Brand voice</li><li>Collateral</li><li>Style guides</li></ul></article>
+    <article class="card-surface svc"><div class="no">11</div><div class="tag">Craft</div><h3>Sports &amp; Event Media Production</h3><div class="sub">Fast-moving event coverage with commercial polish.</div><p>Sports, investor, tournament, and live-event media packaged for sponsors, fans, and sales.</p><ul><li>Event coverage</li><li>Sponsor assets</li><li>Highlight reels</li><li>Pitch media</li></ul></article>
+  </div>
+
+  <div class="cat">Growth</div>
+  <div class="grid-3">
+    <article class="card-surface svc"><div class="no">04</div><div class="tag">Growth</div><h3>Digital Marketing &amp; SEO</h3><div class="sub">Search and campaign systems that compound.</div><p>Performance campaigns, content maps, local search, and reporting loops for measurable demand.</p><ul><li>SEO maps</li><li>Paid campaigns</li><li>Landing pages</li><li>Reports</li></ul></article>
+    <article class="card-surface svc"><div class="no">05</div><div class="tag">Growth</div><h3>Social Media Management</h3><div class="sub">A consistent publishing engine.</div><p>Planning, publishing, creative refreshes, and platform-specific packaging for active brands.</p><ul><li>Calendars</li><li>Publishing</li><li>Community cues</li><li>Analytics</li></ul></article>
+    <article class="card-surface svc"><div class="no">08</div><div class="tag">Growth</div><h3>Website Development</h3><div class="sub">A conversion surface, not an online brochure.</div><p>Static sites, landing pages, portals, intake flows, and CRM-ready web experiences.</p><ul><li>Landing pages</li><li>Full websites</li><li>Lead capture</li><li>Analytics</li></ul></article>
+    <article class="card-surface svc"><div class="no">09</div><div class="tag">Growth</div><h3>Influencer Marketing</h3><div class="sub">Creator reach with brand control.</div><p>Campaign planning, creator packaging, collaboration assets, and performance tracking.</p><ul><li>Creator lists</li><li>Briefs</li><li>Launch kits</li><li>Tracking</li></ul></article>
+  </div>
+
+  <div class="cat">AI</div>
+  <div class="grid-3">
+    <article class="card-surface svc"><div class="no">07</div><div class="tag">AI</div><h3>AI Video Production</h3><div class="sub">Avatar, voice, and generative video at production speed.</div><p>AI presenter and cinematic workflows using HeyGen, ElevenLabs, Sora, Veo, and Kling where they fit the story.</p><ul><li>Avatar explainers</li><li>Voiceovers</li><li>Generative shots</li><li>Localization</li></ul></article>
+    <article class="card-surface svc"><div class="no">10</div><div class="tag">AI</div><h3>AI Business Systems &amp; Automation</h3><div class="sub">Operational workflows that reduce manual follow-up.</div><p>AI-assisted CRM, WhatsApp, intake, reporting, and content operations for growth teams.</p><ul><li>CRM flows</li><li>WhatsApp automation</li><li>Dashboards</li><li>Ops agents</li></ul></article>
+    <article class="card-surface svc"><div class="no">12</div><div class="tag">AI</div><h3>Legal Tech Content</h3><div class="sub">Complex legal products explained clearly.</div><p>Product education, platform positioning, demo flows, and trust-building content for legal AI and service firms.</p><ul><li>Demo scripts</li><li>Trust pages</li><li>Explainers</li><li>Founder content</li></ul></article>
+  </div>
+</section>
+
+<!-- ===== 03 SELECTED WORK ===== -->
+<section id="work" class="band shell reveal">
+  <div class="eyebrow"><span class="idx">03</span><span>Selected Work</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">The volume is already</span> <span class="grad-r grad">real</span><br><span class="grad">enough to sell.</span></h2>
+  <p class="copy" style="margin-bottom:44px">410 generation records, 8 case studies across 6 verticals — built inside a 69-day work window. Not a five-year pitch. <b>A production habit, not a one-off experiment.</b></p>
+
+  <div class="grid-4">
+    <div class="card-surface metric glow-b"><div class="num num-b" data-count="410">0</div><div class="m-label">Generation records</div><div class="m-sub">Apr 5 – Jun 12, 2026</div></div>
+    <div class="card-surface metric glow-r"><div class="num num-r" data-count="4397">0</div><div class="m-label">Tracked platform credits</div><div class="m-sub">Credits, not currency spend</div></div>
+    <div class="card-surface metric glow-v"><div class="num" data-count="69">0</div><div class="m-label">Days, idea → portfolio</div><div class="m-sub">Under-90-day story</div></div>
+    <div class="card-surface metric glow-b"><div class="num num-b" data-count="8">0</div><div class="m-label">Case studies shipped</div><div class="m-sub">Across 6 verticals</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="active" data-filter="All">All</button>
+    <button data-filter="Dental">Dental</button>
+    <button data-filter="Legal AI">Legal AI</button>
+    <button data-filter="Sports">Sports</button>
+    <button data-filter="Finance">Finance</button>
+    <button data-filter="Creator">Creator</button>
+    <button data-filter="Retail">Retail</button>
+  </div>
+  <div class="grid-4" id="cases">
+    <article class="card-surface case" data-vertical="Dental"><div class="badge">Dental</div><h3>Dr. Nitesh Patil Dental Care</h3><p>Patient-facing CRM, clinic content, and service communication rebuilt around trust and speed.</p><div class="out">Day-3 patient system launch pattern.</div></article>
+    <article class="card-surface case" data-vertical="Legal AI"><div class="badge">Legal AI</div><h3>Vakil AI</h3><p>Legal product positioning, workflow demos, voice-first product stories, and platform launch assets.</p><div class="out">Complex legal workflows made demo-ready.</div></article>
+    <article class="card-surface case" data-vertical="Sports"><div class="badge">Sports</div><h3>World Legends 100</h3><p>Investor-grade sports IP packaging, pitch content, media systems, and sponsor-facing material.</p><div class="out">Global event proposition packaged for sale.</div></article>
+    <article class="card-surface case" data-vertical="Sports"><div class="badge">Sports</div><h3>Mississauga Skyhawks</h3><p>Cricket academy strategy, digital presence, investor narrative, and operational content system.</p><div class="out">Academy story connected to growth plan.</div></article>
+    <article class="card-surface case" data-vertical="Finance"><div class="badge">Finance</div><h3>FinanceWithGagan</h3><p>Insurance education scripts, creator packaging, spoken-copy systems, and consistent publishing assets.</p><div class="out">Repeatable advisor content pipeline.</div></article>
+    <article class="card-surface case" data-vertical="Creator"><div class="badge">Creator</div><h3>Dennis / Complete Athlete</h3><p>Athlete creator positioning, training content, and commercial video formats for audience trust.</p><div class="out">Performance story turned into content system.</div></article>
+    <article class="card-surface case" data-vertical="Retail"><div class="badge">Retail</div><h3>PortCart + Gamini</h3><p>Retail and product storytelling across offer pages, visual systems, and launch-ready collateral.</p><div class="out">Product assets organized for conversion.</div></article>
+    <article class="card-surface case" data-vertical="Retail"><div class="badge">Retail</div><h3>Gloriosa</h3><p>Premium floral brand visuals, social packaging, and service storytelling for high-intent buyers.</p><div class="out">A polished retail story with owned assets.</div></article>
+  </div>
+</section>
+
+<!-- ===== 04 OPERATING WORKFLOW ===== -->
+<section id="workflow" class="band shell reveal">
+  <div class="eyebrow"><span class="idx">04</span><span>Operating Workflow</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">One brief becomes a</span><br><span class="grad">full client-facing system.</span></h2>
+  <p class="copy" style="margin-bottom:44px">Five connected phases. Each phase has a clear deliverable and feeds the next. No random asset generation — every output is intentional and tied to the loop.</p>
+  <div class="flow">
+    <article class="flow-item"><div class="flow-no">01</div><div><h3>Understand the client</h3><p>Audit the business, niche, offer, audience, proof assets, existing website, communication gaps and staff workflow.</p></div></article>
+    <article class="flow-item"><div class="flow-no">02</div><div><h3>Build the story</h3><p>Create scripts, visual direction, messaging, offer hierarchy, content and campaign angle before any random asset generation.</p></div></article>
+    <article class="flow-item"><div class="flow-no">03</div><div><h3>Produce the proof</h3><p>Generate or edit videos, avatar content, social creatives, product visuals, deck pages, treatment explainers and campaign stills.</p></div></article>
+    <article class="flow-item"><div class="flow-no">04</div><div><h3>Install the system</h3><p>Connect website, CRM, WhatsApp, reporting, and follow-up assets so leads stop leaking.</p></div></article>
+    <article class="flow-item"><div class="flow-no">05</div><div><h3>Improve the loop</h3><p>Review performance and turn the best signals into the next sprint.</p></div></article>
+  </div>
+</section>
+
+<!-- ===== 05 PRICING ===== -->
+<section id="pricing" class="band shell reveal">
+  <div class="eyebrow"><span class="idx">05</span><span>Pricing</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">Three ways to</span> <span class="grad">engage CS Media.</span></h2>
+  <p class="copy">Fixed-scope build packages. Pick a lane — AI Presenter content, automation &amp; CRM, or the full end-to-end engine.</p>
+
+  <div class="cat">AI Presenter Packages (Maya)</div>
+  <div class="grid-3">
+    <article class="card-surface price-card"><h3>Maya Starter Presenter</h3><div class="price">₹49,000</div><p>Start publishing professional AI presenter videos.</p><ul><li>Positioning &amp; script direction</li><li>Brand voice setup</li><li>12 short-form presenter scripts</li><li>12 AI presenter videos</li><li>Thumbnails &amp; captions</li><li>WhatsApp lead-flow CTA</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start Maya Starter</button></article>
+    <article class="card-surface price-card featured"><div class="popular">Most popular</div><h3>Maya Growth Presenter</h3><div class="price">₹89,000</div><p>A consistent AI video presence, every month.</p><ul><li>Everything in Starter</li><li>30 AI presenter videos</li><li>Monthly content calendar</li><li>Hook bank &amp; offer messaging</li><li>Reels / shorts formatting</li><li>Basic CRM handoff + review</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Choose Maya Growth</button></article>
+    <article class="card-surface price-card"><h3>Maya Authority System</h3><div class="price">₹1,49,000</div><p>A complete AI-led content engine.</p><ul><li>45–60 AI presenter videos</li><li>Campaign concept &amp; strategy</li><li>Full script suite</li><li>Paid-promotion creatives</li><li>Landing / lead-funnel content</li><li>CRM automation + monthly analytics</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Build Authority System</button></article>
+  </div>
+
+  <div class="cat">Content Automation + CRM</div>
+  <div class="grid-3">
+    <article class="card-surface price-card"><h3>CRM Launch System</h3><div class="price">₹49,000</div><p>Organised lead follow-up, set up fast.</p><ul><li>Lead-capture form / funnel</li><li>Customer inquiry flow</li><li>WhatsApp / call CTA structure</li><li>Basic CRM pipeline setup</li><li>Auto-response + follow-up templates</li><li>Admin handoff &amp; usage guide</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Launch CRM</button></article>
+    <article class="card-surface price-card featured"><div class="popular">Most popular</div><h3>Business Growth Automation</h3><div class="price">₹99,000</div><p>Automation plus marketing content for high-traffic brands.</p><ul><li>Everything in CRM Launch</li><li>Customer segmentation</li><li>Follow-up automation flows</li><li>Campaign landing content</li><li>30 content creatives</li><li>Lead-tracking dashboard + review</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start Growth Automation</button></article>
+    <article class="card-surface price-card"><h3>End-to-End Media + CRM Engine</h3><div class="price">₹1,50,000</div><p>The full brand, content, campaign and automation system.</p><ul><li>Logo &amp; brand-kit direction</li><li>Campaign conceptualisation</li><li>3–4 posts/day planning</li><li>Reels, videos, images, thumbnails</li><li>Investor / sponsor proposals</li><li>Social management + CRM pipeline</li></ul><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Build the Engine</button></article>
+  </div>
+
+  <div class="band-strip">
+    <div>
+      <h3>Beta Trial Presenter — ₹999 one-time</h3>
+      <p>Want to test Maya first? An entry-level trial on your own deck: ~3 min rehearsal, ~5 min live presentation talk-time, and real-time Q&amp;A trained on your knowledge doc. Top-up ₹299 adds 3 more minutes.</p>
+    </div>
+    <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Try for ₹999</button>
+  </div>
+</section>
+
+<!-- ===== 06 ONBOARDING ===== -->
+<section class="band shell reveal">
+  <div class="eyebrow"><span class="idx">06</span><span>Onboarding</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head"><span class="w">Live in</span> <span class="grad">3 days.</span></h2>
+  <div class="grid-4" style="margin-top:38px">
+    <div class="card-surface pad onboard glow-b"><div class="day">Day 0</div><h3>Intake</h3><p>Collect business context, services, proof, offers, FAQs, assets, and contact rules.</p></div>
+    <div class="card-surface pad onboard"><div class="day">Day 1</div><h3>Build</h3><p>Set up the page, CRM logic, lead capture, core offer structure, and contact routing.</p></div>
+    <div class="card-surface pad onboard"><div class="day">Day 2</div><h3>Content</h3><p>Produce the first communication set: service copy, social posts, short-form scripts, and AI assets.</p></div>
+    <div class="card-surface pad onboard glow-r"><div class="day">Day 3</div><h3>Review &amp; Launch</h3><p>Review the system with the client, tighten messaging, connect reporting, and go live.</p></div>
+  </div>
+</section>
+
+<!-- ===== 07 CLIENTS ===== -->
+<section class="band shell reveal">
+  <div class="eyebrow"><span class="idx">07</span><span>Selected Clients</span><span class="marker" aria-hidden="true"><i></i></span></div>
+  <h2 class="head" style="margin-bottom:36px"><span class="w">Brands we</span> <span class="grad">work with</span></h2>
+  <div class="clients">
+    <span class="client-tag">Dr. Nitesh Patil Dental Care</span>
+    <span class="client-tag">Vakil AI</span>
+    <span class="client-tag">World Legends 100</span>
+    <span class="client-tag">Mississauga Skyhawks</span>
+    <span class="client-tag">FinanceWithGagan</span>
+    <span class="client-tag">Complete Athlete</span>
+    <span class="client-tag">PortCart + Gamini</span>
+    <span class="client-tag">Gloriosa</span>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section id="cta" class="band shell reveal">
+  <div class="cta-panel">
+    <h2 class="head" style="margin-bottom:0"><span class="w">Ready to let</span> <span class="grad">AI build</span><br><span class="w">your</span> <span class="grad">growth system?</span></h2>
+    <p>Bring the brief. CS Media will turn it into the story, assets, web surface, and follow-up loop your market can actually respond to.</p>
+    <a href="mailto:info@csmediaandproduction.in?subject=Project%20enquiry" class="btn btn--primary"><span class="dot"></span>Start a project</a>
+    <div class="contact-info">
+      <a href="https://csmediaandproduction.in">csmediaandproduction.in</a>
+      <a href="mailto:info@csmediaandproduction.in">info@csmediaandproduction.in</a>
+      <span>@CSMediaProduction</span>
+    </div>
+  </div>
+</section>
 </main>
+
+<footer>
+  <div class="shell foot">
+    <div>
+      <div class="foot-logo">CS_MEDIA<span>&amp;PROD</span></div>
+      <p>AI-powered content creation, video production, websites, CRM systems, AI presenters, and branded growth assets built as one connected engine.</p>
+    </div>
+    <div>
+      <h4>Navigate</h4>
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#workflow">Process</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="https://csmediaandproduction.in">csmediaandproduction.in</a>
+      <a href="mailto:info@csmediaandproduction.in">info@csmediaandproduction.in</a>
+      <a href="#" data-goto="professional">Professional version →</a>
+      <a href="#" data-goto="casual">Casual version →</a>
+    </div>
+  </div>
+  <div class="shell foot-bottom">© 2026 CS Media &amp; Production. All rights reserved.</div>
+</footer>
+
+<!-- ===== film layers ===== -->
+<div class="flash" id="flash" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ===== CHATBOT ===== -->
+<button class="csai-launch" id="csaiLaunch">✦ Ask our AI</button>
+<div id="csai" aria-hidden="true">
+  <div class="csai-card" role="dialog" aria-label="CS Media AI chat">
+    <div class="csai-head">
+      <div class="csai-title"><span class="csai-dot"></span> CS Media AI</div>
+      <button class="csai-x" id="csaiClose" aria-label="Close">✕</button>
+    </div>
+    <div class="csai-msgs" id="csaiMsgs"></div>
+    <div class="csai-sugg" id="csaiSugg"></div>
+    <form class="csai-input" id="csaiForm" autocomplete="off">
+      <input id="csaiText" placeholder="Ask about services, work, pricing…" />
+      <button type="submit" aria-label="Send">➤</button>
+    </form>
+  </div>
+</div>
 
 <script>
 (() => {
 'use strict';
 
 /* ============================================================
-   1. CONFIG — everything you would want to change is here
+   1. CONFIG — the title sequence
    ============================================================ */
 const CONFIG = {
-  /* Title cards, played in order. Each `lines` array is one card. */
   cards: [
-    { lines: ['NO STUDIO'],            hold: 1050 },
-    { lines: ['NO CREW'],              hold: 1050 },
-    { lines: ['NO RESHOOTS'],          hold: 1200 },
+    { lines: ['NO STUDIO'],   hold: 1050 },
+    { lines: ['NO CREW'],     hold: 1050 },
+    { lines: ['NO RESHOOTS'], hold: 1200 },
     {
       lines: ['CS MEDIA'],
       sub:   'THE AVATAR ENGINE',
       final: true,
       kicker: 'CS Media &amp; Production',
-      lede:  'Your presenter, rendered on demand. Script it, style it, publish it — the same face, the same voice, every language, every channel.',
+      lede:  'AI-powered content, video, websites, CRM, branding & automation — under one connected engine.',
       actions: [
-        { label: 'See the engine', href: '#work',    primary: true },
-        { label: 'Watch the reel', href: '#reel' }
+        { label: 'Start a project', href: '#cta',     primary: true },
+        { label: 'See the work',    href: '#work' }
       ]
     }
   ],
-  cardOut: 520,        // ms the exit animation runs
-  startDelay: 420,     // ms before the first card lands
-  dust: 26,            // floating ember count
-  tilt: 9,             // max parallax tilt in degrees
-  smokePuffs: 30,      // volumetric smoke sprite count
-  oncePerSession: true, // seen the intro already? land on the last card
-
-  /* Lightning. The flash is deliberately gentle and rate-limited:
-     at most two flashes per strike, never less than 190ms apart, and
-     capped in brightness — a strobing hero is a photosensitivity
-     hazard, not a mood. Set `on: false` to remove it entirely.      */
+  cardOut: 520,
+  startDelay: 420,
+  dust: 26,
+  tilt: 9,
+  smokePuffs: 30,
+  oncePerSession: true,
   storm: {
-    on: true,
-    gapMin: 6500,      // ms between strikes, low end
-    gapMax: 15000,     // …and high end
-    flashPeak: 0.20,   // hard ceiling on the full-frame flash opacity
-    flashGap: 190,     // min ms between the two flashes of one strike
-    distantOdds: 0.35, // share of strikes that stay behind the clouds
-    sparksPerStrike: 16
+    on: true, gapMin: 6500, gapMax: 15000,
+    flashPeak: 0.20, flashGap: 190, distantOdds: 0.35, sparksPerStrike: 16
   },
-  sparks: 1            // ambient ember density, 0 turns them off
+  sparks: 1
 };
 
 const $  = (s, r = document) => r.querySelector(s);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* has this visitor already watched the intro in this browsing session? */
 const SEEN = 'cs-cinematic-intro';
-const seenIntro = () => {
-  try { return sessionStorage.getItem(SEEN) === '1'; } catch { return false; }
-};
-const markSeen = () => {
-  try { sessionStorage.setItem(SEEN, '1'); } catch { /* private mode */ }
-};
+const seenIntro = () => { try { return sessionStorage.getItem(SEEN) === '1'; } catch { return false; } };
+const markSeen  = () => { try { sessionStorage.setItem(SEEN, '1'); } catch { /* private mode */ } };
 
 /* ============================================================
-   2. BUILD THE CARDS — one <span> per letter
+   2. MODE SWITCHING — four versions of this site
    ============================================================ */
-const deck   = $('#deck');
-const cards  = [];
+const ROUTES = {
+  professional: '/professional.html',
+  cinematic:    '/cinematic.html',
+  aipresenter:  '/ai-presenter',
+  casual:       '/'
+};
+function goMode(m){
+  try { localStorage.setItem('cs_mode', m); } catch(e){}
+  location.href = ROUTES[m] || ROUTES.professional;
+}
+document.querySelectorAll('.mt-btn').forEach(b => {
+  b.addEventListener('click', () => goMode(b.dataset.mode));
+});
+document.querySelectorAll('[data-goto]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); goMode(a.dataset.goto); });
+});
+
+/* ============================================================
+   3. BUILD THE TITLE CARDS — one <span> per letter
+   ============================================================ */
+const deck  = $('#deck');
+const cards = [];
 
 function makeLine(text, mod){
   const line = document.createElement('div');
   line.className = 'line' + (mod ? ' line--' + mod : '');
   let idx = 0;
   for (const ch of text){
-    if (ch === ' '){
-      const sp = document.createElement('span');
-      sp.className = 'sp';
-      line.appendChild(sp);
-      idx++;
-      continue;
-    }
+    if (ch === ' '){ const sp = document.createElement('span'); sp.className = 'sp'; line.appendChild(sp); idx++; continue; }
     const g = document.createElement('span');
     g.className = 'glyph';
     g.textContent = ch;
@@ -750,27 +1006,15 @@ function makeLine(text, mod){
   return line;
 }
 
-CONFIG.cards.forEach((spec, i) => {
-  const card = document.createElement('section');
+CONFIG.cards.forEach(spec => {
+  const card = document.createElement('div');
   card.className = 'card' + (spec.final ? ' is-final' : '');
   card.style.zIndex = spec.final ? 3 : 2;
 
-  if (spec.kicker){
-    const k = document.createElement('p');
-    k.className = 'kicker';
-    k.innerHTML = spec.kicker;
-    card.appendChild(k);
-  }
-
+  if (spec.kicker){ const k = document.createElement('p'); k.className = 'kicker'; k.innerHTML = spec.kicker; card.appendChild(k); }
   spec.lines.forEach(t => card.appendChild(makeLine(t)));
   if (spec.sub) card.appendChild(makeLine(spec.sub, 'sub'));
-
-  if (spec.lede){
-    const p = document.createElement('p');
-    p.className = 'lede';
-    p.textContent = spec.lede;
-    card.appendChild(p);
-  }
+  if (spec.lede){ const p = document.createElement('p'); p.className = 'lede'; p.textContent = spec.lede; card.appendChild(p); }
 
   if (spec.actions){
     const wrap = document.createElement('div');
@@ -779,11 +1023,7 @@ CONFIG.cards.forEach((spec, i) => {
       const el = document.createElement('a');
       el.className = 'btn' + (a.primary ? ' btn--primary' : '');
       el.href = a.href || '#';
-      if (a.primary){
-        const dot = document.createElement('span');
-        dot.className = 'dot';
-        el.appendChild(dot);
-      }
+      if (a.primary){ const dot = document.createElement('span'); dot.className = 'dot'; el.appendChild(dot); }
       el.appendChild(document.createTextNode(a.label));
       wrap.appendChild(el);
     });
@@ -791,14 +1031,11 @@ CONFIG.cards.forEach((spec, i) => {
   }
 
   deck.appendChild(card);
-  cards.push({ el: card, spec, i });
+  cards.push({ el: card, spec });
 });
 
 /* ============================================================
-   3. CONTINUOUS GRADIENT ACROSS EACH LINE
-   Each letter carries its own copy of the gradient, sized to the
-   full line and shifted by its own offset, so the blue→red sweep
-   runs unbroken while every letter still animates on its own.
+   4. CONTINUOUS GRADIENT + 3D EXTRUSION + FRAME FIT
    ============================================================ */
 function paintGradients(){
   document.querySelectorAll('.line').forEach(line => {
@@ -810,46 +1047,29 @@ function paintGradients(){
   });
 }
 
-/* ============================================================
-   4. 3D EXTRUSION — build the text-shadow depth stack once
-   ============================================================ */
 function paintDepth(){
-  const steps = parseInt(getComputedStyle(document.documentElement)
-                  .getPropertyValue('--extrude'), 10) || 12;
+  const steps = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--extrude'), 10) || 12;
   const parts = [];
   for (let d = 1; d <= steps; d++){
     const t = d / steps;
-    // light sits high and slightly left, so the body falls down-right
-    const x = (d * 0.42).toFixed(2);
-    const y = (d * 1.00).toFixed(2);
-    const a = (0.86 - t * 0.62).toFixed(3);
-    parts.push(`${x}px ${y}px 0 rgba(3,4,14,${a})`);
+    parts.push(`${(d * 0.42).toFixed(2)}px ${(d * 1).toFixed(2)}px 0 rgba(3,4,14,${(0.86 - t * 0.62).toFixed(3)})`);
   }
-  // soft contact shadow so the type sits in the smoke, not on top of it
   parts.push(`${steps * 0.5}px ${steps + 8}px ${steps + 20}px rgba(0,0,0,.7)`);
   parts.push(`0 2px 2px rgba(0,0,0,.5)`);
   document.documentElement.style.setProperty('--depth', parts.join(','));
 }
 
-/* ============================================================
-   4b. FIT EACH LINE TO THE FRAME
-   Title cards read best when every card fills the same optical
-   width, so the font-size is measured per line instead of being
-   left to a viewport formula.
-   ============================================================ */
 function fitLines(){
   const w = deck.clientWidth, h = deck.clientHeight;
   if (!w || !h) return;
-
   cards.forEach(({ el, spec }) => {
     const final = !!spec.final;
     el.querySelectorAll('.line').forEach(line => {
-      line.style.fontSize = '';                       // back to the CSS clamp
+      line.style.fontSize = '';
       const sub     = line.classList.contains('line--sub');
       const base    = parseFloat(getComputedStyle(line).fontSize);
-      const natural = line.offsetWidth;               // shrink-to-fit width
+      const natural = line.offsetWidth;
       if (!natural || !base) return;
-
       const widthCap  = w * (sub ? 0.62 : final ? 0.76 : 0.90);
       const heightCap = h * (sub ? 0.11 : final ? 0.26 : 0.44);
       const size = Math.min(base * (widthCap / natural), heightCap, sub ? 150 : 300);
@@ -868,37 +1088,30 @@ const wait = (ms, fn) => timers.push(setTimeout(fn, ms));
 function show(card){
   card.el.classList.remove('is-out');
   card.el.classList.add('is-live');
-  // let the browser paint the entrance state once, then animate —
-  // otherwise the transition can be skipped entirely
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    card.el.classList.add('is-in');
-  }));
+  requestAnimationFrame(() => requestAnimationFrame(() => card.el.classList.add('is-in')));
 }
 function hide(card){
   card.el.classList.remove('is-in');
   card.el.classList.add('is-out');
-  wait(CONFIG.cardOut + 200, () => {
-    card.el.classList.remove('is-live', 'is-out');
-  });
+  wait(CONFIG.cardOut + 200, () => card.el.classList.remove('is-live', 'is-out'));
 }
 
 function play(from = 0){
   clearTimers();
   cards.forEach(c => c.el.classList.remove('is-live', 'is-in', 'is-out'));
+  $('#cue').classList.remove('is-on');
   $('#replay').hidden = true;
   $('#skip').hidden   = false;
 
   let t = CONFIG.startDelay;
   for (let i = from; i < cards.length; i++){
     const card = cards[i];
-    const letters = card.el.querySelectorAll('.glyph').length;
-    const inMs    = 900 + letters * 34;
-    const hold    = card.spec.hold || 0;
-
+    const inMs = 900 + card.el.querySelectorAll('.glyph').length * 34;
+    const hold = card.spec.hold || 0;
     wait(t, () => show(card));
-
     if (card.spec.final){
       wait(t + 600, () => {
+        $('#cue').classList.add('is-on');
         $('#skip').hidden   = true;
         $('#replay').hidden = false;
         markSeen();
@@ -913,8 +1126,8 @@ function play(from = 0){
 function skipToEnd(){
   clearTimers();
   cards.forEach(c => c.el.classList.remove('is-live', 'is-in', 'is-out'));
-  const last = cards[cards.length - 1];
-  show(last);
+  show(cards[cards.length - 1]);
+  $('#cue').classList.add('is-on');
   $('#skip').hidden   = true;
   $('#replay').hidden = false;
   markSeen();
@@ -922,33 +1135,26 @@ function skipToEnd(){
 
 $('#skip').addEventListener('click', skipToEnd);
 $('#replay').addEventListener('click', () => play(0));
-addEventListener('keydown', e => {
-  if (e.key === 'Escape') skipToEnd();
-});
+addEventListener('keydown', e => { if (e.key === 'Escape') skipToEnd(); });
 
 /* ============================================================
-   6. POINTER PARALLAX — the whole deck tilts in 3D
+   6. POINTER PARALLAX
    ============================================================ */
-const deckEl = deck;
-let tx = 0, ty = 0, cx = 0, cy = 0, rafTilt = 0;
-
+let tx = 0, ty = 0, cx = 0, cy = 0;
 function tiltLoop(){
   cx += (tx - cx) * 0.08;
   cy += (ty - cy) * 0.08;
-  deckEl.style.transform =
-    `rotateX(${(-cy * CONFIG.tilt).toFixed(2)}deg) ` +
-    `rotateY(${( cx * CONFIG.tilt).toFixed(2)}deg) ` +
+  deck.style.transform =
+    `rotateX(${(-cy * CONFIG.tilt).toFixed(2)}deg) rotateY(${(cx * CONFIG.tilt).toFixed(2)}deg) ` +
     `translate3d(${(cx * 14).toFixed(1)}px, ${(cy * 10).toFixed(1)}px, 0)`;
-  rafTilt = requestAnimationFrame(tiltLoop);
+  requestAnimationFrame(tiltLoop);
 }
-
 if (!reduced && matchMedia('(hover: hover)').matches){
-  deckEl.style.transition = 'none';
+  deck.style.transition = 'none';
   addEventListener('pointermove', e => {
     tx = (e.clientX / innerWidth  - 0.5) * 2;
     ty = (e.clientY / innerHeight - 0.5) * 2;
   }, { passive: true });
-  addEventListener('pointerleave', () => { tx = 0; ty = 0; });
   tiltLoop();
 }
 
@@ -961,10 +1167,10 @@ if (!reduced){
   for (let i = 0; i < CONFIG.dust; i++){
     const d = document.createElement('i');
     const dur = 10 + Math.random() * 16;
-    d.style.left            = (Math.random() * 100).toFixed(2) + '%';
+    d.style.left = (Math.random() * 100).toFixed(2) + '%';
     d.style.animationDuration = dur.toFixed(2) + 's';
-    d.style.animationDelay    = (-Math.random() * dur).toFixed(2) + 's';
-    d.style.opacity           = (0.3 + Math.random() * 0.6).toFixed(2);
+    d.style.animationDelay = (-Math.random() * dur).toFixed(2) + 's';
+    d.style.opacity = (0.3 + Math.random() * 0.6).toFixed(2);
     const s = (0.7 + Math.random() * 1.9).toFixed(2);
     d.style.width = d.style.height = s + 'px';
     if (i % 2) d.style.boxShadow = '0 0 9px rgba(255,120,140,.85)';
@@ -974,12 +1180,12 @@ if (!reduced){
 }
 
 /* ============================================================
-   8. VOLUMETRIC SMOKE — additive sprite field, GPU-blurred
+   8. VOLUMETRIC SMOKE
    ============================================================ */
 const canvas = $('#smoke');
 const ctx    = canvas.getContext('2d', { alpha: false });
-const SCALE  = 0.42;                       // render small, blur big
-let W = 0, H = 0, puffs = [], sprites = [], rafSmoke = 0, tSmoke = 0;
+const SCALE  = 0.42;
+let W = 0, H = 0, puffs = [], sprites = [], rafId = 0, tLast = 0;
 let pointer = { x: 0.5, y: 0.5 };
 
 function makeSprite(rgb){
@@ -991,29 +1197,21 @@ function makeSprite(rgb){
   g.addColorStop(0.35, `rgba(${rgb},0.34)`);
   g.addColorStop(0.70, `rgba(${rgb},0.08)`);
   g.addColorStop(1.00, `rgba(${rgb},0)`);
-  c.fillStyle = g;
-  c.fillRect(0, 0, 256, 256);
+  c.fillStyle = g; c.fillRect(0, 0, 256, 256);
   return s;
 }
-
 function seedSmoke(){
-  sprites = [
-    makeSprite('54,116,255'),   // blue
-    makeSprite('255,42,64'),    // red
-    makeSprite('118,74,214'),   // violet crossover
-    makeSprite('150,170,225')   // cool grey body
-  ];
+  sprites = [ makeSprite('54,116,255'), makeSprite('255,42,64'), makeSprite('118,74,214'), makeSprite('150,170,225') ];
   puffs = [];
   for (let i = 0; i < CONFIG.smokePuffs; i++){
-    // blue puffs bias left, red puffs bias right — like the reference
     const kind = i % 4;
     const bias = kind === 0 ? 0.30 : kind === 1 ? 0.72 : 0.5;
     puffs.push({
-      k:  kind,
-      x:  bias + (Math.random() - 0.5) * 0.55,
-      y:  Math.random(),
-      r:  0.22 + Math.random() * 0.46,
-      a:  0.06 + Math.random() * 0.16,
+      k: kind,
+      x: bias + (Math.random() - 0.5) * 0.55,
+      y: Math.random(),
+      r: 0.22 + Math.random() * 0.46,
+      a: 0.06 + Math.random() * 0.16,
       vx: (Math.random() - 0.5) * 0.00016,
       vy: -0.00006 - Math.random() * 0.00016,
       ph: Math.random() * Math.PI * 2,
@@ -1021,83 +1219,63 @@ function seedSmoke(){
     });
   }
 }
-
 function sizeSmoke(){
   W = canvas.width  = Math.max(2, Math.round(innerWidth  * 1.16 * SCALE));
   H = canvas.height = Math.max(2, Math.round(innerHeight * 1.16 * SCALE));
 }
-
 function drawSmoke(dt){
   ctx.globalCompositeOperation = 'source-over';
   ctx.fillStyle = '#04050b';
   ctx.fillRect(0, 0, W, H);
-
   ctx.globalCompositeOperation = 'lighter';
   const base = Math.max(W, H);
-
   for (const p of puffs){
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-    p.ph += 0.00022 * p.sp * dt;
-
-    if (p.y < -0.35) { p.y = 1.3; p.x = Math.random(); }
-    if (p.x < -0.4)  p.x = 1.3;
-    if (p.x > 1.4)   p.x = -0.3;
-
-    // turbulence + a gentle lean toward the pointer
-    const wob  = Math.sin(p.ph) * 0.06 + Math.cos(p.ph * 0.63) * 0.035;
-    const lean = (pointer.x - 0.5) * 0.05;
+    p.x += p.vx * dt; p.y += p.vy * dt; p.ph += 0.00022 * p.sp * dt;
+    if (p.y < -0.35){ p.y = 1.3; p.x = Math.random(); }
+    if (p.x < -0.4) p.x = 1.3;
+    if (p.x > 1.4)  p.x = -0.3;
+    const wob   = Math.sin(p.ph) * 0.06 + Math.cos(p.ph * 0.63) * 0.035;
+    const lean  = (pointer.x - 0.5) * 0.05;
     const pulse = 1 + Math.sin(p.ph * 1.4) * 0.16;
-
     const r = p.r * base * pulse;
-    const x = (p.x + wob + lean) * W - r / 2;
-    const y = (p.y + Math.cos(p.ph * 0.8) * 0.03) * H - r / 2;
-
     ctx.globalAlpha = p.a * (0.65 + 0.35 * Math.sin(p.ph * 0.9));
-    ctx.drawImage(sprites[p.k], x, y, r, r);
+    ctx.drawImage(sprites[p.k], (p.x + wob + lean) * W - r / 2,
+                  (p.y + Math.cos(p.ph * 0.8) * 0.03) * H - r / 2, r, r);
   }
   ctx.globalAlpha = 1;
 }
 
 /* ============================================================
    8b. STORM — lightning, cloud illumination and sparks
-   One canvas, screen-blended, sitting behind the type so a strike
-   lights the scene without ever competing with the headline.
    ============================================================ */
-const storm    = $('#storm');
-const sctx     = storm.getContext('2d');
-const flashEl  = $('#flash');
-const SDPR     = Math.min(2, devicePixelRatio || 1);
+const storm   = $('#storm');
+const sctx    = storm.getContext('2d');
+const flashEl = $('#flash');
+const SDPR    = Math.min(2, devicePixelRatio || 1);
 const TINTS = [
-  { bolt: '150,195,255', glow: '47,123,255', side: 0.28 },  // blue, stage left
-  { bolt: '255,170,180', glow: '255,36,54',  side: 0.74 }   // red,  stage right
+  { bolt: '150,195,255', glow: '47,123,255', side: 0.28 },
+  { bolt: '255,170,180', glow: '255,36,54',  side: 0.74 }
 ];
-
 let SW = 0, SH = 0, strikes = [], sparks = [], nextStrike = 0, lastFlash = '0';
 const rnd = (a, b) => a + Math.random() * (b - a);
 
-/* one glow sprite per tint — drawImage is far cheaper than asking the
-   canvas for a shadowBlur on every ember, every frame */
 const sparkSprite = {};
 function makeSparkSprite(rgb){
   const c = document.createElement('canvas');
   c.width = c.height = 64;
-  const g = c.getContext('2d').createRadialGradient(32, 32, 0, 32, 32, 32);
+  const cc = c.getContext('2d');
+  const g = cc.createRadialGradient(32, 32, 0, 32, 32, 32);
   g.addColorStop(0.00, 'rgba(255,250,242,1)');
   g.addColorStop(0.22, `rgba(${rgb},0.85)`);
   g.addColorStop(0.55, `rgba(${rgb},0.22)`);
   g.addColorStop(1.00, `rgba(${rgb},0)`);
-  const cc = c.getContext('2d');
   cc.fillStyle = g; cc.fillRect(0, 0, 64, 64);
   return c;
 }
-
 function sizeStorm(){
   SW = storm.width  = Math.max(2, Math.round(innerWidth  * SDPR));
   SH = storm.height = Math.max(2, Math.round(innerHeight * SDPR));
 }
-
-/* midpoint displacement — the classic jagged bolt */
 function boltPath(x0, y0, x1, y1, detail, spread){
   let pts = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
   for (let i = 0; i < detail; i++){
@@ -1107,70 +1285,19 @@ function boltPath(x0, y0, x1, y1, detail, spread){
       const dx = b.x - a.x, dy = b.y - a.y;
       const len = Math.hypot(dx, dy) || 1;
       const off = (Math.random() - 0.5) * len * spread;
-      next.push(a, { x: (a.x + b.x) / 2 - dy / len * off,
-                     y: (a.y + b.y) / 2 + dx / len * off });
+      next.push(a, { x: (a.x + b.x) / 2 - dy / len * off, y: (a.y + b.y) / 2 + dx / len * off });
     }
     next.push(pts[pts.length - 1]);
-    pts = next;
-    spread *= 0.62;
+    pts = next; spread *= 0.62;
   }
   return pts;
 }
-
-function makeStrike(){
-  const S = CONFIG.storm;
-  const tint    = TINTS[Math.random() < 0.5 ? 0 : 1];
-  const distant = Math.random() < S.distantOdds;
-
-  const x0 = SW * (tint.side + rnd(-0.14, 0.14));
-  const y0 = SH * rnd(-0.04, 0.06);
-  const x1 = x0 + SW * rnd(-0.18, 0.18);
-  const y1 = SH * rnd(0.52, 0.86);
-
-  const main = distant ? null : boltPath(x0, y0, x1, y1, 6, 0.34);
-  const forks = [];
-  if (main){
-    const n = Math.round(rnd(2, 4));
-    for (let i = 0; i < n; i++){
-      const at = main[Math.floor(rnd(main.length * 0.3, main.length * 0.82))];
-      forks.push(boltPath(at.x, at.y,
-        at.x + SW * rnd(-0.13, 0.13), at.y + SH * rnd(0.06, 0.2), 4, 0.42));
-    }
-    // embers thrown off along the lower run of the bolt
-    burstSparks(main, S.sparksPerStrike, tint);
-  }
-
-  // the cloud illumination is one gradient, built once and faded with alpha
-  const gy = y0 + SH * 0.06;
-  const glowR = SW * (distant ? 0.55 : 0.42);
-  const grad = sctx.createRadialGradient(x0, gy, 0, x0, gy, glowR);
-  grad.addColorStop(0,   `rgba(${tint.glow},1)`);
-  grad.addColorStop(0.4, `rgba(${tint.glow},0.35)`);
-  grad.addColorStop(1,   `rgba(${tint.glow},0)`);
-
-  // two flashes maximum, spaced past the rate limit
-  const peak = S.flashPeak * (distant ? 0.5 : 1);
-  return {
-    tint, main, forks, distant, grad, glowR,
-    age: 0,
-    life: 900,
-    gx: x0, gy,
-    flashes: [
-      { at: 0,                        peak: peak,        fall: 150 },
-      { at: S.flashGap + rnd(0, 90),  peak: peak * 0.62, fall: 210 }
-    ]
-  };
-}
-
-/* Embers come off the whole lower run of the bolt, not one point, and
-   they arrive staggered at mixed speeds — a single radial burst from a
-   single instant reads as a firework, not a strike. */
 function burstSparks(pts, n, tint){
   const from = Math.floor(pts.length * 0.5);
   for (let i = 0; i < n; i++){
     const o = pts[Math.floor(rnd(from, pts.length))];
     const fast = Math.random() < 0.22;
-    const a = rnd(-Math.PI * 0.96, Math.PI * 0.16);   // mostly up and out
+    const a = rnd(-Math.PI * 0.96, Math.PI * 0.16);
     const v = (fast ? rnd(0.15, 0.30) : rnd(0.02, 0.11)) * SDPR;
     sparks.push({
       x: o.x + rnd(-4, 4) * SDPR, y: o.y + rnd(-4, 4) * SDPR,
@@ -1182,7 +1309,6 @@ function burstSparks(pts, n, tint){
     });
   }
 }
-
 function ambientSpark(){
   const tint = TINTS[Math.random() < 0.5 ? 0 : 1];
   sparks.push({
@@ -1193,7 +1319,40 @@ function ambientSpark(){
     tint: tint.bolt, hot: 0, seed: Math.random() * 6.283
   });
 }
-
+function makeStrike(){
+  const S = CONFIG.storm;
+  const tint = TINTS[Math.random() < 0.5 ? 0 : 1];
+  const distant = Math.random() < S.distantOdds;
+  const x0 = SW * (tint.side + rnd(-0.14, 0.14));
+  const y0 = SH * rnd(-0.04, 0.06);
+  const x1 = x0 + SW * rnd(-0.18, 0.18);
+  const y1 = SH * rnd(0.52, 0.86);
+  const main = distant ? null : boltPath(x0, y0, x1, y1, 6, 0.34);
+  const forks = [];
+  if (main){
+    const n = Math.round(rnd(2, 4));
+    for (let i = 0; i < n; i++){
+      const at = main[Math.floor(rnd(main.length * 0.3, main.length * 0.82))];
+      forks.push(boltPath(at.x, at.y, at.x + SW * rnd(-0.13, 0.13), at.y + SH * rnd(0.06, 0.2), 4, 0.42));
+    }
+    burstSparks(main, S.sparksPerStrike, tint);
+  }
+  const gy = y0 + SH * 0.06;
+  const glowR = SW * (distant ? 0.55 : 0.42);
+  const grad = sctx.createRadialGradient(x0, gy, 0, x0, gy, glowR);
+  grad.addColorStop(0,   `rgba(${tint.glow},1)`);
+  grad.addColorStop(0.4, `rgba(${tint.glow},0.35)`);
+  grad.addColorStop(1,   `rgba(${tint.glow},0)`);
+  const peak = S.flashPeak * (distant ? 0.5 : 1);
+  return {
+    tint, main, forks, distant, grad, glowR,
+    age: 0, life: 900, gx: x0, gy,
+    flashes: [
+      { at: 0, peak, fall: 150 },
+      { at: S.flashGap + rnd(0, 90), peak: peak * 0.62, fall: 210 }
+    ]
+  };
+}
 function strokePath(pts, rgb, width, alpha, blur){
   if (!pts) return;
   sctx.beginPath();
@@ -1205,21 +1364,17 @@ function strokePath(pts, rgb, width, alpha, blur){
   sctx.shadowBlur  = blur * SDPR;
   sctx.stroke();
 }
-
 function drawStorm(dt, now){
   sctx.clearRect(0, 0, SW, SH);
   sctx.globalCompositeOperation = 'lighter';
-  sctx.lineCap = 'round';
-  sctx.lineJoin = 'round';
+  sctx.lineCap = 'round'; sctx.lineJoin = 'round';
 
-  /* --- strikes ------------------------------------------------ */
   let flashNow = 0;
   for (let i = strikes.length - 1; i >= 0; i--){
     const s = strikes[i];
     s.age += dt;
     if (s.age > s.life){ strikes.splice(i, 1); continue; }
 
-    // the clouds light from within, and fade over the whole life
     const decay = Math.max(0, 1 - s.age / s.life);
     sctx.shadowBlur = 0;
     sctx.globalAlpha = decay * decay * (s.distant ? 0.5 : 0.42);
@@ -1227,7 +1382,6 @@ function drawStorm(dt, now){
     sctx.fillRect(s.gx - s.glowR, s.gy - s.glowR, s.glowR * 2, s.glowR * 2);
     sctx.globalAlpha = 1;
 
-    // the bolt itself only exists during the flash windows
     for (const f of s.flashes){
       const t = s.age - f.at;
       if (t < 0 || t > f.fall) continue;
@@ -1236,7 +1390,7 @@ function drawStorm(dt, now){
       if (!s.main) continue;
       strokePath(s.main, s.tint.bolt, 9,   0.30 * k, 30);
       strokePath(s.main, s.tint.bolt, 3.4, 0.62 * k, 16);
-      strokePath(s.main, '255,255,255',1.5, 0.95 * k, 9);
+      strokePath(s.main, '255,255,255', 1.5, 0.95 * k, 9);
       sctx.shadowBlur = 0;
       for (const fk of s.forks){
         strokePath(fk, s.tint.bolt, 2.2, 0.34 * k, 0);
@@ -1248,31 +1402,26 @@ function drawStorm(dt, now){
   const fv = flashNow.toFixed(3);
   if (fv !== lastFlash){ flashEl.style.opacity = fv; lastFlash = fv; }
   if (flashNow > 0.001 && strikes.length){
-    const s = strikes[strikes.length - 1];
-    flashEl.style.setProperty('--fx', (s.gx / SW * 100).toFixed(1) + '%');
+    flashEl.style.setProperty('--fx', (strikes[strikes.length - 1].gx / SW * 100).toFixed(1) + '%');
     flashEl.style.setProperty('--fy', '14%');
   }
 
-  /* --- sparks -------------------------------------------------- */
   for (let i = sparks.length - 1; i >= 0; i--){
     const p = sparks[i];
     p.age += dt;
     if (p.age > p.life){ sparks.splice(i, 1); continue; }
-
-    if (p.age < p.delay) continue;                       // staggered arrival
+    if (p.age < p.delay) continue;
 
     const px = p.x, py = p.y;
-    p.vy += 0.00007 * dt * SDPR * (p.hot ? 1 : 0.2);     // gravity
-    p.vx += Math.sin(p.age * 0.004 + p.seed) * 0.000018 * dt * SDPR;  // curl
-    p.vx *= 0.9985; p.vy *= 0.9985;                      // drag
-    p.x  += p.vx * dt;
-    p.y  += p.vy * dt;
+    p.vy += 0.00007 * dt * SDPR * (p.hot ? 1 : 0.2);
+    p.vx += Math.sin(p.age * 0.004 + p.seed) * 0.000018 * dt * SDPR;
+    p.vx *= 0.9985; p.vy *= 0.9985;
+    p.x += p.vx * dt; p.y += p.vy * dt;
 
-    const fade = 1 - (p.age - p.delay) / (p.life - p.delay);
+    const fade  = 1 - (p.age - p.delay) / (p.life - p.delay);
     const flick = 0.55 + 0.45 * Math.sin(p.age * 0.02 + p.seed);
     const a = Math.max(0, fade) * flick * (p.hot ? 0.9 : 0.45);
 
-    // trail, clipped short so a fast ember streaks instead of drawing a ray
     const dx = p.x - px, dy = p.y - py, d = Math.hypot(dx, dy);
     if (d > 0.01){
       const cap = Math.min(d, p.size * 5);
@@ -1283,7 +1432,6 @@ function drawStorm(dt, now){
       sctx.lineTo(p.x, p.y);
       sctx.stroke();
     }
-
     const spr = sparkSprite[p.tint] || (sparkSprite[p.tint] = makeSparkSprite(p.tint));
     const r = p.size * 6;
     sctx.globalAlpha = a;
@@ -1291,7 +1439,6 @@ function drawStorm(dt, now){
     sctx.globalAlpha = 1;
   }
 
-  /* --- scheduling ---------------------------------------------- */
   if (CONFIG.storm.on && now > nextStrike){
     strikes.push(makeStrike());
     nextStrike = now + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
@@ -1301,12 +1448,12 @@ function drawStorm(dt, now){
   }
 }
 
-function smokeLoop(now){
-  const dt = Math.min(64, now - tSmoke || 16);
-  tSmoke = now;
+function loop(now){
+  const dt = Math.min(64, now - tLast || 16);
+  tLast = now;
   drawSmoke(dt);
   drawStorm(dt, now);
-  rafSmoke = requestAnimationFrame(smokeLoop);
+  rafId = requestAnimationFrame(loop);
 }
 
 addEventListener('pointermove', e => {
@@ -1314,31 +1461,125 @@ addEventListener('pointermove', e => {
   pointer.y = e.clientY / innerHeight;
 }, { passive: true });
 
-/* pause the heavy loop when the tab is hidden */
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden){ cancelAnimationFrame(rafSmoke); rafSmoke = 0; }
-  else if (!rafSmoke && !reduced){
-    tSmoke = performance.now();
-    nextStrike = tSmoke + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
-    rafSmoke = requestAnimationFrame(smokeLoop);
+  if (document.hidden){ cancelAnimationFrame(rafId); rafId = 0; }
+  else if (!rafId && !reduced){
+    tLast = performance.now();
+    nextStrike = tLast + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
+    rafId = requestAnimationFrame(loop);
   }
 });
 
 /* ============================================================
-   9. BOOT
+   9. THE SITE — nav, reveal, counters, filters, chat
+   ============================================================ */
+const nav = $('#nav');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+
+// the weather drops back once the hero is behind you
+const heroObs = new IntersectionObserver(
+  e => document.body.classList.toggle('past-hero', !e[0].isIntersecting),
+  { threshold: 0.12 }
+);
+heroObs.observe($('#stage'));
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) en.target.classList.add('in-view'); });
+}, { threshold: .1, rootMargin: '0px 0px -6% 0px' });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting || en.target.dataset.done) return;
+    en.target.dataset.done = '1';
+    const target = Number(en.target.dataset.count), start = performance.now(), dur = 1200;
+    const tick = n => {
+      const p = Math.min(1, (n - start) / dur);
+      en.target.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString('en-IN');
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+}, { threshold: .45 });
+document.querySelectorAll('[data-count]').forEach(c => countObs.observe(c));
+
+const fBtns = document.querySelectorAll('[data-filter]');
+const fCases = document.querySelectorAll('.case[data-vertical]');
+fBtns.forEach(b => b.addEventListener('click', () => {
+  const f = b.dataset.filter;
+  fBtns.forEach(x => x.classList.toggle('active', x === b));
+  fCases.forEach(c => { c.style.display = (f === 'All' || c.dataset.vertical === f) ? '' : 'none'; });
+}));
+
+/* Chatbot — shares the /api/chat knowledge base with the other versions */
+(function(){
+  const panel = $('#csai'), msgs = $('#csaiMsgs'), form = $('#csaiForm'), input = $('#csaiText'), sugg = $('#csaiSugg');
+  const history = []; let greeted = false;
+  function add(text, who){
+    const d = document.createElement('div');
+    d.className = 'csai-m ' + who;
+    d.innerHTML = text
+      .replace(/info@csmediaandproduction\.in/g, '<a href="mailto:info@csmediaandproduction.in">info@csmediaandproduction.in</a>')
+      .replace(/csmediaandproduction\.in(?!<)/g, '<a href="https://csmediaandproduction.in" target="_blank" rel="noopener">csmediaandproduction.in</a>');
+    msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return d;
+  }
+  const SUGG = ['What services do you offer?','Tell me about Maya AI Presenter','How does pricing work?','Who have you worked with?'];
+  function buildSugg(){
+    sugg.innerHTML = '';
+    SUGG.forEach(s => {
+      const c = document.createElement('button');
+      c.type = 'button'; c.className = 'csai-chip'; c.textContent = s;
+      c.onclick = () => { input.value = s; form.requestSubmit(); };
+      sugg.appendChild(c);
+    });
+  }
+  function openPanel(){
+    panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); input.focus();
+    if (!greeted){
+      greeted = true;
+      add("Hi! I'm the CS Media & Production AI ✦ — ask me about our services, Maya AI Presenter, packages & pricing, or how to get started.", 'bot');
+      buildSugg();
+    }
+  }
+  function closePanel(){ panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+  function ask(q){
+    return fetch('/api/chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'glm-4-flash', temperature: 0.4, messages: history.concat([{ role: 'user', content: q }]) })
+    }).then(r => { if (!r.ok) throw 0; return r.json(); })
+      .then(d => d.choices[0].message.content.trim());
+  }
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const q = input.value.trim(); if (!q) return;
+    add(q, 'me'); input.value = '';
+    history.push({ role: 'user', content: q });
+    const thinking = add('…', 'bot');
+    ask(q).then(reply => {
+      thinking.textContent = reply;
+      thinking.innerHTML = thinking.innerHTML;
+      history.push({ role: 'assistant', content: reply });
+      msgs.scrollTop = msgs.scrollHeight;
+    }).catch(() => {
+      thinking.textContent = "I'm having trouble right now — please email info@csmediaandproduction.in and we'll help.";
+    });
+  });
+  $('#csaiLaunch').addEventListener('click', e => { e.preventDefault(); openPanel(); });
+  $('#csaiClose').addEventListener('click', closePanel);
+  panel.addEventListener('click', e => { if (e.target === panel) closePanel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+})();
+
+/* ============================================================
+   10. BOOT
    ============================================================ */
 let resizeTimer = 0;
-function onResize(){
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    sizeSmoke();
-    sizeStorm();
-    fitLines();
-    paintGradients();
-  }, 120);
-}
 addEventListener('resize', onResize);
 addEventListener('orientationchange', onResize);
+function onResize(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { sizeSmoke(); sizeStorm(); fitLines(); paintGradients(); }, 120);
+}
 
 let booted = false;
 function boot(){
@@ -1352,10 +1593,10 @@ function boot(){
   nextStrike = performance.now() + 2600;
 
   if (!reduced){
-    rafSmoke = requestAnimationFrame(smokeLoop);
+    rafId = requestAnimationFrame(loop);
   } else {
-    CONFIG.storm.on = false;   // no flashing under reduced motion
-    drawSmoke(16);             // one static frame — no animation loop
+    CONFIG.storm.on = false;
+    drawSmoke(16);
   }
 
   if (reduced || (CONFIG.oncePerSession && seenIntro())) skipToEnd();
@@ -1363,16 +1604,20 @@ function boot(){
 }
 
 seedSmoke();
-
-/* wait for the display font so letter widths — and therefore the
-   gradient offsets — are measured against the real glyphs        */
 if (document.fonts && document.fonts.ready){
   document.fonts.ready.then(boot);
-  setTimeout(boot, 2500);            // safety net if the webfont never resolves
+  setTimeout(boot, 2500);
 } else {
   addEventListener('load', boot);
 }
 })();
 </script>
+
+<!-- ===== BendyButton 3D key — CS Media & Production ===== -->
+<link rel="stylesheet" href="/bendy3d.css">
+<link rel="stylesheet" href="/csmedia-bendy.css">
+<script src="/bendy3d.js"></script>
+<script src="/csmedia-bendy-init.js" data-mode="3d"></script>
+<!-- ===================================================== -->
 </body>
 </html>

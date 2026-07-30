@@ -34,7 +34,10 @@
     // fun.html is the loosest page on the site; let it bounce hardest.
     fun:       { mode: 'bend', strength: 22, stiffness: 0.12, damping: 0.60, press: 0.930, label: 0.58 },
     // The gallery is a working tool, not a showpiece. Keep it crisp.
-    gallery:   { mode: 'bend', strength: 11, stiffness: 0.21, damping: 0.85, press: 0.975, label: 0.35 }
+    gallery:   { mode: 'bend', strength: 11, stiffness: 0.21, damping: 0.85, press: 0.975, label: 0.35 },
+    // The cinematic version is a title sequence. Controls move like the type:
+    // deliberate, weighted, no wobble.
+    cinematic: { mode: 'bend', strength: 9,  stiffness: 0.22, damping: 0.88, press: 0.972, label: 0.32 }
   };
 
   /* 3D-key feel per version — tilt and wall height instead of bend strength. */
@@ -43,7 +46,8 @@
     presenter: { tilt: 12, depth: 7,  press: 0.975, gloss: 0.10, damping: 0.76 },
     casual:    { tilt: 16, depth: 10, press: 0.965, gloss: 0.13, damping: 0.70 },
     fun:       { tilt: 18, depth: 11, press: 0.960, gloss: 0.14, damping: 0.66 },
-    gallery:   { tilt: 10, depth: 5,  press: 0.982, gloss: 0.08, damping: 0.84 }
+    gallery:   { tilt: 10, depth: 5,  press: 0.982, gloss: 0.08, damping: 0.84 },
+    cinematic: { tilt: 11, depth: 6,  press: 0.980, gloss: 0.06, damping: 0.83 }
   };
 
   /* ------------------------------------------------------------- selectors */
@@ -101,6 +105,7 @@
     // 2. The path is unambiguous where it exists, so trust it before styles.
     var p = location.pathname;
     if (/ai-presenter/i.test(p)) return 'presenter';
+    if (/cinematic/i.test(p)) return 'cinematic';
     if (/professional/i.test(p)) return 'pro';
     if (/\bfun\b/i.test(p)) return 'fun';
     if (/gallery/i.test(p)) return 'gallery';
@@ -117,6 +122,7 @@
     try {
       var m = localStorage.getItem('cs_mode');
       if (m === 'professional') return 'pro';
+      if (m === 'cinematic') return 'cinematic';
       if (m === 'casual') return 'casual';
     } catch (e) {}
 
@@ -200,6 +206,17 @@
         var engine = EFFECT === '3d' ? window.Bendy3D : window.BendyButton;
         if (engine) engine.refresh();
       });
+    }
+
+    // With four versions the switcher scrolls sideways on a phone, so the
+    // version you are actually on can start off-screen. Bring it into view
+    // inside its own track — never the page.
+    var active = document.querySelector('.mode-toggle .mt-btn.active');
+    if (active && active.scrollIntoView) {
+      var track = active.parentElement;
+      if (track && track.scrollWidth > track.clientWidth) {
+        track.scrollLeft = active.offsetLeft - (track.clientWidth - active.offsetWidth) / 2;
+      }
     }
   }
 
