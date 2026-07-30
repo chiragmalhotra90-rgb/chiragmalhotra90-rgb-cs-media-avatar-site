@@ -1080,34 +1080,6 @@ nav{max-width:1520px;}
       <article class="card counter-card"><div class="value">3-day</div><div class="label">launch sprints</div></article>
     </div>
   </section>
-  <style>
-    #corridor-3d .scene-wrap{position:relative;width:100%;height:72vh;min-height:420px;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);margin-top:26px;background:#04140e;}
-    #corridor-3d #scene{position:absolute;inset:0;}
-    #corridor-3d #scene canvas{display:block;width:100%!important;height:100%!important;}
-    .corridor-poster{position:absolute;inset:0;width:100%;height:100%;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(120% 90% at 50% 118%, color-mix(in srgb,var(--accent) 24%,transparent), transparent 60%),#050d0a;overflow:hidden;}
-    .corridor-poster .cp-grid{position:absolute;left:-30%;right:-30%;bottom:-10%;height:120%;background:repeating-linear-gradient(90deg,transparent 0 40px,rgba(255,255,255,.06) 40px 41px),repeating-linear-gradient(0deg,transparent 0 40px,rgba(255,255,255,.06) 40px 41px);transform:perspective(540px) rotateX(60deg) scale(1.5);transform-origin:center bottom;opacity:.5;}
-    .corridor-poster::after{content:'';position:absolute;inset:0;background:linear-gradient(#050d0a 0%,transparent 42%,transparent 70%,#050d0a 100%);pointer-events:none;}
-    .corridor-poster .cp-play{position:relative;z-index:2;width:80px;height:80px;border-radius:50%;display:grid;place-items:center;font-size:26px;color:#06140d;background:var(--accent);box-shadow:0 0 44px color-mix(in srgb,var(--accent) 60%,transparent);transition:transform .2s;}
-    .corridor-poster:hover .cp-play{transform:scale(1.08);}
-    .corridor-poster .cp-cap{position:relative;z-index:2;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text);opacity:.82;}
-    .corridor-poster .cp-badge{position:absolute;z-index:2;top:14px;left:14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,transparent);padding:5px 10px;border-radius:999px;}
-  </style>
-  <section id="corridor-3d" class="reveal">
-    <div class="section-top">
-      <div><div class="eyebrow">Immersive · Live 3D</div><h2 class="section-title">Step into the corridor.</h2></div>
-      <p class="section-lead">A real-time 3D walk-through of the CS Media universe.</p>
-    </div>
-    <div class="scene-wrap">
-      <div id="scene" style="display:none;"></div>
-      <button class="corridor-poster" id="corridorEnter" type="button" aria-label="Enter the 3D corridor">
-        <span class="cp-grid" aria-hidden="true"></span>
-        <span class="cp-badge">3D · Live render</span>
-        <span class="cp-play">▶</span>
-        <span class="cp-cap">Step into the corridor · click to enter</span>
-      </button>
-    </div>
-    <script>(function(){var b=document.getElementById('corridorEnter');if(!b)return;b.addEventListener('click',function(){var c=b.querySelector('.cp-cap');if(c)c.textContent='Immersive demo — switching on soon ✦';});})();</script>
-  </section>
   <section id="ai-presenter" class="reveal">
     <div class="section-top">
       <div><div class="eyebrow">Flagship · AI Presenter</div><h2 class="section-title">Your pitch. Their attention. Powered by AI.</h2></div>
