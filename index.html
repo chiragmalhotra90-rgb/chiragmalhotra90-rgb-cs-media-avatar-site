@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <!-- Send returning visitors back to the version they chose. Anyone arriving
      fresh — search, a shared link, a new device — lands on Professional. -->
-<script>try{var m=localStorage.getItem('cs_mode');if(m==='professional'){location.replace('/professional.html');}else if(m==='cinematic'){location.replace('/cinematic.html');}else if(m==='aipresenter'){location.replace('/ai-presenter');}else if(m!=='casual'){location.replace('/professional.html');}}catch(e){}</script>
+<script>try{var m=localStorage.getItem('cs_mode');if(m==='professional'){location.replace('/professional.html');}else if(m==='cinematic'){location.replace('/cinematic.html');}else if(m==='aipresenter'){location.replace('/ai-presenter');}else if(m!=='casual'){location.replace('/ai-presenter');}}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CS Media &amp; Production — AI Avatar Engine</title>
@@ -95,16 +95,11 @@ body.mode-3d #clean-hero{display:none;}
 .rc-prow .cb-btn{flex:1;}
 .cb-btn.saved{background:var(--accent);color:#06121a;}
 
-/* section ordering: Hero → Services → Knowledge Hub → rest */
+/* section ordering: Hero → Services → rest
+   (the Knowledge Nexus moved to the AI Presenter page's Knowledge section) */
 .site{display:flex;flex-direction:column;}
 #ai-presenter{order:-3;}
 #services{order:-2;}
-#knowledge-hub{order:-1;}
-
-/* Knowledge Hub scaffold (content/animation drops in after upload) */
-#kh-stage{margin-top:36px;border:1px solid rgba(255,255,255,.12);border-radius:18px;
-  background:rgba(255,255,255,.04);padding:6px;overflow:hidden;position:relative;}
-#kh-stage iframe{width:100%;height:72vh;border:0;border-radius:14px;display:block;background:#000;}
 
 nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);width:calc(100% - 48px);max-width:1400px;display:flex;align-items:center;justify-content:space-between;z-index:30;pointer-events:none;}
 nav>*{pointer-events:auto;}
@@ -793,7 +788,6 @@ nav{max-width:1520px;}
   <a href="#services">Services</a>
   <a href="#aip-packages">AI Presenter Packages</a>
   <a href="#crm-packages">CRM Packages</a>
-  <a href="#knowledge-hub">Knowledge Nexus</a>
   <a href="#proof">Proof</a>
   <a href="#cta">Contact</a>
 </div>
@@ -1316,14 +1310,6 @@ document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('cli
       #services .service-card h3{font-family:'Archivo','Montserrat',sans-serif;font-stretch:125%;font-weight:800;font-size:15.5px;text-transform:uppercase;margin:12px 0 7px;color:var(--text);}
       #services .service-card p{font-size:14px;line-height:1.5;opacity:.74;}
     </style>
-  </section>
-
-  <section id="knowledge-hub" class="reveal">
-    <div class="section-top">
-      <div><div class="eyebrow">Knowledge Nexus</div><h2 class="section-title">The digital-marketing universe, mapped.</h2></div>
-      <p class="section-lead">An interactive map of the digital-marketing ecosystem — click any node to explore how strategy, content, AI and automation connect into one growth engine.</p>
-    </div>
-    <div id="kh-stage" class="kh-tint"><iframe id="kh-frame" src="nexus/Digital Marketing Nexus.html" title="Digital Marketing Nexus — interactive" loading="lazy"></iframe></div>
   </section>
 
     <section id="aip-packages" class="reveal">
