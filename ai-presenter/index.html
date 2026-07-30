@@ -117,9 +117,13 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 /* orb */
 .orb-wrap{position:relative;display:grid;place-items:center;min-height:400px}
 .orb-video{width:min(470px,96%);aspect-ratio:1;object-fit:cover;mix-blend-mode:screen;
-  filter:contrast(1.14) brightness(1.04) saturate(1.05);
-  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%);
-  mask-image:radial-gradient(circle at 50% 50%,#000 46%,transparent 72%)}
+  filter:contrast(1.22) brightness(1.05) saturate(1.05);
+  /* the video's backdrop is near-black, not black — on phones the screen
+     blend often doesn't apply to the accelerated video plane, so any mask
+     radius past the orb shows that backdrop as a dark disc. Fade out right
+     at the orb's edge so only the orb itself is ever visible. */
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 42%,transparent 61%);
+  mask-image:radial-gradient(circle at 50% 50%,#000 42%,transparent 61%)}
 .orb{width:min(340px,74%);aspect-ratio:1;border-radius:50%;position:relative;
   background:
     radial-gradient(circle at 33% 28%,rgba(60,190,180,.95),rgba(10,70,66,.9) 46%,rgba(5,30,29,.98) 76%),
