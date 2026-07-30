@@ -84,48 +84,21 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 .nav-links a:hover,.nav-links a[aria-current="true"]{color:var(--ap-white)}
 .nav-links a[aria-current="true"]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--ap-orange);border-radius:2px}
 .nav-act{display:flex;align-items:center;gap:12px;flex:none}
-.mode-toggle{display:inline-flex;padding:3px;border-radius:999px;background:rgba(216,224,220,.06);border:1px solid var(--ap-border);gap:2px;flex:none}
-.mt-btn{border:none;background:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--ap-white);opacity:.55;padding:7px 12px;border-radius:999px;transition:all .2s;min-height:30px}
-.mt-btn.active{background:var(--ap-teal);color:#fff;opacity:1}
-.mt-btn:not(.active):hover{opacity:1}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;padding:12px 24px;border-radius:999px;font-family:inherit;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;border:1px solid transparent;transition:transform .22s var(--ap-ease),background .25s,box-shadow .25s}
 .btn-primary{background:var(--ap-orange);color:#fff;box-shadow:0 0 22px rgba(193,68,14,.26)}
 .btn-primary:hover{background:var(--ap-orange-lit);transform:translateY(-2px);box-shadow:0 0 30px rgba(193,68,14,.4)}
 .btn-secondary{background:transparent;color:var(--ap-white);border-color:var(--ap-teal)}
 .btn-secondary:hover{background:rgba(13,110,106,.18);transform:translateY(-2px)}
-.nav-burger{display:none;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:19px;align-items:center;justify-content:center}
-#mnav{display:none;position:fixed;inset:0;z-index:210;background:rgba(8,17,15,.97);backdrop-filter:blur(10px);padding:96px 28px 40px;flex-direction:column;gap:6px}
-#mnav.open{display:flex}
-#mnav a{color:var(--ap-white);text-decoration:none;font-size:19px;font-weight:500;padding:15px 0;border-bottom:1px solid var(--ap-border);min-height:44px}
-#mnav .btn{margin-top:18px}
-.mnav-close{position:absolute;top:22px;right:24px;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;font-size:20px;cursor:pointer}
+/* the version switcher and page-local mobile menu are gone — the shared
+   csmedia-menu.js burger (always visible, far right) carries all of it */
 @media(max-width:1500px){nav{gap:14px;padding-inline:20px}.nav-links{gap:16px}.nav-act .btn-secondary{display:none}}
-@media(max-width:1400px){.nav-links{display:none}.nav-burger{display:inline-flex}}
-@media(max-width:1080px){.nav-links{display:none}.nav-burger{display:inline-flex}.nav-act .btn-secondary{display:none}}
-@media(max-width:640px){.nav-act .btn-primary{display:none}.mt-btn{padding:6px 8px;font-size:9.5px}}
+@media(max-width:1360px){.nav-links{display:none}}
+@media(max-width:640px){.nav-act .btn-primary{display:none}}
 
 /* ---------- HERO ---------- */
 .hero{padding-block:150px 78px;position:relative;overflow:hidden}
 .hero-grid{display:grid;grid-template-columns:minmax(0,55%) minmax(0,45%);gap:56px;align-items:center}
 @media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:46px}}
-
-/* version rail — all four site versions, always visible on the hero.
-   The nav switcher clips on narrow screens; this is the fallback that can't. */
-.vrail{position:absolute;right:clamp(12px,1.8vw,30px);top:112px;z-index:6;
-  display:flex;flex-direction:column;gap:6px;padding:12px 10px;border-radius:16px;
-  background:rgba(8,18,16,.55);border:1px solid var(--ap-border);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.vrail-t{font-size:9px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ap-silver);text-align:center;margin-bottom:2px}
-.vrail-btn{font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ap-white);text-decoration:none;
-  padding:7px 12px;border-radius:999px;border:1px solid transparent;opacity:.72;text-align:center;white-space:nowrap;transition:all .2s}
-.vrail-btn:hover{opacity:1;border-color:var(--ap-border)}
-.vrail-btn.active{opacity:1;background:var(--ap-teal);color:#fff}
-@media(max-width:1024px){
-  .vrail{position:static;transform:none;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-end;
-    margin:0 0 22px auto;width:fit-content;max-width:100%;padding:7px 8px;gap:5px}
-  .vrail-t{margin:0 4px 0 2px}
-  .vrail-btn{font-size:9.5px;padding:6px 10px}
-}
 
 /* knowledge flow — animation sets stacked in order, each loads only on click */
 .know-flow{display:flex;flex-direction:column;gap:26px}
@@ -439,31 +412,12 @@ footer a:hover{color:var(--ap-white)}
       </ul>
     </nav>
     <div class="nav-act">
-      <div class="mode-toggle" role="group" aria-label="Site version">
-        <button type="button" class="mt-btn active" data-mode="aipresenter">AI Presenter</button>
-        <button type="button" class="mt-btn" data-mode="professional">Professional</button>
-        <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
-        <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-      </div>
       <a class="btn btn-secondary" href="#platform">Explore the Platform</a>
       <a class="btn btn-primary" href="#contact" data-ap="ap_hero_demo_click" data-label="Nav — Book a Business Demo">Book a Business Demo</a>
-      <button class="nav-burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">☰</button>
+      <span class="cs-menu-slot"></span>
     </div>
   </div>
 </header>
-
-<div id="mnav" role="dialog" aria-modal="true" aria-label="Menu">
-  <button class="mnav-close" id="mnavClose" aria-label="Close menu">✕</button>
-  <a href="#watch">Watch</a>
-  <a href="#live">Experience It</a>
-  <a href="#platform">Platform</a>
-  <a href="#how">How It Works</a>
-  <a href="#industries">Industries</a>
-  <a href="#knowledge">Knowledge</a>
-  <a href="#leadership">About</a>
-  <a href="#contact">Contact</a>
-  <a class="btn btn-primary" href="#contact">Book a Business Demo</a>
-</div>
 
 <main id="main">
 <div id="top"></div>
@@ -472,13 +426,6 @@ footer a:hover{color:var(--ap-white)}
 <section class="hero">
   <div class="shell hero-grid">
     <div>
-      <aside class="vrail" aria-label="Choose a site version">
-        <span class="vrail-t">Versions</span>
-        <a class="vrail-btn active" href="/ai-presenter" aria-current="page" data-vmode="aipresenter">AI Presenter</a>
-        <a class="vrail-btn" href="/professional.html" data-vmode="professional">Professional</a>
-        <a class="vrail-btn" href="/cinematic.html" data-vmode="cinematic">Cinematic</a>
-        <a class="vrail-btn" href="/" data-vmode="casual">Casual</a>
-      </aside>
       <span class="eyebrow">AI Sales • Presentation • Automation</span>
       <h1 class="h1">An AI Presenter for Your Business.<br><span class="accent-sand">It Greets, Presents and Answers — 24/7.</span></h1>
 
@@ -628,7 +575,7 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
-<section class="rv">
+<section id="outcomes" class="rv">
   <div class="shell">
     <span class="eyebrow">Business Outcomes</span>
     <h2 class="h2">Designed to Improve the First Half of the Sales Journey</h2>
@@ -698,7 +645,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ IMPLEMENTATION OPTIONS ============ -->
-<section class="rv">
+<section id="implementation" class="rv">
   <div class="shell">
     <span class="eyebrow">Implementation Options</span>
     <h2 class="h2">Built Around Your Business, Not Forced Into a Template</h2>
@@ -759,7 +706,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ PARTNER / AGENT ============ -->
-<section class="rv">
+<section id="partners" class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Partners &amp; Agents</span>
     <h2 class="h2">Build the AI Presenter Market With Us</h2>
@@ -859,7 +806,7 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ FAQ ============ -->
-<section class="rv">
+<section id="faq" class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Questions</span>
     <h2 class="h2">Frequently Asked Questions</h2>
@@ -1220,11 +1167,6 @@ var CREATIVES = [];
 })();
 
 /* ============ MODE TOGGLE ============ */
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
-
-// hero version rail — remember the choice, then let the link navigate
-document.querySelectorAll('.vrail-btn').forEach(function(a){a.addEventListener('click',function(){try{localStorage.setItem('cs_mode',a.dataset.vmode);}catch(e){}});});
-
 // knowledge flow — nothing loads until its button is pressed
 document.querySelectorAll('.know-item').forEach(function(item){
   var btn=item.querySelector('.know-load'), stage=item.querySelector('.know-stage');
@@ -1249,14 +1191,8 @@ document.querySelectorAll('.know-item').forEach(function(item){
 
 /* ================== NAV ================== */
 (function(){
-  var nav=document.getElementById('nav'), burger=document.getElementById('burger'), mnav=document.getElementById('mnav');
+  var nav=document.getElementById('nav');
   window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>30);},{passive:true});
-  function openM(){mnav.classList.add('open');burger.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';document.getElementById('mnavClose').focus();}
-  function closeM(){mnav.classList.remove('open');burger.setAttribute('aria-expanded','false');document.body.style.overflow='';burger.focus();}
-  burger.addEventListener('click',openM);
-  document.getElementById('mnavClose').addEventListener('click',closeM);
-  mnav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeM);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mnav.classList.contains('open'))closeM();});
   // active section
   var links=Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
   var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
@@ -1355,9 +1291,7 @@ document.querySelectorAll('.know-item').forEach(function(item){
   };
   give('.btn-primary', 'lgx--primary');
   give('.btn-secondary', 'lgx--teal');
-  give('.nav-burger, .mnav-close, .lb-btn, .csl-nav', 'lgx--quiet');
-  var mt = document.querySelector('.mode-toggle');
-  if (mt) mt.classList.add('lgx-track');
+  give('.lb-btn, .csl-nav', 'lgx--quiet');
 
   // the video facade: swap our poster for the embed only when asked.
   // youtube-nocookie + playsinline keeps the loaded player as quiet as the
@@ -1371,18 +1305,16 @@ document.querySelectorAll('.know-item').forEach(function(item){
     f.title='Maya explains AI Presenter';
     vs.innerHTML=''; vs.appendChild(f);
   });
-
-  // keep the active version visible inside the scrollable track on phones
-  var a = document.querySelector('.mode-toggle .mt-btn.active');
-  if (a){
-    var t = a.parentElement;
-    if (t && t.scrollWidth > t.clientWidth){
-      t.scrollLeft += a.getBoundingClientRect().left - t.getBoundingClientRect().left
-                      - (t.clientWidth - a.offsetWidth) / 2;
-    }
-  }
 })();
 </script>
+<script>window.CSMenuPage={current:'aipresenter',sections:[
+  ['Watch Maya Explain It','#watch'],['Live Experience','#live'],['What It Does','#platform'],
+  ['The Ecosystem','#capabilities'],['How It Works','#how'],['Industries','#industries'],
+  ['Knowledge','#knowledge'],['Business Outcomes','#outcomes'],['Leadership','#leadership'],
+  ['Implementation & Pricing','#implementation'],['Partners & Agents','#partners'],
+  ['FAQ','#faq'],['Contact','#contact']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 <!-- ===================================================== -->
 </body>
 </html>

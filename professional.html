@@ -295,13 +295,8 @@ footer a:hover{color:var(--cyan)}
     <li><a href="/ai-presenter#knowledge">Knowledge</a></li>
   </ul>
   <div class="nav-right">
-    <div class="mode-toggle" role="group" aria-label="Site mode">
-      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
-      <button type="button" class="mt-btn active" data-mode="professional">Professional</button>
-      <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
-      <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-    </div>
     <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
+    <span class="cs-menu-slot"></span>
   </div>
 </nav>
 
@@ -534,9 +529,6 @@ footer a:hover{color:var(--cyan)}
 </div>
 
 <script>
-// Mode toggle
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
-
 // Nav scroll effect
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)});
 
@@ -607,5 +599,10 @@ buttons.forEach(function(b){b.addEventListener('click',function(){var f=b.datase
 <script src="/bendy3d.js"></script>
 <script src="/csmedia-bendy-init.js" data-mode="3d"></script>
 <!-- ===================================================== -->
+<script>window.CSMenuPage={current:'professional',sections:[
+  ['Services','#services'],['Selected Work','#work'],['Process','#workflow'],
+  ['Pricing','#pricing'],['Start a Project','#cta']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 </body>
 </html>

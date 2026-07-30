@@ -117,13 +117,8 @@ nav>*{pointer-events:auto;}
 .theme-dots span:nth-child(3){background:#FFEA00;}
 .start-btn{padding:9px 18px;background:var(--accent);color:#000;border:none;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;transition:transform .2s,box-shadow .3s;box-shadow:0 0 20px var(--accent);}
 .start-btn:hover{transform:scale(1.05);box-shadow:0 0 30px var(--accent);}
-.nav-burger{display:none;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.2);color:var(--text);font-size:20px;width:44px;height:44px;border-radius:12px;cursor:pointer;}
-#mobileMenu{position:fixed;inset:0;z-index:35;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:color-mix(in srgb,var(--base) 96%,#000);backdrop-filter:blur(16px);}
-#mobileMenu.open{display:flex;}
-#mobileMenu a{font-family:'Archivo','Montserrat',sans-serif;font-stretch:125%;font-weight:800;font-size:26px;text-transform:uppercase;color:var(--text);text-decoration:none;padding:12px 0;letter-spacing:.02em;}
-#mobileMenu a:hover{color:var(--accent);}
-#mobileMenu .mm-close{position:absolute;top:22px;right:22px;background:none;border:none;color:var(--text);font-size:28px;cursor:pointer;}
-@media(max-width:768px){.nav-burger{display:grid;place-items:center;}#panel{display:none!important;}.csai-launch{bottom:128px;right:14px;padding:10px 14px;font-size:12px;}#cp-fontbtn{right:14px;}#cp-add{left:14px;}}
+/* the page-local burger + mobile menu are gone — csmedia-menu.js is the one menu */
+@media(max-width:768px){#panel{display:none!important;}.csai-launch{bottom:128px;right:14px;padding:10px 14px;font-size:12px;}#cp-fontbtn{right:14px;}#cp-add{left:14px;}}
 .site{min-width:0;width:100%;max-width:100%;align-items:stretch;}
 .site>section{min-width:0;}
 @media(max-width:768px){
@@ -768,35 +763,12 @@ nav{max-width:1520px;}
     <li><a href="#cta">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <div class="mode-toggle" role="group" aria-label="Site mode">
-      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
-      <button type="button" class="mt-btn" data-mode="professional">Professional</button>
-      <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
-      <button type="button" class="mt-btn active" data-mode="casual">Casual</button>
-    </div>
     <div class="theme-pill"><span>Spotify Lime</span><div class="theme-dots"><span></span><span></span><span></span></div></div>
     <button class="start-btn">Start Project</button>
-    <button class="nav-burger" id="navBurger" aria-label="Open menu">☰</button>
+    <span class="cs-menu-slot"></span>
   </div>
 </nav>
-
-<div id="mobileMenu">
-  <button class="mm-close" id="mmClose" aria-label="Close menu">✕</button>
-  <a href="#ai-presenter">Maya AI Presenter</a>
-  <a href="#who">Who We Help</a>
-  <a href="#monthly">What You Get</a>
-  <a href="#services">Services</a>
-  <a href="#aip-packages">AI Presenter Packages</a>
-  <a href="#crm-packages">CRM Packages</a>
-  <a href="#proof">Proof</a>
-  <a href="#cta">Contact</a>
-</div>
 <script>
-(function(){var b=document.getElementById('navBurger'),m=document.getElementById('mobileMenu'),c=document.getElementById('mmClose');if(!b||!m)return;
-  b.addEventListener('click',function(){m.classList.add('open');});
-  if(c)c.addEventListener('click',function(){m.classList.remove('open');});
-  m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){m.classList.remove('open');});});})();
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
 </script>
 
 <div id="parallax">
@@ -2522,4 +2494,10 @@ CONTACT: info@csmediaandproduction.in · csmediaandproduction.in · @CSMediaProd
 <script src="/bendy3d.js"></script>
 <script src="/csmedia-bendy-init.js" data-mode="3d"></script>
 <!-- ===================================================== -->
+<script>window.CSMenuPage={current:'casual',sections:[
+  ['Maya AI Presenter','#ai-presenter'],['Who We Help','#who'],['What You Get','#monthly'],
+  ['Services','#services'],['AI Presenter Packages','#aip-packages'],['CRM Packages','#crm-packages'],
+  ['Proof of Work','#proof'],['Contact','#cta']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 </body></html>

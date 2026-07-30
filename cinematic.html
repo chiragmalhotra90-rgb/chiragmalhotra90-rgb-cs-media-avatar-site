@@ -714,13 +714,8 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
     <li><a href="#pricing">Pricing</a></li>
   </ul>
   <div class="nav-right">
-    <div class="mode-toggle" role="group" aria-label="Site mode">
-      <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
-      <button type="button" class="mt-btn" data-mode="professional">Professional</button>
-      <button type="button" class="mt-btn active" data-mode="cinematic">Cinematic</button>
-      <button type="button" class="mt-btn" data-mode="casual">Casual</button>
-    </div>
     <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
+    <span class="cs-menu-slot"></span>
   </div>
 </nav>
 
@@ -1010,9 +1005,6 @@ function goMode(m){
   try { localStorage.setItem('cs_mode', m); } catch(e){}
   location.href = ROUTES[m] || ROUTES.professional;
 }
-document.querySelectorAll('.mt-btn').forEach(b => {
-  b.addEventListener('click', () => goMode(b.dataset.mode));
-});
 document.querySelectorAll('[data-goto]').forEach(a => {
   a.addEventListener('click', e => { e.preventDefault(); goMode(a.dataset.goto); });
 });
@@ -1711,5 +1703,10 @@ if (document.fonts && document.fonts.ready){
 <script src="/bendy3d.js"></script>
 <script src="/csmedia-bendy-init.js" data-mode="3d"></script>
 <!-- ===================================================== -->
+<script>window.CSMenuPage={current:'cinematic',sections:[
+  ['Services','#services'],['Selected Work','#work'],['Process','#workflow'],
+  ['Pricing','#pricing'],['Start a Project','#cta']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
 </body>
 </html>
