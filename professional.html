@@ -310,7 +310,7 @@ footer a:hover{color:var(--cyan)}
 <div class="hero">
   <div class="ambient-glow" style="left:50%;top:10%;transform:translateX(-50%);background:radial-gradient(circle,rgba(0,234,244,.5),transparent 70%)"></div>
   <div class="version-tag">Professional Version</div>
-  <video class="hero-video" src="logo-reveal.mp4" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
+  <video class="hero-video" data-src="logo-reveal.mp4" autoplay muted playsinline preload="none" aria-hidden="true"></video>
   <h1 class="hero-heading" id="heroTitle">
     <span class="heading-white">One brief.</span>
     <span class="gradient-text gradient-spectrum">A complete growth system.</span>
@@ -572,6 +572,17 @@ buttons.forEach(function(b){b.addEventListener('click',function(){var f=b.datase
 })();
 </script>
 
+<script>
+/* The logo reveal is 1.5 MB — three quarters of this page's weight — and this
+   is now the page a first-time visitor lands on. Let the text, type and CTA
+   paint first, then stream the video in when the browser is idle. */
+(function(){
+  var v=document.querySelector('.hero-video'); if(!v||!v.dataset.src) return;
+  function go(){ v.src=v.dataset.src; v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:2500});
+  else window.addEventListener('load',go);
+})();
+</script>
 <script src="/csmedia-hero-lines.js"></script>
 <script>
 /* Rotating hero headline. Copy lives in csmedia-hero-lines.js so this version,

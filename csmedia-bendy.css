@@ -353,6 +353,13 @@
 [data-cs-bendy="casual"]    .b3d.ch-ghost,
 [data-cs-bendy="casual"]    .b3d.ghost         { --b3d-depth: #4e6b0c; --b3d-fg: #d3ff38; }
 
+/* A floating launcher is positioned by the page — the engine's own
+   position:relative would drop it out of the corner and into the end of the
+   document, which is exactly where the "Ask our AI" button had gone. Keep it
+   where the page put it; right/bottom still come from the page's own rule. */
+.b3d.csai-launch,
+.b3d-ready.csai-launch { position: fixed; }
+
 /* Bridge for 3D: the host becomes a frame, the surface layer does the painting.
    Padding moves off the host or the button would double up on spacing.       */
 .b3d-ready {

@@ -56,11 +56,13 @@
       #4d93ff 0%, #2f7bff 16%, #3f63ef 30%, #7b46d6 46%,
       #e2263f 60%, #ff2436 76%, #ff4152 100%);
   --grad-blue:  linear-gradient(97deg,#6fa9ff 0%,#2f7bff 55%,#4f63e8 100%);
+  --title-grad-lift: linear-gradient(97deg,
+      #8dbcff 0%, #6ba2ff 18%, #8286f4 40%, #c977dc 56%, #ff6b78 76%, #ff8b95 100%);
   --grad-red:   linear-gradient(97deg,#a052d8 0%,#ff2436 55%,#ff5566 100%);
 
-  --text-body:  rgba(206,216,242,.72);
-  --text-muted: rgba(190,201,230,.54);
-  --text-faint: rgba(180,192,222,.38);
+  --text-body:  rgba(228,236,255,.92);
+  --text-muted: rgba(214,224,250,.80);
+  --text-faint: rgba(198,210,240,.60);
   --line:       rgba(255,255,255,.10);
   --line-soft:  rgba(255,255,255,.06);
 
@@ -332,14 +334,29 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
 .headline.is-out .glyph.rot{ opacity:0; transform:translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06); filter:blur(20px); transition-duration:.5s,.5s,.5s; transition-delay:calc(var(--i) * 12ms) }
 
 .kicker{
-  font-size:clamp(.72rem,1.5vw,.96rem); letter-spacing:.42em; text-transform:uppercase;
-  color:var(--text-muted); margin-bottom:.9em;
+  font-family:var(--title-font);
+  font-size:clamp(1.35rem,3.4vw,2.6rem);
+  letter-spacing:.16em; text-transform:uppercase; line-height:1.05;
+  margin-bottom:.42em;
+  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  color:transparent; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(1,2,10,.85)) drop-shadow(0 6px 16px rgba(0,0,0,.7));
   opacity:0; transform:translateY(14px);
   transition:opacity .9s ease .15s, transform .9s var(--ease) .15s;
 }
+.tagline{
+  font-family:var(--title-font);
+  font-size:clamp(.98rem,2.1vw,1.45rem); letter-spacing:.3em; text-transform:uppercase;
+  color:rgba(226,236,255,.9); margin-bottom:1.05em;
+  text-shadow:0 2px 0 rgba(1,2,10,.7), 0 6px 16px rgba(0,0,0,.6);
+  opacity:0; transform:translateY(14px);
+  transition:opacity .9s ease .24s, transform .9s var(--ease) .24s;
+}
+.card.is-in .tagline{ opacity:1; transform:translateY(0) }
 .lede{
-  max-width:64ch; margin-top:clamp(26px,2.6vw,34px); text-align:center;
-  font-size:clamp(.98rem,1.55vw,1.18rem); line-height:1.62; color:var(--text-body);
+  max-width:60ch; margin-top:clamp(26px,2.6vw,34px); text-align:center;
+  font-size:clamp(1.06rem,1.7vw,1.32rem); line-height:1.6; font-weight:500;
+  color:rgba(236,242,255,.94);
   opacity:0; transform:translateY(18px);
   transition:opacity .9s ease .5s, transform .9s var(--ease) .5s;
 }
@@ -385,7 +402,7 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
 .cue span{ display:block; width:1px; height:44px; background:linear-gradient(180deg,rgba(255,255,255,.5),transparent); animation:cueMove 2.4s ease-in-out infinite }
 @keyframes cueMove{0%,100%{transform:scaleY(.4);opacity:.3}50%{transform:scaleY(1);opacity:1}}
 
-.tools{ position:absolute; right:clamp(16px,3vw,34px); bottom:calc(var(--bar) + 18px); z-index:42; display:flex; gap:10px }
+.tools{ position:absolute; left:clamp(16px,3vw,34px); bottom:calc(var(--bar) + 18px); z-index:42; display:flex; gap:10px }
 .chip{
   font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:var(--text-muted);
   background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:999px;
@@ -438,14 +455,14 @@ h2.head{
 h2.head .w{ color:#fff }
 .grad{
   display:inline-block; color:transparent; -webkit-text-fill-color:transparent;
-  -webkit-background-clip:text; background-clip:text; background-image:var(--title-grad);
+  -webkit-background-clip:text; background-clip:text; background-image:var(--title-grad-lift);
 }
 .grad-b{ background-image:var(--grad-blue) }
 .grad-r{ background-image:var(--grad-red) }
 
-.copy{ font-size:18px; line-height:1.6; color:var(--text-body); max-width:1000px }
-.copy b{ color:#fff; font-weight:600 }
-@media(max-width:640px){ .copy{ font-size:16px } }
+.copy{ font-size:19.5px; line-height:1.65; font-weight:450; color:var(--text-body); max-width:1000px }
+.copy b{ color:#fff; font-weight:700 }
+@media(max-width:640px){ .copy{ font-size:17.5px; line-height:1.62 } }
 .cat{
   font-family:var(--mono-font); font-size:11px; letter-spacing:.3em; text-transform:uppercase;
   color:var(--text-faint); margin:44px 0 18px; display:flex; align-items:center; gap:14px;
@@ -474,13 +491,13 @@ h2.head .w{ color:#fff }
 .num{
   font-family:var(--title-font); font-weight:400; font-size:clamp(42px,5vw,72px);
   line-height:.9; letter-spacing:.01em;
-  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  background:var(--title-grad-lift); -webkit-background-clip:text; background-clip:text;
   color:transparent; -webkit-text-fill-color:transparent;
   filter:drop-shadow(0 3px 0 rgba(1,2,10,.8)) drop-shadow(0 8px 20px rgba(0,0,0,.6));
 }
 .num-b{ background-image:var(--grad-blue) } .num-r{ background-image:var(--grad-red) }
-.c-title{ font-size:15px; font-weight:600; line-height:1.35; color:rgba(255,255,255,.94) }
-.c-desc{ font-size:14px; line-height:1.6; color:var(--text-muted) }
+.c-title{ font-size:16px; font-weight:700; line-height:1.35; color:#fff }
+.c-desc{ font-size:15px; line-height:1.62; font-weight:450; color:var(--text-body) }
 .pad{ padding:32px 30px 28px }
 .pad-lg{ padding:38px 34px 32px }
 
@@ -488,16 +505,16 @@ h2.head .w{ color:#fff }
 .svc{ padding:28px 26px 26px }
 .svc .tag{ font-family:var(--mono-font); font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:#7fa6ff; margin-bottom:16px }
 .svc .no{ font-family:var(--title-font); font-size:30px; line-height:1; color:rgba(255,255,255,.14); position:absolute; right:22px; top:20px }
-.svc h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:8px; line-height:1.3 }
-.svc .sub{ font-size:13.5px; color:#9db4e8; margin-bottom:12px; line-height:1.5 }
-.svc p{ font-size:13.5px; line-height:1.6; color:var(--text-muted); margin-bottom:16px }
+.svc h3{ font-size:18px; font-weight:700; color:#fff; margin-bottom:8px; line-height:1.3 }
+.svc .sub{ font-size:14.5px; font-weight:500; color:#b6cbf5; margin-bottom:12px; line-height:1.5 }
+.svc p{ font-size:14.5px; line-height:1.62; font-weight:450; color:var(--text-body); margin-bottom:16px }
 .svc ul{ list-style:none; display:flex; flex-wrap:wrap; gap:7px }
-.svc li{ font-family:var(--mono-font); font-size:10.5px; letter-spacing:.04em; color:var(--text-faint); border:1px solid var(--line-soft); border-radius:999px; padding:4px 10px }
+.svc li{ font-family:var(--mono-font); font-size:11px; letter-spacing:.04em; color:var(--text-muted); border:1px solid var(--line); border-radius:999px; padding:4px 10px }
 
 /* ---------- WORK ---------- */
 .metric{ padding:34px 30px 30px }
-.m-label{ font-size:14px; font-weight:600; color:rgba(255,255,255,.9); margin-top:14px }
-.m-sub{ font-family:var(--mono-font); font-size:11px; letter-spacing:.06em; color:var(--text-faint); margin-top:5px }
+.m-label{ font-size:15px; font-weight:700; color:#fff; margin-top:14px }
+.m-sub{ font-family:var(--mono-font); font-size:12px; letter-spacing:.06em; color:var(--text-muted); margin-top:5px }
 .filters{ display:flex; flex-wrap:wrap; gap:9px; margin:44px 0 22px }
 .filters button{
   font-family:var(--mono-font); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
@@ -514,31 +531,31 @@ h2.head .w{ color:#fff }
 [data-cs-bendy] .filters button.active{ --b3d-surface:var(--title-grad); --b3d-fg:#fff; --b3d-depth:#14082c }
 .case{ padding:26px 24px 24px }
 .case .badge{ font-family:var(--mono-font); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#ff8792; margin-bottom:14px }
-.case h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:9px }
-.case p{ font-size:13.5px; line-height:1.6; color:var(--text-muted); margin-bottom:14px }
-.case .out{ font-size:12.5px; color:#9db4e8; border-top:1px solid var(--line-soft); padding-top:12px }
+.case h3{ font-size:18px; font-weight:700; color:#fff; margin-bottom:9px }
+.case p{ font-size:14.5px; line-height:1.62; font-weight:450; color:var(--text-body); margin-bottom:14px }
+.case .out{ font-size:13.5px; font-weight:500; color:#b6cbf5; border-top:1px solid var(--line); padding-top:12px }
 
 /* ---------- WORKFLOW ---------- */
 .flow{ display:flex; flex-direction:column; gap:2px; border-top:1px solid var(--line-soft) }
 .flow-item{ display:flex; gap:26px; padding:26px 6px; border-bottom:1px solid var(--line-soft); transition:background .3s, padding-left .3s }
 .flow-item:hover{ background:rgba(255,255,255,.02); padding-left:16px }
 .flow-no{ font-family:var(--title-font); font-size:34px; line-height:1; flex:none; width:64px;
-  background:var(--title-grad); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
-.flow-item h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:7px }
-.flow-item p{ font-size:14.5px; line-height:1.6; color:var(--text-muted); max-width:820px }
+  background:var(--title-grad-lift); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
+.flow-item h3{ font-size:19px; font-weight:700; color:#fff; margin-bottom:7px }
+.flow-item p{ font-size:15.5px; line-height:1.62; font-weight:450; color:var(--text-body); max-width:820px }
 @media(max-width:640px){ .flow-item{ gap:16px } .flow-no{ width:44px; font-size:26px } }
 
 /* ---------- PRICING ---------- */
 .price-card{ padding:32px 28px 30px; display:flex; flex-direction:column }
 .price-card h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:14px }
 .price{
-  font-family:var(--title-font); font-size:40px; line-height:1; margin-bottom:12px;
-  background:var(--title-grad); -webkit-background-clip:text; background-clip:text;
+  font-family:var(--title-font); font-size:42px; line-height:1; margin-bottom:12px;
+  background:var(--title-grad-lift); -webkit-background-clip:text; background-clip:text;
   color:transparent; -webkit-text-fill-color:transparent;
 }
-.price-card > p{ font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.55 }
+.price-card > p{ font-size:15px; font-weight:450; color:var(--text-body); margin-bottom:20px; line-height:1.58 }
 .price-card ul{ list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:26px; flex:1 }
-.price-card li{ font-size:13.5px; color:var(--text-body); padding-left:20px; position:relative; line-height:1.5 }
+.price-card li{ font-size:14.5px; font-weight:450; color:var(--text-body); padding-left:20px; position:relative; line-height:1.52 }
 .price-card li::before{ content:''; position:absolute; left:0; top:.55em; width:8px; height:1px; background:linear-gradient(90deg,#4d93ff,#ff4152) }
 .price-card button{
   width:100%; border:1px solid var(--line); background:rgba(255,255,255,.05); color:#fff;
@@ -558,16 +575,16 @@ h2.head .w{ color:#fff }
   border:1px solid var(--line-soft); background:linear-gradient(120deg, rgba(47,123,255,.10), rgba(255,36,54,.10));
   display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
 }
-.band-strip h3{ font-size:17px; font-weight:600; color:#fff; margin-bottom:7px }
-.band-strip p{ font-size:14px; color:var(--text-muted); max-width:74ch; line-height:1.6 }
+.band-strip h3{ font-size:18px; font-weight:700; color:#fff; margin-bottom:7px }
+.band-strip p{ font-size:15px; font-weight:450; color:var(--text-body); max-width:74ch; line-height:1.62 }
 
 /* ---------- ONBOARDING / CLIENTS ---------- */
 .day{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#7fa6ff; margin-bottom:14px }
-.onboard h3{ font-size:18px; font-weight:600; color:#fff; margin-bottom:9px }
-.onboard p{ font-size:13.5px; line-height:1.6; color:var(--text-muted) }
+.onboard h3{ font-size:19px; font-weight:700; color:#fff; margin-bottom:9px }
+.onboard p{ font-size:14.5px; line-height:1.62; font-weight:450; color:var(--text-body) }
 .clients{ display:flex; flex-wrap:wrap; gap:11px }
 .client-tag{
-  font-family:var(--mono-font); font-size:12px; letter-spacing:.04em; color:var(--text-body);
+  font-family:var(--mono-font); font-size:13px; letter-spacing:.04em; font-weight:500; color:var(--text-body);
   border:1px solid var(--line-soft); border-radius:999px; padding:11px 20px;
   background:rgba(255,255,255,.03); transition:all .25s;
 }
@@ -580,7 +597,7 @@ h2.head .w{ color:#fff }
   background:linear-gradient(140deg, rgba(47,123,255,.13), rgba(10,12,24,.7) 46%, rgba(255,36,54,.13));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 30px 90px rgba(0,0,0,.5);
 }
-.cta-panel p{ font-size:17px; line-height:1.6; color:var(--text-body); max-width:70ch; margin:22px auto 30px }
+.cta-panel p{ font-size:18.5px; line-height:1.62; font-weight:450; color:var(--text-body); max-width:70ch; margin:22px auto 30px }
 .contact-info{ display:flex; flex-wrap:wrap; gap:22px; justify-content:center; margin-top:30px; font-family:var(--mono-font); font-size:12.5px; letter-spacing:.03em }
 .contact-info a,.contact-info span{ color:var(--text-muted); text-decoration:none; transition:color .25s }
 .contact-info a:hover{ color:#fff }
@@ -589,9 +606,9 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
 .foot{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:44px }
 @media(max-width:800px){ .foot{ grid-template-columns:1fr; gap:32px } }
 .foot h4{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); margin-bottom:16px }
-.foot a{ display:block; color:var(--text-muted); text-decoration:none; font-size:14px; margin-bottom:11px; transition:color .25s }
+.foot a{ display:block; color:var(--text-body); text-decoration:none; font-size:15px; font-weight:450; margin-bottom:11px; transition:color .25s }
 .foot a:hover{ color:#fff }
-.foot > div:first-child p{ font-size:14px; line-height:1.65; color:var(--text-muted); max-width:46ch; margin-top:16px }
+.foot > div:first-child p{ font-size:15px; line-height:1.68; font-weight:450; color:var(--text-body); max-width:46ch; margin-top:16px }
 .foot-logo{ font-family:var(--title-font); font-size:20px; letter-spacing:.02em; text-transform:uppercase; color:#fff }
 .foot-logo span{ background:var(--title-grad); -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
 .foot-bottom{ margin-top:52px; padding-top:26px; border-top:1px solid var(--line-soft); font-family:var(--mono-font); font-size:11.5px; letter-spacing:.05em; color:var(--text-faint) }
@@ -650,6 +667,11 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
   .line{ font-size:clamp(2.2rem,13.5vw,4.6rem) }
   .line--sub{ font-size:clamp(1.3rem,7.4vw,2.6rem) }
   .marks{ display:none }
+  /* letterbox framing belongs to a full-bleed film frame, not to a hero with
+     a page under it — on a phone the bottom bar just reads as a gap */
+  .bar{ display:none }
+  .stage{ height:auto; min-height:100svh; padding-block:76px 24px }
+  main > section.band:first-of-type{ padding-top:26px }
   .actions{ flex-direction:column; align-items:center; width:auto }
   .btn{ justify-content:center }
   nav{ gap:10px }
@@ -943,7 +965,8 @@ const CONFIG = {
     {
       rotating: true,          // headline comes from CSHero.lines, every 5s
       final: true,
-      kicker: 'CS Media &amp; Production',
+      kicker:  'CS Media &amp; Production',
+      tagline: 'The Avatar Engine',
       lede:  'AI-powered content, video, websites, CRM, branding & automation — under one connected engine.',
       actions: [
         { label: 'Start a project', href: '#cta',     primary: true },
@@ -1031,6 +1054,7 @@ CONFIG.cards.forEach(spec => {
   card.style.zIndex = spec.final ? 3 : 2;
 
   if (spec.kicker){ const k = document.createElement('p'); k.className = 'kicker'; k.innerHTML = spec.kicker; card.appendChild(k); }
+  if (spec.tagline){ const t = document.createElement('p'); t.className = 'tagline'; t.textContent = spec.tagline; card.appendChild(t); }
 
   if (spec.rotating){
     headlineEl = document.createElement('div');
@@ -1236,7 +1260,7 @@ if (!reduced){
 const canvas = $('#smoke');
 const ctx    = canvas.getContext('2d', { alpha: false });
 const SCALE  = 0.42;
-let W = 0, H = 0, puffs = [], sprites = [], rafId = 0, tLast = 0;
+let W = 0, H = 0, puffs = [], sprites = [], rafId = 0, tLast = 0, paused = false;
 let pointer = { x: 0.5, y: 0.5 };
 
 function makeSprite(rgb){
@@ -1500,6 +1524,7 @@ function drawStorm(dt, now){
 }
 
 function loop(now){
+  if (paused){ rafId = 0; return; }   // a cancelled frame can still be in flight
   const dt = Math.min(64, now - tLast || 16);
   tLast = now;
   drawSmoke(dt);
@@ -1512,13 +1537,20 @@ addEventListener('pointermove', e => {
   pointer.y = e.clientY / innerHeight;
 }, { passive: true });
 
+function pauseLoop(){
+  paused = true;
+  if (rafId){ cancelAnimationFrame(rafId); rafId = 0; }
+}
+function resumeLoop(){
+  paused = false;
+  if (rafId || reduced || document.hidden || !heroVisible) return;
+  tLast = performance.now();
+  nextStrike = tLast + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
+  rafId = requestAnimationFrame(loop);
+}
+
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden){ cancelAnimationFrame(rafId); rafId = 0; }
-  else if (!rafId && !reduced){
-    tLast = performance.now();
-    nextStrike = tLast + rnd(CONFIG.storm.gapMin, CONFIG.storm.gapMax);
-    rafId = requestAnimationFrame(loop);
-  }
+  if (document.hidden) pauseLoop(); else resumeLoop();
 });
 
 /* ============================================================
@@ -1527,11 +1559,17 @@ document.addEventListener('visibilitychange', () => {
 const nav = $('#nav');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
 
-// the weather drops back once the hero is behind you
-const heroObs = new IntersectionObserver(
-  e => document.body.classList.toggle('past-hero', !e[0].isIntersecting),
-  { threshold: 0.12 }
-);
+/* The weather drops back once the hero is behind you — and, more to the
+   point, stops being drawn. Smoke, lightning and sparks are the expensive
+   part of this page; there is no reason to spend a frame on them while
+   someone is reading the pricing table with a scrim over the top. The last
+   frame stays on screen, so nothing visibly disappears. */
+let heroVisible = true;
+const heroObs = new IntersectionObserver(e => {
+  heroVisible = e[0].isIntersecting;
+  document.body.classList.toggle('past-hero', !heroVisible);
+  if (heroVisible) resumeLoop(); else pauseLoop();
+}, { threshold: 0.06 });
 heroObs.observe($('#stage'));
 
 const revealObs = new IntersectionObserver(entries => {
