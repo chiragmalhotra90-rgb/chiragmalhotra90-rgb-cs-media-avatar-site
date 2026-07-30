@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge — CS Media &amp; Production</title>
+<meta name="description" content="Interactive knowledge experiences from CS Media &amp; Production — the Digital Marketing Map, the Knowledge Nexus, and more over time. Each one loads only when you open it.">
+<meta name="robots" content="noindex, follow">
+<style>
+:root{
+  --k-bg:#0a0d0f; --k-card:rgba(255,255,255,.035); --k-border:rgba(255,255,255,.12);
+  --k-white:#f2f5f4; --k-silver:#aab4b1; --k-teal:#12938d; --k-teal-lit:#9be0d8;
+  --k-radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--k-bg);color:var(--k-white);font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(60% 40% at 18% 8%,rgba(18,147,141,.12),transparent 65%),
+             radial-gradient(50% 40% at 88% 92%,rgba(217,176,140,.07),transparent 65%)}
+:focus-visible{outline:2px solid var(--k-teal-lit);outline-offset:3px;border-radius:6px}
+
+.k-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(18px,4vw,42px);background:rgba(10,13,15,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--k-border)}
+.k-brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--k-white)}
+.k-brand b{font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.k-brand small{font-size:9px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--k-silver)}
+.k-nav-right{display:flex;align-items:center;gap:12px}
+
+.k-shell{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:clamp(40px,7vw,80px) clamp(18px,4vw,42px) 60px}
+.k-eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--k-teal-lit);display:block;margin-bottom:14px}
+h1{font-size:clamp(30px,5.4vw,52px);font-weight:650;line-height:1.12;letter-spacing:-.01em;margin-bottom:18px}
+.k-lead{font-size:clamp(16px,1.4vw,19px);color:var(--k-silver);max-width:760px;margin-bottom:44px}
+
+.know-flow{display:flex;flex-direction:column;gap:26px}
+.know-item{background:var(--k-card);border:1px solid var(--k-border);border-radius:var(--k-radius);padding:clamp(20px,3vw,28px);transition:border-color .3s}
+.know-item:hover{border-color:rgba(18,147,141,.5)}
+.know-head{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.know-head h2{font-size:clamp(19px,2vw,24px);font-weight:600;margin-bottom:4px}
+.know-head p{font-size:15px;color:var(--k-silver);max-width:680px}
+.know-load{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 26px;
+  border-radius:999px;border:1px solid var(--k-teal);background:transparent;color:var(--k-white);
+  font-family:inherit;font-size:14.5px;font-weight:500;cursor:pointer;transition:background .25s,transform .22s}
+.know-load:hover{background:rgba(18,147,141,.18);transform:translateY(-2px)}
+.know-load:disabled{cursor:default;opacity:.75;transform:none}
+.know-stage{margin-top:22px;border-radius:14px;overflow:hidden;border:1px solid var(--k-border);background:#06090b}
+.know-stage[hidden]{display:none}
+.know-stage iframe{display:block;width:100%;height:80vh;border:0;background:#06090b}
+.know-wait{padding:48px 20px;text-align:center;font-size:15.5px;color:var(--k-silver)}
+
+.k-foot{position:relative;z-index:1;border-top:1px solid var(--k-border);padding:26px clamp(18px,4vw,42px);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--k-silver)}
+.k-foot a{color:var(--k-white);text-decoration:none;padding-block:6px;display:inline-block;min-height:32px}
+.k-foot a:hover{color:var(--k-teal-lit)}
+</style>
+</head>
+<body>
+
+<header class="k-nav">
+  <a class="k-brand" href="/ai-presenter"><b>CS Media &amp; Production</b><small>Knowledge</small></a>
+  <div class="k-nav-right"><span class="cs-menu-slot"></span></div>
+</header>
+
+<main class="k-shell">
+  <span class="k-eyebrow">Knowledge</span>
+  <h1>Learn the Landscape</h1>
+  <p class="k-lead">Interactive guides from across the CS Media universe, collected in one place and played in order. Each one loads only when you open it, so this page stays light — and more are on the way.</p>
+
+  <div class="know-flow">
+    <!-- FIXED FIRST — the Digital Marketing Map always opens the flow -->
+    <article class="know-item" id="map" data-embed="/knowledge-hub.html">
+      <div class="know-head">
+        <div>
+          <h2>The Digital Marketing Map</h2>
+          <p>The complete digital-marketing roadmap as an animated, explorable map — strategy, content, AI and automation, topic by topic.</p>
+        </div>
+        <button type="button" class="know-load">Open the Map</button>
+      </div>
+      <div class="know-stage" hidden></div>
+    </article>
+
+    <!-- ==================================================================
+         NEW ANIMATION SETS GO HERE, IN ORDER — keep the Map first and the
+         Nexus last. Copy a .know-item block above, point data-embed at the
+         new animation's HTML file, and it inherits the click-to-load
+         behaviour automatically.
+         ================================================================== -->
+
+    <!-- FIXED LAST — the Knowledge Nexus always closes the flow -->
+    <article class="know-item" id="nexus" data-embed="/nexus/Digital%20Marketing%20Nexus.html">
+      <div class="know-head">
+        <div>
+          <h2>Knowledge Nexus</h2>
+          <p>The digital-marketing universe, mapped — click any node to explore how strategy, content, AI and automation connect into one growth engine.</p>
+        </div>
+        <button type="button" class="know-load">Open the Nexus</button>
+      </div>
+      <div class="know-stage" hidden></div>
+    </article>
+  </div>
+</main>
+
+<footer class="k-foot">
+  <span>© 2026 CS Media &amp; Production</span>
+  <a href="/ai-presenter">← Back to the site</a>
+</footer>
+
+<script>
+// each experience loads only when its button is pressed — nothing up front
+document.querySelectorAll('.know-item').forEach(function(item){
+  var btn=item.querySelector('.know-load'), stage=item.querySelector('.know-stage');
+  if(!btn||!stage) return;
+  btn.addEventListener('click',function(){
+    if(item.dataset.on) return; item.dataset.on='1';
+    btn.disabled=true; btn.textContent='Loading… ⏳';
+    stage.hidden=false;
+    fetch(item.dataset.embed,{method:'HEAD'}).then(function(r){
+      if(!r.ok) throw new Error(r.status);
+      var f=document.createElement('iframe');
+      f.src=item.dataset.embed; f.loading='lazy';
+      f.title=item.querySelector('h2').textContent;
+      stage.appendChild(f);
+      f.addEventListener('load',function(){ btn.textContent='Loaded ✓'; });
+    }).catch(function(){
+      stage.innerHTML='<p class="know-wait">⏳ This experience is being prepared — check back soon.</p>';
+      btn.textContent='Coming soon';
+    });
+  });
+});
+</script>
+<script>window.CSMenuPage={current:'',sections:[
+  ['The Digital Marketing Map','#map'],
+  ['Knowledge Nexus','#nexus']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
+</body>
+</html>

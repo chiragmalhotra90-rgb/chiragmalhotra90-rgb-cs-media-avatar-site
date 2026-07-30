@@ -28,8 +28,8 @@
     ['casual',       'Casual',       '/',                  'The playground']
   ];
   var KNOWLEDGE = [
-    ['The Digital Marketing Map', '/ai-presenter#knowledge'],
-    ['Knowledge Nexus', '/ai-presenter#knowledge', 'coming soon']
+    ['The Digital Marketing Map', '/knowledge.html#map'],
+    ['Knowledge Nexus', '/knowledge.html#nexus', 'coming soon']
   ];
   var ACTIONS = [
     ['Watch Maya explain AI Presenter', '/ai-presenter#watch'],

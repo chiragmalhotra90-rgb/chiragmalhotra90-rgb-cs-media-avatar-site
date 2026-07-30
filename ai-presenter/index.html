@@ -100,17 +100,6 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 .hero-grid{display:grid;grid-template-columns:minmax(0,55%) minmax(0,45%);gap:56px;align-items:center}
 @media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:46px}}
 
-/* knowledge flow — animation sets stacked in order, each loads only on click */
-.know-flow{display:flex;flex-direction:column;gap:26px}
-.know-item{background:var(--ap-card);border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);padding:26px;transition:border-color .3s}
-.know-item:hover{border-color:var(--ap-border-lit)}
-.know-head{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.know-head .body{max-width:720px;margin-top:6px}
-.know-load{flex:none}
-.know-stage{margin-top:22px;border-radius:var(--ap-radius);overflow:hidden;border:1px solid var(--ap-border);background:#050f0e}
-.know-stage[hidden]{display:none}
-.know-stage iframe{display:block;width:100%;height:76vh;border:0;background:#050f0e}
-.know-wait{padding:46px 20px;text-align:center;font-size:15.5px;color:var(--ap-silver)}
 .rotator{display:grid;margin:22px 0 26px;min-height:calc(1.14em * 2)}
 .rot{grid-area:1/1;font-size:clamp(28px,3.05vw,46px);font-weight:600;line-height:1.14;letter-spacing:-.015em;
   opacity:0;transform:translateY(12px);transition:opacity .7s var(--ap-ease),transform .7s var(--ap-ease);
@@ -406,7 +395,6 @@ footer a:hover{color:var(--ap-white)}
         <li><a href="#platform">Platform</a></li>
         <li><a href="#how">How It Works</a></li>
         <li><a href="#industries">Industries</a></li>
-        <li><a href="#knowledge">Knowledge</a></li>
         <li><a href="#leadership">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -760,48 +748,6 @@ footer a:hover{color:var(--ap-white)}
       </aside>
     </div>
     <div style="margin-top:30px"><a class="btn btn-primary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Partner — Discuss Partnership">Discuss a Regional or Agency Partnership</a></div>
-  </div>
-</section>
-
-<!-- ============ KNOWLEDGE ============ -->
-<section id="knowledge" class="rv">
-  <div class="shell">
-    <span class="eyebrow eyebrow-teal">Knowledge</span>
-    <h2 class="h2">Learn the Landscape</h2>
-    <p class="lead" style="margin-bottom:34px">Interactive guides from across the CS Media universe, collected in one place and played in order. Each one loads only when you press its button, so the page stays light — and more are on the way.</p>
-
-    <div class="know-flow">
-      <!-- FIXED FIRST — the Digital Marketing Map always opens the flow -->
-      <article class="know-item" data-embed="/knowledge-hub.html">
-        <div class="know-head">
-          <div>
-            <h3 class="h3">The Digital Marketing Map</h3>
-            <p class="body">The complete digital-marketing roadmap as an animated, explorable map — strategy, content, AI and automation, topic by topic.</p>
-          </div>
-          <button type="button" class="btn btn-secondary know-load" data-ap="ap_knowledge_open" data-label="Knowledge — Load the Map">Open the Map</button>
-        </div>
-        <div class="know-stage" hidden></div>
-      </article>
-
-      <!-- ==================================================================
-           NEW ANIMATION SETS GO HERE, IN ORDER — keep the Map first and the
-           Nexus last. Copy a .know-item block above, point data-embed at the
-           new animation's HTML file, and it inherits the click-to-load
-           behaviour automatically.
-           ================================================================== -->
-
-      <!-- FIXED LAST — the Knowledge Nexus always closes the flow -->
-      <article class="know-item" data-embed="/nexus/Digital%20Marketing%20Nexus.html">
-        <div class="know-head">
-          <div>
-            <h3 class="h3">Knowledge Nexus</h3>
-            <p class="body">The digital-marketing universe, mapped — click any node to explore how strategy, content, AI and automation connect into one growth engine.</p>
-          </div>
-          <button type="button" class="btn btn-secondary know-load" data-ap="ap_knowledge_open" data-label="Knowledge — Load the Nexus">Open the Nexus</button>
-        </div>
-        <div class="know-stage" hidden></div>
-      </article>
-    </div>
   </div>
 </section>
 
@@ -1167,27 +1113,6 @@ var CREATIVES = [];
 })();
 
 /* ============ MODE TOGGLE ============ */
-// knowledge flow — nothing loads until its button is pressed
-document.querySelectorAll('.know-item').forEach(function(item){
-  var btn=item.querySelector('.know-load'), stage=item.querySelector('.know-stage');
-  if(!btn||!stage) return;
-  btn.addEventListener('click',function(){
-    if(item.dataset.on) return; item.dataset.on='1';
-    btn.disabled=true; btn.textContent='Loading… ⏳';
-    stage.hidden=false;
-    fetch(item.dataset.embed,{method:'HEAD'}).then(function(r){
-      if(!r.ok) throw new Error(r.status);
-      var f=document.createElement('iframe');
-      f.src=item.dataset.embed; f.loading='lazy';
-      f.title=item.querySelector('h3').textContent;
-      stage.appendChild(f);
-      f.addEventListener('load',function(){ btn.textContent='Loaded ✓'; });
-    }).catch(function(){
-      stage.innerHTML='<p class="know-wait">⏳ This experience is being prepared — check back soon.</p>';
-      btn.textContent='Coming soon';
-    });
-  });
-});
 
 /* ================== NAV ================== */
 (function(){
@@ -1310,7 +1235,7 @@ document.querySelectorAll('.know-item').forEach(function(item){
 <script>window.CSMenuPage={current:'aipresenter',sections:[
   ['Watch Maya Explain It','#watch'],['Live Experience','#live'],['What It Does','#platform'],
   ['The Ecosystem','#capabilities'],['How It Works','#how'],['Industries','#industries'],
-  ['Knowledge','#knowledge'],['Business Outcomes','#outcomes'],['Leadership','#leadership'],
+  ['Business Outcomes','#outcomes'],['Leadership','#leadership'],
   ['Implementation & Pricing','#implementation'],['Partners & Agents','#partners'],
   ['FAQ','#faq'],['Contact','#contact']
 ]};</script>
