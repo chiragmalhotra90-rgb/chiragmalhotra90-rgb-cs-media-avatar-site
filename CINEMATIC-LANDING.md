@@ -99,7 +99,7 @@ All design tokens are CSS custom properties in `:root`:
 | `--title-grad` | the blue → violet → red sweep across the type |
 | `--blue` / `--red` / `--ink` | haze, smoke tint and background |
 | `--extrude` / `--extrude-color` | depth and colour of the 3D extrusion |
-| `--bar` | letterbox height (set to `0` to remove the bars) |
+| `--bar` | hero framing inset for the corner marks |
 | `--title-font` / `--ui-font` | display and UI typefaces |
 | `--cloud-a` / `--cloud-b` | the fractal-noise masks the drifting smoke is cut from |
 | `--bank-a` / `--bank-b` | the higher-contrast masks the thick cloud banks are cut from |
@@ -150,7 +150,9 @@ and no strikes are scheduled.
   speeds, gravity and a slow curl, drawn as pre-rendered glow sprites with
   clipped trails. Ambient embers rise continuously; `CONFIG.sparks: 0` stops
   them.
-- **Film** — animated grain, scanlines, vignette, letterbox bars, corner marks.
+- **Film** — animated grain, scanlines, vignette and corner framing marks. The
+  letterbox bars are gone: the hero is a section with a page under it, not a
+  full-bleed film frame, and a black bar at its foot read as a gap.
 
 ## Buttons
 
@@ -182,7 +184,13 @@ UI stack if that request fails.
   smoke frame, brand card shown immediately.
 - Parallax is pointer-only (`hover: hover`); touch devices get the static
   composition.
-- The smoke loop pauses when the tab is hidden.
+- The smoke and storm loop pauses when the tab is hidden **and** whenever the
+  hero is scrolled out of view — those canvases are the expensive part of the
+  page and there is no reason to draw them while someone is reading. The last
+  frame stays on screen, so nothing visibly disappears.
+- Gradient text takes its depth from `filter: drop-shadow`, never
+  `text-shadow`: a `background-clip: text` glyph has a transparent fill, so a
+  text-shadow is seen straight through the letter and muddies it.
 - The stage is a `100svh` hero section, not a fixed overlay — put your own
   sections directly after `</main>` and the page scrolls normally.
 

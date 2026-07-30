@@ -70,7 +70,7 @@
   --extrude-color:  #01020a;
 
   --page-max: 1360px;
-  --bar: 4.2vh;
+  --bar: 2.2vh;   /* hero framing inset — no longer a black letterbox */
   --radius: 22px;
   --ease: cubic-bezier(.22,1,.36,1);
 
@@ -268,12 +268,11 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
    ============================================================ */
 .stage{
   position:relative; z-index:2;
-  width:100%; height:100vh; height:100svh;
+  width:100%; min-height:94svh;
+  padding-block:88px 14px;
   display:grid; place-items:center;
   overflow:hidden;
 }
-.bar{ position:absolute; left:0; right:0; z-index:40; height:var(--bar); background:#000; pointer-events:none; box-shadow:0 0 40px rgba(0,0,0,.9) }
-.bar--t{ top:0 } .bar--b{ bottom:0 }
 .marks{ position:absolute; inset:calc(var(--bar) + 18px) 18px; z-index:41; pointer-events:none; opacity:.22 }
 .marks i{ position:absolute; width:26px; height:26px; border:1px solid rgba(255,255,255,.85) }
 .marks i:nth-child(1){ left:0; top:0; border-right:0; border-bottom:0 }
@@ -282,7 +281,7 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
 .marks i:nth-child(4){ right:0; bottom:0; border-left:0; border-top:0 }
 
 .scene{ position:relative; z-index:5; width:100%; height:100%; display:grid; place-items:center; perspective:1100px; perspective-origin:50% 46% }
-.deck{ position:relative; width:min(1500px,92vw); height:calc(100% - (var(--bar) * 2) - 24px); transform-style:preserve-3d; transition:transform .5s var(--ease); will-change:transform }
+.deck{ position:relative; width:min(1500px,92vw); height:100%; transform-style:preserve-3d; transition:transform .5s var(--ease); will-change:transform }
 .card{ position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; transform-style:preserve-3d; pointer-events:none; opacity:0 }
 .card.is-live{ opacity:1 }
 .card.is-final.is-live{ pointer-events:auto }
@@ -402,7 +401,7 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
 .cue span{ display:block; width:1px; height:44px; background:linear-gradient(180deg,rgba(255,255,255,.5),transparent); animation:cueMove 2.4s ease-in-out infinite }
 @keyframes cueMove{0%,100%{transform:scaleY(.4);opacity:.3}50%{transform:scaleY(1);opacity:1}}
 
-.tools{ position:absolute; left:clamp(16px,3vw,34px); bottom:calc(var(--bar) + 18px); z-index:42; display:flex; gap:10px }
+.tools{ position:absolute; left:clamp(16px,3vw,34px); bottom:16px; z-index:42; display:flex; gap:10px }
 .chip{
   font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:var(--text-muted);
   background:rgba(255,255,255,.05); border:1px solid var(--line); border-radius:999px;
@@ -422,6 +421,7 @@ section[id], footer{ scroll-margin-top:96px }
 @media(max-width:640px){ section[id], footer{ scroll-margin-top:74px } }
 .shell{ width:min(100% - 48px, var(--page-max)); margin-inline:auto; position:relative }
 section.band{ padding-block:96px 108px; position:relative }
+#problem{ padding-top:34px }   /* first band sits right under the hero */
 @media(max-width:1024px){ section.band{ padding-block:74px 84px } }
 @media(max-width:640px){ .shell{ width:min(100% - 28px, var(--page-max)) } section.band{ padding-block:58px 66px } }
 
@@ -450,9 +450,11 @@ h2.head{
   font-family:var(--title-font); font-weight:400;
   font-size:clamp(2rem,5vw,4.6rem); line-height:.98; letter-spacing:.008em;
   text-transform:uppercase; margin-bottom:20px;
-  text-shadow:0 2px 0 rgba(0,0,0,.6), 0 12px 34px rgba(0,0,0,.5);
 }
-h2.head .w{ color:#fff }
+h2.head .w{ color:#fff; text-shadow:0 2px 0 rgba(0,0,0,.6), 0 12px 34px rgba(0,0,0,.5) }
+/* depth for the gradient half has to come from drop-shadow, which follows the
+   glyph's alpha instead of being seen through it */
+h2.head .grad{ filter:drop-shadow(0 2px 0 rgba(1,2,10,.75)) drop-shadow(0 8px 22px rgba(0,0,0,.6)) }
 .grad{
   display:inline-block; color:transparent; -webkit-text-fill-color:transparent;
   -webkit-background-clip:text; background-clip:text; background-image:var(--title-grad-lift);
@@ -663,15 +665,18 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
 }
 
 @media(max-width:720px){
-  :root{ --bar:3vh; --extrude:9 }
+  :root{ --bar:1.4vh; --extrude:9 }
   .line{ font-size:clamp(2.2rem,13.5vw,4.6rem) }
   .line--sub{ font-size:clamp(1.3rem,7.4vw,2.6rem) }
   .marks{ display:none }
   /* letterbox framing belongs to a full-bleed film frame, not to a hero with
      a page under it — on a phone the bottom bar just reads as a gap */
-  .bar{ display:none }
-  .stage{ height:auto; min-height:100svh; padding-block:76px 24px }
-  main > section.band:first-of-type{ padding-top:26px }
+  /* let the first section break the fold — a full screen of hero followed by
+     a screen of padding is what read as a gap */
+  .stage{ height:auto; min-height:90svh; padding-block:72px 6px }
+  .tools{ bottom:10px }
+  .cue{ bottom:10px }
+  #problem{ padding-top:14px }
   .actions{ flex-direction:column; align-items:center; width:auto }
   .btn{ justify-content:center }
   nav{ gap:10px }
@@ -734,8 +739,6 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
     <button class="chip" id="replay" type="button" hidden>Replay</button>
   </div>
 
-  <div class="bar bar--t" aria-hidden="true"></div>
-  <div class="bar bar--b" aria-hidden="true"></div>
   <div class="marks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 </section>
 
