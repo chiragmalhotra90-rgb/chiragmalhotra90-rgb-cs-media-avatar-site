@@ -608,7 +608,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
 .foot{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:44px }
 @media(max-width:800px){ .foot{ grid-template-columns:1fr; gap:32px } }
 .foot h4{ font-family:var(--mono-font); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--text-faint); margin-bottom:16px }
-.foot a{ display:block; color:var(--text-body); text-decoration:none; font-size:15px; font-weight:450; margin-bottom:11px; transition:color .25s }
+.foot a{ display:block; color:var(--text-body); text-decoration:none; font-size:15px; font-weight:450; padding-block:6px; margin-bottom:0; transition:color .25s; min-height:32px }
 .foot a:hover{ color:#fff }
 .foot > div:first-child p{ font-size:15px; line-height:1.68; font-weight:450; color:var(--text-body); max-width:46ch; margin-top:16px }
 .foot-logo{ font-family:var(--title-font); font-size:20px; letter-spacing:.02em; text-transform:uppercase; color:#fff }
