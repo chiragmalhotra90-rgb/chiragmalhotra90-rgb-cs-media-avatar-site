@@ -99,6 +99,8 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 #mnav a{color:var(--ap-white);text-decoration:none;font-size:19px;font-weight:500;padding:15px 0;border-bottom:1px solid var(--ap-border);min-height:44px}
 #mnav .btn{margin-top:18px}
 .mnav-close{position:absolute;top:22px;right:24px;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;font-size:20px;cursor:pointer}
+@media(max-width:1500px){nav{gap:14px;padding-inline:20px}.nav-links{gap:16px}.nav-act .btn-secondary{display:none}}
+@media(max-width:1280px){.nav-links{display:none}.nav-burger{display:inline-flex}}
 @media(max-width:1080px){.nav-links{display:none}.nav-burger{display:inline-flex}.nav-act .btn-secondary{display:none}}
 @media(max-width:640px){.nav-act .btn-primary{display:none}.mt-btn{padding:6px 8px;font-size:9.5px}}
 
@@ -184,18 +186,29 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 .prow:first-of-type{border-top:1px solid var(--ap-border)}
 @media(max-width:768px){.prow{grid-template-columns:1fr;gap:9px}}
 .prow .p-q{font-size:16.5px;font-weight:500;color:var(--ap-white);display:flex;gap:12px;align-items:flex-start}
-.prow .p-q span{color:var(--ap-orange-lit);flex:none;font-weight:600}
+.prow .p-q span{color:var(--ap-orange-lit);font-weight:600}
+.prow .p-q span:first-child{flex:none}
+.prow .p-q span+span{min-width:0}
 .prow .p-a{font-size:15px;color:var(--ap-silver);padding-left:18px;border-left:2px solid rgba(13,110,106,.55)}
 .prow .p-a b{color:var(--ap-teal-lit);font-weight:500;display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
 
 /* ---------- LIVE EXPERIENCE ---------- */
-.live-frame{border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);overflow:hidden;background:#050f0e;
-  box-shadow:0 30px 90px rgba(0,0,0,.45)}
-.live-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(216,224,220,.05);border-bottom:1px solid var(--ap-border)}
-.live-bar i{width:10px;height:10px;border-radius:50%;background:rgba(216,224,220,.22);display:block}
-.live-bar .u{margin-left:12px;font-size:12px;color:var(--ap-silver)}
 .live-note{margin-top:20px;font-size:14px;color:var(--ap-silver);padding:16px 20px;border-radius:16px;
   background:rgba(13,110,106,.09);border:1px solid rgba(13,110,106,.26)}
+
+/* watch — facade video player: our frame, our play key, no third-party UI
+   until the visitor presses play (then the embed loads with minimal chrome) */
+.vid-shell{position:relative;width:100%;max-width:1138px;aspect-ratio:16/9;border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);overflow:hidden;
+  background:radial-gradient(120% 120% at 28% 18%,rgba(13,110,106,.38),transparent 62%),radial-gradient(130% 120% at 82% 92%,rgba(193,68,14,.30),transparent 58%),#050f0e;
+  box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.vid-poster{position:absolute;inset:0;width:100%;height:100%;display:grid;place-items:center;padding:0;border:0;background:transparent;cursor:pointer}
+.vid-poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:.9}
+.vid-poster::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,15,14,.16),rgba(5,15,14,.48))}
+.vid-play{position:relative;z-index:2;width:88px;height:88px;border-radius:50%;display:grid;place-items:center;color:#fff;transition:transform .22s var(--ap-ease)}
+.vid-poster:hover .vid-play{transform:translateY(-2px) scale(1.04)}
+.vid-hint{position:absolute;z-index:2;bottom:16px;left:0;right:0;text-align:center;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,248,246,.85)}
+.vid-shell iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+@media(max-width:640px){.vid-play{width:66px;height:66px}.vid-hint{font-size:10px;letter-spacing:.08em}}
 
 /* gallery — next/next carousel viewer */
 .csl-main{position:relative;margin-top:34px;max-width:1138px}
@@ -237,10 +250,66 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
   color:var(--ap-teal-lit);background:rgba(11,24,21,.9);border:1.5px solid var(--ap-teal);flex:none}
 .step h3{font-size:18px;margin-bottom:6px}
 .step p{font-size:14.8px;color:var(--ap-silver);line-height:1.6}
-.proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;counter-reset:pc}
-.proc-item{display:flex;gap:13px;align-items:flex-start;padding:16px 18px;border:1px solid var(--ap-border);border-radius:15px;background:rgba(12,24,21,.5)}
-.proc-item span{font-size:12px;font-weight:600;color:var(--ap-orange-lit);flex:none;min-width:20px}
-.proc-item p{font-size:14.2px;color:var(--ap-silver);line-height:1.45}
+/* process timeline — four phases on one connected track (vertical on phones) */
+.ptl{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:44px}
+.ptl::before{content:'';position:absolute;top:9px;left:12px;right:12px;height:2px;border-radius:2px;opacity:.55;
+  background:linear-gradient(90deg,var(--ap-teal-lit),var(--ap-sand) 38%,var(--ap-green) 66%,var(--ap-orange-lit))}
+.ptl-phase{position:relative;padding-top:38px}
+.ptl-phase[data-ph="1"]{--ph:var(--ap-teal-lit);--ph-glow:rgba(18,147,141,.4)}
+.ptl-phase[data-ph="2"]{--ph:var(--ap-sand);--ph-glow:rgba(217,176,140,.32)}
+.ptl-phase[data-ph="3"]{--ph:var(--ap-green);--ph-glow:rgba(104,190,35,.3)}
+.ptl-phase[data-ph="4"]{--ph:var(--ap-orange-lit);--ph-glow:rgba(224,86,27,.4)}
+.ptl-dot{position:absolute;top:0;left:2px;width:20px;height:20px;border-radius:50%;border:2px solid var(--ph);background:var(--ap-forest);box-shadow:0 0 16px var(--ph-glow)}
+.ptl-dot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--ph)}
+.ptl-name{font-size:16px;font-weight:600;color:var(--ap-white)}
+.ptl-range{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ph);display:block;margin:2px 0 14px}
+.ptl-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ptl-list li{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border:1px solid var(--ap-border);border-radius:13px;background:rgba(12,24,21,.5);font-size:13.9px;line-height:1.45;color:var(--ap-silver)}
+.ptl-list li span{font-size:11.5px;font-weight:600;color:var(--ph);flex:none;min-width:20px;padding-top:1px}
+@media(max-width:900px){
+  .ptl{grid-template-columns:1fr;gap:30px}
+  .ptl::before{top:14px;bottom:6px;left:11px;right:auto;width:2px;height:auto;
+    background:linear-gradient(180deg,var(--ap-teal-lit),var(--ap-sand) 38%,var(--ap-green) 66%,var(--ap-orange-lit))}
+  .ptl-phase{padding-top:0;padding-left:40px}
+  .ptl-dot{top:2px}
+}
+
+/* partner network — two operations feeding one agent chain, benefits as flows */
+.pnet{margin-top:42px;display:grid;grid-template-columns:minmax(220px,1fr) minmax(270px,1.2fr) minmax(220px,1fr);gap:24px;align-items:start}
+.pnet-engines{grid-column:1/-1;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+.pnet-node{background:var(--ap-card);border:1px solid var(--ap-border);border-radius:var(--ap-radius);padding:22px 24px}
+.pnet-node strong{display:block;font-size:16px;font-weight:600;color:var(--ap-white);margin-bottom:4px}
+.pnet-node p{font-size:14.3px;color:var(--ap-silver);line-height:1.55}
+.pnet-tag{font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ap-teal-lit);display:block;margin-bottom:9px}
+.pnet-bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0 4px;text-align:center}
+.pnet-bridge .gv{display:none}
+.pnet-bridge-arrow{font-size:24px;line-height:1;color:var(--ap-teal-lit)}
+.pnet-bridge-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ap-silver);line-height:1.5}
+.pnet-spine{display:flex;flex-direction:column;align-items:stretch}
+.pnet-tier{text-align:center;border-color:var(--ap-border-lit)}
+.pnet-varrow{width:2px;height:30px;margin:0 auto 7px;background:rgba(18,147,141,.55);position:relative;flex:none}
+.pnet-varrow::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top:7px solid var(--ap-teal-lit)}
+.pnet-lane{border:1px dashed var(--ap-border);border-radius:var(--ap-radius);padding:22px;background:rgba(12,24,21,.35)}
+.pnet-lane-head{display:flex;align-items:center;gap:10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+.pnet-lane-down .pnet-lane-head{color:var(--ap-teal-lit)}
+.pnet-lane-up .pnet-lane-head{color:var(--ap-sand)}
+.pnet-lane-arrow{font-size:17px}
+.pnet-lane ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.pnet-lane li{font-size:13.9px;color:var(--ap-silver);line-height:1.5;padding-left:16px;position:relative}
+.pnet-lane li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%}
+.pnet-lane-down li::before{background:var(--ap-teal-lit)}
+.pnet-lane-up li::before{background:var(--ap-sand)}
+@media(max-width:960px){
+  .pnet{grid-template-columns:1fr;gap:18px}
+  .pnet-engines{grid-template-columns:1fr;gap:10px}
+  .pnet-bridge{flex-direction:row;gap:10px;padding:2px 0}
+  .pnet-bridge .gh{display:none}
+  .pnet-bridge .gv{display:inline}
+  .pnet-bridge-label br{display:none}
+  .pnet-spine{order:1}
+  .pnet-lane-down{order:2}
+  .pnet-lane-up{order:3}
+}
 
 /* ---------- LEADERSHIP ---------- */
 .leader{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:40px;align-items:start;
@@ -329,11 +398,11 @@ footer a:hover{color:var(--ap-white)}
     </a>
     <nav aria-label="Primary">
       <ul class="nav-links">
+        <li><a href="#watch">Watch</a></li>
+        <li><a href="#live">Experience It</a></li>
         <li><a href="#platform">Platform</a></li>
-        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#how">How It Works</a></li>
         <li><a href="#industries">Industries</a></li>
-        <li><a href="#live">Live Experience</a></li>
-        <li><a href="#operations">Global Operations</a></li>
         <li><a href="#leadership">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -342,6 +411,7 @@ footer a:hover{color:var(--ap-white)}
       <div class="mode-toggle" role="group" aria-label="Site version">
         <button type="button" class="mt-btn active" data-mode="aipresenter">AI Presenter</button>
         <button type="button" class="mt-btn" data-mode="professional">Professional</button>
+        <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
         <button type="button" class="mt-btn" data-mode="casual">Casual</button>
       </div>
       <a class="btn btn-secondary" href="#platform">Explore the Platform</a>
@@ -353,11 +423,11 @@ footer a:hover{color:var(--ap-white)}
 
 <div id="mnav" role="dialog" aria-modal="true" aria-label="Menu">
   <button class="mnav-close" id="mnavClose" aria-label="Close menu">✕</button>
+  <a href="#watch">Watch</a>
+  <a href="#live">Experience It</a>
   <a href="#platform">Platform</a>
-  <a href="#capabilities">Capabilities</a>
+  <a href="#how">How It Works</a>
   <a href="#industries">Industries</a>
-  <a href="#live">Live Experience</a>
-  <a href="#operations">Global Operations</a>
   <a href="#leadership">About</a>
   <a href="#contact">Contact</a>
   <a class="btn btn-primary" href="#contact">Book a Business Demo</a>
@@ -371,15 +441,15 @@ footer a:hover{color:var(--ap-white)}
   <div class="shell hero-grid">
     <div>
       <span class="eyebrow">AI Sales • Presentation • Automation</span>
-      <h1 class="h1">Your Business,<br><span class="accent-sand">Presented by Intelligence.</span></h1>
+      <h1 class="h1">An AI Presenter for Your Business.<br><span class="accent-sand">It Greets, Presents and Answers — 24/7.</span></h1>
 
       <div class="rotator" id="rotator" aria-live="off"></div>
 
-      <p class="lead" style="margin-bottom:14px">AI Presenter combines intelligent presentation, live conversation, visual exploration, lead qualification, CRM automation and personalised follow-up into one connected customer experience.</p>
+      <p class="lead" style="margin-bottom:14px">AI Presenter is a digital presenter trained on your business. It introduces your company, walks each customer through your offer, answers their questions by voice or text, and captures qualified leads — every hour of every day.</p>
       <p class="body" style="margin-bottom:30px">Operate continuously. Communicate consistently. Scale without losing the human connection.</p>
 
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#live" data-ap="ap_live_experience_click" data-label="Hero — Experience AI Presenter">Experience AI Presenter</a>
+        <a class="btn btn-primary" href="#watch" data-ap="ap_watch_demo_click" data-label="Hero — Watch Maya Explain It">Watch Maya Explain It</a>
         <a class="btn btn-secondary" href="#contact" data-ap="ap_hero_contact_click" data-label="Hero — Talk to Our Team">Talk to Our Team</a>
       </div>
 
@@ -403,39 +473,51 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
-<!-- ============ GLOBAL OPERATIONS TRUST STRIP ============ -->
-<section id="operations" class="rv">
+<!-- ============ WATCH ============ -->
+<section id="watch" class="rv">
   <div class="shell">
-    <span class="eyebrow eyebrow-teal">Global Presence</span>
-    <h2 class="h2">One International Team.<br>Two Operational Bases. Global Delivery.</h2>
-    <p class="lead" style="margin-bottom:38px">AI Presenter combines a dedicated technology and production operation in India with direct North American business representation in Canada.</p>
-
-    <div class="ops-grid">
-      <article class="card ops-card">
-        <div class="ops-flag" aria-hidden="true">🇮🇳</div>
-        <h3 class="h3">Mumbai, Maharashtra, India</h3>
-        <p class="ops-role">Technology, AI Development, Creative Production and Global Delivery</p>
-        <p>Our India operation designs, builds, trains, customises and supports the AI Presenter platform for clients across all markets.</p>
-        <ul class="ops-list">
-          <li>AI platform development</li><li>Knowledge architecture</li><li>Interface and product experience design</li>
-          <li>AI Navigator development</li><li>CRM and automation</li><li>Website and application integrations</li>
-          <li>Voice and chat configuration</li><li>Creative production</li><li>Technical testing</li><li>Deployment and optimisation</li>
-        </ul>
-      </article>
-      <article class="card ops-card">
-        <div class="ops-flag" aria-hidden="true">🇨🇦</div>
-        <h3 class="h3">Brampton, Ontario, Canada</h3>
-        <p class="ops-role">North American Business Development, Client Representation and Regional Expansion</p>
-        <p>Our Canadian operation supports businesses, agencies and strategic partners across Canada and the United States.</p>
-        <ul class="ops-list">
-          <li>Canada and USA business development</li><li>Local client meetings</li><li>Product demonstrations</li>
-          <li>Strategic partnerships</li><li>Commercial coordination</li><li>Regional onboarding</li>
-          <li>Agency relationships</li><li>Agent and sub-agent network development</li>
-          <li>Client-to-technology-team coordination</li><li>North American expansion</li>
-        </ul>
-      </article>
+    <span class="eyebrow eyebrow-teal">See It First</span>
+    <h2 class="h2">Watch Maya Explain AI Presenter</h2>
+    <p class="lead" style="margin-bottom:30px">The fastest way to understand the concept is to watch it work — an AI presenter, presenting itself. Press play and Maya walks you through what AI Presenter is, how it works and what it does for your business.</p>
+    <div class="vid-shell" id="vidShell">
+      <button type="button" class="vid-poster" id="vidPlay" aria-label="Play video: Maya explains AI Presenter">
+        <img src="https://i.ytimg.com/vi/yvKjmDCwu40/maxresdefault.jpg" alt="" loading="lazy"
+             onerror="if(this.dataset.f){this.style.display='none'}else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/yvKjmDCwu40/hqdefault.jpg'}">
+        <span class="vid-play lgx lgx--primary lgx-rel" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="vid-hint" aria-hidden="true">Press play — 2 minutes, presented by Maya</span>
+      </button>
     </div>
-    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Local representation. Connected execution. One consistent standard.</p>
+  </div>
+</section>
+
+<!-- ============ LIVE EXPERIENCE ============ -->
+<section id="live" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Live Experience</span>
+    <h2 class="h2">Do Not Just Read About It. Experience It.</h2>
+    <p class="lead" style="margin-bottom:30px">Meet Maya, the conversational face of AI Presenter. Ask questions, explore a project, navigate locations and experience how a customer interacts with a business through an intelligent guided interface.</p>
+
+    <div class="hero-ctas" style="margin-top:26px">
+      <a class="btn btn-primary" href="#contact" data-ap="ap_live_experience_click" data-label="Live — Launch Live Experience">Book a Live Maya Session</a>
+      <a class="btn btn-secondary" href="#gallery" data-ap="ap_product_overview_click" data-label="Live — Watch Product Overview">Watch Product Overview</a>
+    </div>
+    <p class="live-note">Client implementations are trained and configured using approved business information, defined workflows and agreed response guidelines.</p>
+
+    <div id="gallery">
+      <h3 class="h3" style="margin-top:52px">One Platform. Every Format.</h3>
+      <p class="body" style="margin-top:8px;max-width:820px">A quick visual tour of AI Presenter. Flip through with the arrows or the strip below — tap any image to view it full-size.</p>
+      <div class="csl-main">
+        <button type="button" class="csl-stage" id="cslStage" aria-label="Open current image full-size"><img id="cslImg" alt=""></button>
+        <button type="button" class="csl-nav" id="cslPrev" aria-label="Previous image">‹</button>
+        <button type="button" class="csl-nav" id="cslNext" aria-label="Next image">›</button>
+      </div>
+      <div class="csl-bar">
+        <div><span class="csl-count" id="cslCount"></span><span class="csl-tag" id="cslTag"></span></div>
+      </div>
+      <div class="csl-title" id="cslTitle"></div>
+      <div class="csl-desc" id="cslDesc"></div>
+      <div class="csl-thumbs" id="cslThumbs" role="tablist" aria-label="All images"></div>
+    </div>
   </div>
 </section>
 
@@ -476,56 +558,8 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
-<!-- ============ BUSINESS PROBLEM ============ -->
-<section class="rv">
-  <div class="shell">
-    <span class="eyebrow">The Real Problem</span>
-    <h2 class="h2">Most Businesses Do Not Have a Lead Problem.<br>They Have a <span class="accent-orange">Response Problem.</span></h2>
-    <p class="lead" style="margin-bottom:14px">Potential customers arrive at different times, ask different questions and expect immediate clarity. Delayed responses, inconsistent explanations and disconnected follow-up cause genuine opportunities to disappear.</p>
-    <p class="body" style="max-width:920px;margin-bottom:40px">AI Presenter creates one reliable system that remains available, informed and consistent across every interaction.</p>
-    <div id="problemRows"></div>
-  </div>
-</section>
-
-<!-- ============ LIVE EXPERIENCE ============ -->
-<section id="live" class="rv">
-  <div class="shell">
-    <span class="eyebrow eyebrow-teal">Live Experience</span>
-    <h2 class="h2">Do Not Just Read About It. Experience It.</h2>
-    <p class="lead" style="margin-bottom:30px">Meet Maya, the conversational face of AI Presenter. Ask questions, explore a project, navigate locations and experience how a customer interacts with a business through an intelligent guided interface.</p>
-
-    <div class="live-frame">
-      <div class="live-bar" aria-hidden="true"><i></i><i></i><i></i><span class="u">AI Presenter — live interface</span></div>
-      <img src="/ai-presenter/media/08_skyhawks_investor_presentation.jpg" width="1536" height="864"
-           alt="AI Presenter delivering a full investor deck with Maya answering questions in a live Q&A panel alongside the slides.">
-    </div>
-
-    <div class="hero-ctas" style="margin-top:26px">
-      <a class="btn btn-primary" href="#contact" data-ap="ap_live_experience_click" data-label="Live — Launch Live Experience">Launch Live Experience</a>
-      <a class="btn btn-secondary" href="#gallery" data-ap="ap_product_overview_click" data-label="Live — Watch Product Overview">Watch Product Overview</a>
-    </div>
-    <p class="live-note">Client implementations are trained and configured using approved business information, defined workflows and agreed response guidelines.</p>
-
-    <div id="gallery">
-      <h3 class="h3" style="margin-top:52px">One Platform. Every Format.</h3>
-      <p class="body" style="margin-top:8px;max-width:820px">A quick visual tour of AI Presenter. Flip through with the arrows or the strip below — tap any image to view it full-size.</p>
-      <div class="csl-main">
-        <button type="button" class="csl-stage" id="cslStage" aria-label="Open current image full-size"><img id="cslImg" alt=""></button>
-        <button type="button" class="csl-nav" id="cslPrev" aria-label="Previous image">‹</button>
-        <button type="button" class="csl-nav" id="cslNext" aria-label="Next image">›</button>
-      </div>
-      <div class="csl-bar">
-        <div><span class="csl-count" id="cslCount"></span><span class="csl-tag" id="cslTag"></span></div>
-      </div>
-      <div class="csl-title" id="cslTitle"></div>
-      <div class="csl-desc" id="cslDesc"></div>
-      <div class="csl-thumbs" id="cslThumbs" role="tablist" aria-label="All images"></div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ HOW IT WORKS ============ -->
-<section class="rv">
+<section id="how" class="rv">
   <div class="shell">
     <span class="eyebrow">How It Works</span>
     <h2 class="h2">From Business Knowledge to a Working AI Experience</h2>
@@ -544,41 +578,17 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
-<!-- ============ INDIA & NORTH AMERICA OPERATIONS ============ -->
+<!-- ============ BUSINESS OUTCOMES ============ -->
 <section class="rv">
   <div class="shell">
-    <span class="eyebrow">Operations</span>
-    <h2 class="h2">Global Capability. Local Accountability.</h2>
-    <p class="lead" style="margin-bottom:38px">AI Presenter operates through formally established business operations in India and Canada. This structure connects a dedicated technology and production team with direct North American market representation.</p>
-    <div class="ops-grid">
-      <article class="card ops-card">
-        <h3 class="h3">Mumbai, Maharashtra, India</h3>
-        <p class="ops-role">Technology, Product Development and Global Delivery</p>
-        <p>Our Mumbai operation leads the design, development, customisation and deployment of the AI Presenter platform.</p>
-        <ul class="ops-list">
-          <li>AI platform and product development</li><li>Business knowledge architecture</li><li>User experience and interface design</li>
-          <li>AI Navigator development</li><li>CRM and workflow automation</li><li>Voice and chat systems</li>
-          <li>Multilingual configuration</li><li>Creative and content production</li>
-          <li>Website and application integration</li><li>Testing, deployment and optimisation</li>
-        </ul>
-      </article>
-      <article class="card ops-card">
-        <h3 class="h3">Brampton, Ontario, Canada</h3>
-        <p class="ops-role">Business Development, Representation and Regional Expansion</p>
-        <p>Our Brampton operation represents AI Presenter across Canada and the United States and coordinates local business relationships with the India technology team.</p>
-        <ul class="ops-list">
-          <li>Business development across Canada and the USA</li><li>Client meetings and local representation</li>
-          <li>Product demonstrations</li><li>Strategic partnerships</li><li>Agency and enterprise relationships</li>
-          <li>Regional onboarding</li><li>Commercial coordination</li><li>Agent and sub-agent network development</li>
-          <li>North American market expansion</li><li>Implementation coordination with the India team</li>
-        </ul>
-      </article>
-    </div>
-    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-white)">Clients receive one connected delivery system—local business support backed by a dedicated international technology operation.</p>
+    <span class="eyebrow">The Real Problem</span>
+    <h2 class="h2">Most Businesses Do Not Have a Lead Problem.<br>They Have a <span class="accent-orange">Response Problem.</span></h2>
+    <p class="lead" style="margin-bottom:14px">Potential customers arrive at different times, ask different questions and expect immediate clarity. Delayed responses, inconsistent explanations and disconnected follow-up cause genuine opportunities to disappear.</p>
+    <p class="body" style="max-width:920px;margin-bottom:40px">AI Presenter creates one reliable system that remains available, informed and consistent across every interaction.</p>
+    <div id="problemRows"></div>
   </div>
 </section>
 
-<!-- ============ BUSINESS OUTCOMES ============ -->
 <section class="rv">
   <div class="shell">
     <span class="eyebrow">Business Outcomes</span>
@@ -612,6 +622,42 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
+<!-- ============ GLOBAL OPERATIONS TRUST STRIP ============ -->
+<section id="operations" class="rv">
+  <div class="shell">
+    <span class="eyebrow eyebrow-teal">Global Presence</span>
+    <h2 class="h2">One International Team.<br>Two Operational Bases. Global Delivery.</h2>
+    <p class="lead" style="margin-bottom:38px">AI Presenter combines a dedicated technology and production operation in India with direct North American business representation in Canada.</p>
+
+    <div class="ops-grid">
+      <article class="card ops-card">
+        <div class="ops-flag" aria-hidden="true">🇮🇳</div>
+        <h3 class="h3">Mumbai, Maharashtra, India</h3>
+        <p class="ops-role">Technology, AI Development, Creative Production and Global Delivery</p>
+        <p>Our India operation designs, builds, trains, customises and supports the AI Presenter platform for clients across all markets.</p>
+        <ul class="ops-list">
+          <li>AI platform development</li><li>Knowledge architecture</li><li>Interface and product experience design</li>
+          <li>AI Navigator development</li><li>CRM and automation</li><li>Website and application integrations</li>
+          <li>Voice and chat configuration</li><li>Creative production</li><li>Technical testing</li><li>Deployment and optimisation</li>
+        </ul>
+      </article>
+      <article class="card ops-card">
+        <div class="ops-flag" aria-hidden="true">🇨🇦</div>
+        <h3 class="h3">Brampton, Ontario, Canada</h3>
+        <p class="ops-role">North American Business Development, Client Representation and Regional Expansion</p>
+        <p>Our Canadian operation supports businesses, agencies and strategic partners across Canada and the United States.</p>
+        <ul class="ops-list">
+          <li>Canada and USA business development</li><li>Local client meetings</li><li>Product demonstrations</li>
+          <li>Strategic partnerships</li><li>Commercial coordination</li><li>Regional onboarding</li>
+          <li>Agency relationships</li><li>Agent and sub-agent network development</li>
+          <li>Client-to-technology-team coordination</li><li>North American expansion</li>
+        </ul>
+      </article>
+    </div>
+    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Local representation. Connected execution. One consistent standard.</p>
+  </div>
+</section>
+
 <!-- ============ IMPLEMENTATION OPTIONS ============ -->
 <section class="rv">
   <div class="shell">
@@ -623,25 +669,111 @@ footer a:hover{color:var(--ap-white)}
   </div>
 </section>
 
+<!-- ============ IMPLEMENTATION PROCESS ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">Process</span>
+    <h2 class="h2">A Clear Process From Discovery to Deployment</h2>
+    <div class="ptl">
+      <div class="ptl-phase" data-ph="1">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Discover</h3>
+        <span class="ptl-range">Steps 01–02</span>
+        <ul class="ptl-list">
+          <li><span>01</span>Business discovery session</li>
+          <li><span>02</span>Customer journey and objective mapping</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="2">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Build</h3>
+        <span class="ptl-range">Steps 03–06</span>
+        <ul class="ptl-list">
+          <li><span>03</span>Content and asset collection</li>
+          <li><span>04</span>Knowledge architecture</li>
+          <li><span>05</span>Experience and interface design</li>
+          <li><span>06</span>AI configuration and response rules</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="3">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Connect &amp; Test</h3>
+        <span class="ptl-range">Steps 07–09</span>
+        <ul class="ptl-list">
+          <li><span>07</span>CRM and automation connection</li>
+          <li><span>08</span>Internal testing</li>
+          <li><span>09</span>Client review and approval</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="4">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Launch &amp; Improve</h3>
+        <span class="ptl-range">Steps 10–11</span>
+        <ul class="ptl-list">
+          <li><span>10</span>Launch</li>
+          <li><span>11</span>Monitoring and optimisation</li>
+        </ul>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Every client implementation is built using approved information, defined escalation rules and a structured review process.</p>
+  </div>
+</section>
+
 <!-- ============ PARTNER / AGENT ============ -->
 <section class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Partners &amp; Agents</span>
     <h2 class="h2">Build the AI Presenter Market With Us</h2>
     <p class="lead" style="margin-bottom:14px">AI Presenter works with agencies, consultants, technology partners, regional representatives and business development professionals who want to introduce intelligent presentation and automation solutions to their markets.</p>
-    <p class="body" style="max-width:920px;margin-bottom:34px">Our North America operation is developing a structured network of regional agents and sub-agents across Canada and the United States, supported by the platform, production and implementation capabilities of the India operation.</p>
-    <div class="g4" id="partnerGrid"></div>
-    <div style="margin-top:30px"><a class="btn btn-primary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Partner — Discuss Partnership">Discuss a Regional or Agency Partnership</a></div>
-  </div>
-</section>
+    <p class="body" style="max-width:920px;margin-bottom:34px">Our North America operation is developing a structured network of regional agents and sub-agents across Canada and the United States, supported by the platform, production and implementation capabilities of the India operation. This is how the network fits together:</p>
+    <div class="pnet">
+      <div class="pnet-engines">
+        <div class="pnet-node">
+          <span class="pnet-tag">India Operation · Mumbai</span>
+          <strong>The production engine</strong>
+          <p>Platform, content production and implementation behind every deployment in the network.</p>
+        </div>
+        <div class="pnet-bridge" aria-hidden="true">
+          <span class="pnet-bridge-arrow"><span class="gh">⇄</span><span class="gv">⇅</span></span>
+          <span class="pnet-bridge-label">One platform <br>One standard</span>
+        </div>
+        <div class="pnet-node">
+          <span class="pnet-tag">North America Operation · Brampton, ON</span>
+          <strong>The network builder</strong>
+          <p>Business development, partnerships and regional representation across Canada and the United States.</p>
+        </div>
+      </div>
 
-<!-- ============ IMPLEMENTATION PROCESS ============ -->
-<section class="rv">
-  <div class="shell">
-    <span class="eyebrow">Process</span>
-    <h2 class="h2">A Clear Process From Discovery to Deployment</h2>
-    <div class="proc-grid" style="margin-top:36px" id="procGrid"></div>
-    <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Every client implementation is built using approved information, defined escalation rules and a structured review process.</p>
+      <aside class="pnet-lane pnet-lane-down">
+        <span class="pnet-lane-head"><span class="pnet-lane-arrow" aria-hidden="true">↓</span>The platform sends down</span>
+        <ul>
+          <li>International product and delivery support</li>
+          <li>Structured onboarding</li>
+          <li>Sales and presentation resources</li>
+          <li>Implementation coordination</li>
+        </ul>
+      </aside>
+
+      <div class="pnet-spine">
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Regional agents</strong><p>Lead territories across Canada and the United States.</p></div>
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Sub-agents</strong><p>Extend each territory with local reach and relationships.</p></div>
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Clients</strong><p>Businesses across multiple industries, presented by AI Presenter.</p></div>
+      </div>
+
+      <aside class="pnet-lane pnet-lane-up">
+        <span class="pnet-lane-head"><span class="pnet-lane-arrow" aria-hidden="true">↑</span>Partners build up</span>
+        <ul>
+          <li>Local market development</li>
+          <li>Product demonstrations</li>
+          <li>Opportunities across multiple industries</li>
+          <li>Long-term account and relationship potential</li>
+        </ul>
+      </aside>
+    </div>
+    <div style="margin-top:30px"><a class="btn btn-primary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Partner — Discuss Partnership">Discuss a Regional or Agency Partnership</a></div>
   </div>
 </section>
 
@@ -755,14 +887,11 @@ footer a:hover{color:var(--ap-white)}
 <script>
 /* ================== CONTENT DATA ================== */
 var HERO_STATEMENTS = [
- "AI-Powered Growth Across India, Canada & the USA",
- "A 24/7 AI Sales Team That Presents, Explains and Converts",
- "Built in India. Represented in Canada. Ready for Global Markets",
- "Transform Every Enquiry Into a Guided Sales Experience",
- "One Intelligent Platform for Presentation, Qualification and Follow-Up",
- "Give Every Prospect the Right Answer at the Right Moment",
- "Global AI Technology With Local Business Representation",
- "From Mumbai to Brampton—Powering Smarter Customer Journeys",
+ "Presents your project like your best salesperson — on every visit",
+ "Answers customer questions instantly, by voice or text, in their language",
+ "Qualifies leads and captures requirements while you sleep",
+ "Walks buyers through properties, products and plans visually",
+ "Hands every conversation to your CRM with full context for follow-up",
  "Multilingual AI Conversations Designed Around Your Business",
  "The Future of Sales Is Personal, Interactive and Always Available"
 ];
@@ -770,11 +899,8 @@ var HERO_STATEMENTS = [
 var PROBLEMS = [
  ["Enquiries arrive outside office hours","An always-available guided business presentation."],
  ["Different salespeople provide different information","One controlled and approved business knowledge system."],
- ["Customers do not understand the complete offer","Interactive explanation based on individual interest and questions."],
  ["Teams repeat the same basic information","AI handles early-stage education while the team focuses on serious conversations."],
- ["Leads are captured without useful context","Conversation-led requirement capture and qualification."],
- ["Follow-up becomes irregular or too aggressive","Structured, relevant and knowledge-based follow-up."],
- ["International customers need confidence and accountability","India technology delivery connected to local North American representation."]
+ ["Leads are captured without useful context","Conversation-led requirement capture and qualification."]
 ];
 
 var HOW_STEPS = [
@@ -815,10 +941,6 @@ var IMPL_OPTIONS = [
  ["Enterprise Experience","Custom integrations, multiple locations, partner networks, advanced automation and dedicated workflows.",["Enterprise deployment","Multi-branch operations","Agency networks","International campaigns","Multi-product or multi-region use"]]
 ];
 
-var PARTNER_ADV = ["International product and delivery support","Local market development","Product demonstrations","Structured onboarding","Sales and presentation resources","Implementation coordination","Opportunities across multiple industries","Long-term account and relationship potential"];
-
-var PROCESS = ["Business discovery session","Customer journey and objective mapping","Content and asset collection","Knowledge architecture","Experience and interface design","AI configuration and response rules","CRM and automation connection","Internal testing","Client review and approval","Launch","Monitoring and optimisation"];
-
 var FAQS = [
  ["Is AI Presenter only a chatbot?","No. AI Presenter combines presentation, conversation, visuals, navigation, qualification, CRM workflows and follow-up into one connected customer experience."],
  ["Can AI Presenter be trained on our business information?","Yes. The platform is configured using approved business documents, FAQs, product details, sales information, media assets and response rules supplied or approved by the client."],
@@ -835,7 +957,9 @@ var FAQS = [
 
 var MEDIA = [
  {src:"/ai-presenter/media/08_skyhawks_investor_presentation.jpg",tag:"Deck + Q&A",title:"Full deck with live Q&A",desc:"A 24-slide investor deck presented alongside Maya answering investor questions in real time.",w:1536,h:864},
- {src:"/ai-presenter/media/09_skyhawks_topic_interface.jpg",tag:"Topic Navigator",title:"Navigator around your brand",desc:"Topic pills orbit the client logo — running live on the client's own domain.",w:1536,h:864}
+ {src:"/ai-presenter/media/09_skyhawks_topic_interface.jpg",tag:"Topic Navigator",title:"Navigator around your brand",desc:"Topic pills orbit the client logo — running live on the client's own domain.",w:1536,h:864},
+ {src:"/ai-presenter/media/10_hsa_ai_navigator.jpg",tag:"AI Navigator",title:"Explore the location, guided",desc:"The AI Navigator built for Home Search Advisors — an interactive project map with travel times and nearby landmarks, with Maya answering location questions by voice or text.",w:1536,h:864},
+ {src:"/ai-presenter/media/11_hsa_custom_ui.jpg",tag:"Custom UI",title:"A custom-made interface around the brand",desc:"Home Search Advisors' custom-built home screen — every topic a tap away around the brand mark, with Maya ready to present, answer and talk live.",w:1536,h:864}
 ];
 
 /* ================== ANALYTICS ================== */
@@ -916,16 +1040,6 @@ function el(tag,cls,html){var e=document.createElement(tag); if(cls)e.className=
   });
 })();
 
-(function(){ // partner advantages
-  var w=document.getElementById('partnerGrid');
-  PARTNER_ADV.forEach(function(s){ w.appendChild(el('article','card','<p style="color:var(--ap-white);font-size:15px;font-weight:500">'+s+'</p>')); });
-})();
-
-(function(){ // process
-  var w=document.getElementById('procGrid');
-  PROCESS.forEach(function(s,n){ w.appendChild(el('div','proc-item','<span>'+String(n+1).padStart(2,'0')+'</span><p>'+s+'</p>')); });
-})();
-
 (function(){ // FAQ + schema
   var w=document.getElementById('faqList');
   FAQS.forEach(function(f,n){
@@ -967,6 +1081,7 @@ var CREATIVES = [];
     thumbs.appendChild(b);
   });
 
+  var firstShow=true;
   function show(n){
     idx=(n+VIEW.length)%VIEW.length;
     var m=VIEW[idx];
@@ -974,7 +1089,11 @@ var CREATIVES = [];
     count.textContent=(idx+1)+' / '+VIEW.length;
     tag.textContent=m.tag||''; title.textContent=m.title||''; desc.textContent=m.desc||'';
     Array.prototype.forEach.call(thumbs.children,function(x,i){x.setAttribute('aria-current',String(i===idx));});
-    var t=thumbs.children[idx]; if(t&&t.scrollIntoView) t.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+    // centre the active thumb only on user navigation — running this during
+    // init scrolled the whole page down to the gallery on every load, so
+    // visitors never saw the hero
+    var t=thumbs.children[idx]; if(!firstShow && t&&t.scrollIntoView) t.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+    firstShow=false;
     var pre=new Image(); pre.src=VIEW[(idx+1)%VIEW.length].src;
   }
   document.getElementById('cslPrev').addEventListener('click',function(){show(idx-1);});
@@ -1020,7 +1139,7 @@ var CREATIVES = [];
 })();
 
 /* ============ MODE TOGGLE ============ */
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='aipresenter')?'/ai-presenter':'/';});});
+document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
 
 /* ================== NAV ================== */
 (function(){
@@ -1109,10 +1228,55 @@ document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('cli
 </script>
 
 <!-- ===== BendyButton 3D key — CS Media & Production ===== -->
-<link rel="stylesheet" href="/bendy3d.css">
-<link rel="stylesheet" href="/csmedia-bendy.css">
-<script src="/bendy3d.js"></script>
-<script src="/csmedia-bendy-init.js" data-mode="3d"></script>
+<!-- ===== Liquid glass controls — AI Presenter only ==================
+     This page does NOT load the BendyButton 3D engine: its carousel stage
+     is a <button> wrapping a 16:9 image, and the engine's DOM rebuild
+     painted it over as a giant key and collapsed the lightbox controls.
+     Glass here is pure CSS — nothing restructures the buttons. -->
+<link rel="stylesheet" href="/csmedia-liquid-glass.css">
+<script>
+(function(){
+  // apply the glass classes to this page's controls
+  var give = function(sel, cls){
+    document.querySelectorAll(sel).forEach(function(e){
+      e.classList.add('lgx');
+      if (cls) e.classList.add(cls);
+      // the specular layer needs a positioned host, but forcing
+      // position:relative onto absolutely-positioned controls (the
+      // carousel arrows, the menu close) tears them out of place
+      if (getComputedStyle(e).position === 'static') e.classList.add('lgx-rel');
+    });
+  };
+  give('.btn-primary', 'lgx--primary');
+  give('.btn-secondary', 'lgx--teal');
+  give('.nav-burger, .mnav-close, .lb-btn, .csl-nav', 'lgx--quiet');
+  var mt = document.querySelector('.mode-toggle');
+  if (mt) mt.classList.add('lgx-track');
+
+  // the video facade: swap our poster for the embed only when asked.
+  // youtube-nocookie + playsinline keeps the loaded player as quiet as the
+  // platform allows; before the click there is no third-party UI at all.
+  var vs=document.getElementById('vidShell'), vp=document.getElementById('vidPlay');
+  if (vs && vp) vp.addEventListener('click', function(){
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/yvKjmDCwu40?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&color=white';
+    f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen=true;
+    f.title='Maya explains AI Presenter';
+    vs.innerHTML=''; vs.appendChild(f);
+  });
+
+  // keep the active version visible inside the scrollable track on phones
+  var a = document.querySelector('.mode-toggle .mt-btn.active');
+  if (a){
+    var t = a.parentElement;
+    if (t && t.scrollWidth > t.clientWidth){
+      t.scrollLeft += a.getBoundingClientRect().left - t.getBoundingClientRect().left
+                      - (t.clientWidth - a.offsetWidth) / 2;
+    }
+  }
+})();
+</script>
 <!-- ===================================================== -->
 </body>
 </html>

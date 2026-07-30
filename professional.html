@@ -69,6 +69,12 @@ nav.scrolled{padding:12px 40px;background:rgba(2,5,6,.98)}
 .mt-btn.active{background:var(--cyan);color:#00131a;opacity:1}
 .mt-btn:not(.active):hover{opacity:1}
 
+/* With four versions in the switcher this nav carries a logo, five links and
+   two controls. Tighten the gutters before it runs past the viewport, and drop
+   the links to the burger-free layout a little earlier than the old 768px. */
+@media(max-width:1400px){nav,nav.scrolled{padding-inline:24px;gap:16px}.nav-links{gap:20px}.logo{font-size:13.5px}}
+@media(max-width:1100px){.nav-links{display:none}}
+
 /* ---------- TYPOGRAPHY: HEADINGS ---------- */
 .hero-heading{font-family:var(--font-display);font-weight:800;font-size:clamp(42px,6.2vw,88px);line-height:.92;letter-spacing:-.02em;text-transform:uppercase}
 .section-heading{font-family:var(--font-display);font-weight:800;font-size:clamp(32px,4.3vw,62px);line-height:.98;letter-spacing:-.018em;text-transform:uppercase;margin-bottom:20px}
@@ -211,7 +217,16 @@ footer a:hover{color:var(--cyan)}
 .hero-video{position:relative;width:min(620px,88vw);aspect-ratio:16/9;object-fit:cover;mix-blend-mode:screen;pointer-events:none;
   -webkit-mask-image:radial-gradient(60% 70% at 50% 50%,#000 52%,transparent 80%);mask-image:radial-gradient(60% 70% at 50% 50%,#000 52%,transparent 80%);
   margin:-30px 0 -56px}
-.hero h1.hero-heading{margin-bottom:20px}
+/* The hero headline now rotates through the shared lines, which run from two
+   words to eleven. Cap the width and size so a long line stays inside the
+   frame, and reserve the height so the video, tagline and CTA below it do not
+   jump every five seconds. */
+.hero h1.hero-heading{margin-bottom:20px;max-width:1040px;margin-inline:auto;
+  font-size:clamp(28px,4.4vw,60px);
+  min-height:3.75em;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0 .26em;
+  transition:opacity .42s var(--ease-premium), transform .42s var(--ease-premium)}
+.hero h1.hero-heading.swapping{opacity:0;transform:translateY(-10px)}
+@media(max-width:640px){.hero h1.hero-heading{font-size:clamp(24px,7.4vw,34px);min-height:6.1em}}
 .hero .tagline{font-size:clamp(1rem,1.9vw,1.25rem);color:var(--text-body);margin-bottom:36px;font-weight:400;max-width:640px;font-family:var(--font-body)}
 .hero .cta{display:inline-block;background:var(--cyan);color:#00131a;padding:16px 38px;border-radius:999px;font-family:var(--font-mono);font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:transform .2s var(--ease-premium)}
 .hero .cta:hover{transform:translateY(-1px)}
@@ -258,6 +273,10 @@ footer a:hover{color:var(--cyan)}
   .discovery-band{flex-direction:column;text-align:center}
   .csai-card{width:100%;height:100%;margin:0;border-radius:0}
   .mt-btn{padding:5px 9px;font-size:9.5px}
+  /* The hero carries its own "Start a project" button two screens up, so on a
+     phone the nav gives that space to the version switcher instead. */
+  nav .start-btn{display:none}
+  .logo{font-size:12px}
 }
 @media(max-width:900px){.onboard-grid{grid-template-columns:1fr 1fr}}
 </style>
@@ -279,6 +298,7 @@ footer a:hover{color:var(--cyan)}
     <div class="mode-toggle" role="group" aria-label="Site mode">
       <button type="button" class="mt-btn" data-mode="aipresenter">AI Presenter</button>
       <button type="button" class="mt-btn active" data-mode="professional">Professional</button>
+      <button type="button" class="mt-btn" data-mode="cinematic">Cinematic</button>
       <button type="button" class="mt-btn" data-mode="casual">Casual</button>
     </div>
     <button class="start-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Start a project</button>
@@ -290,10 +310,10 @@ footer a:hover{color:var(--cyan)}
 <div class="hero">
   <div class="ambient-glow" style="left:50%;top:10%;transform:translateX(-50%);background:radial-gradient(circle,rgba(0,234,244,.5),transparent 70%)"></div>
   <div class="version-tag">Professional Version</div>
-  <video class="hero-video" src="logo-reveal.mp4" autoplay muted playsinline preload="auto" aria-hidden="true"></video>
-  <h1 class="hero-heading">
-    <span class="heading-white">Bringing your</span>
-    <span class="gradient-text gradient-spectrum">brand to life.</span>
+  <video class="hero-video" data-src="logo-reveal.mp4" autoplay muted playsinline preload="none" aria-hidden="true"></video>
+  <h1 class="hero-heading" id="heroTitle">
+    <span class="heading-white">One brief.</span>
+    <span class="gradient-text gradient-spectrum">A complete growth system.</span>
   </h1>
   <p class="tagline">AI-powered content, video, websites, CRM, branding & automation — under one connected engine.</p>
   <a href="#pricing" class="cta">Start a project</a>
@@ -515,7 +535,7 @@ footer a:hover{color:var(--cyan)}
 
 <script>
 // Mode toggle
-document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='aipresenter')?'/ai-presenter':'/';});});
+document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('click',function(){var m=b.dataset.mode;try{localStorage.setItem('cs_mode',m);}catch(e){}location.href=(m==='professional')?'/professional.html':(m==='cinematic')?'/cinematic.html':(m==='aipresenter')?'/ai-presenter':'/';});});
 
 // Nav scroll effect
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)});
@@ -549,6 +569,35 @@ buttons.forEach(function(b){b.addEventListener('click',function(){var f=b.datase
   document.getElementById('csaiClose').addEventListener('click',closePanel);
   panel.addEventListener('click',function(e){if(e.target===panel)closePanel();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closePanel();});
+})();
+</script>
+
+<script>
+/* The logo reveal is 1.5 MB — three quarters of this page's weight — and this
+   is now the page a first-time visitor lands on. Let the text, type and CTA
+   paint first, then stream the video in when the browser is idle. */
+(function(){
+  var v=document.querySelector('.hero-video'); if(!v||!v.dataset.src) return;
+  function go(){ v.src=v.dataset.src; v.load(); var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  if('requestIdleCallback' in window) requestIdleCallback(go,{timeout:2500});
+  else window.addEventListener('load',go);
+})();
+</script>
+<script src="/csmedia-hero-lines.js"></script>
+<script>
+/* Rotating hero headline. Copy lives in csmedia-hero-lines.js so this version,
+   Cinematic and Casual all say the same thing in their own type. */
+(function(){
+  var el=document.getElementById('heroTitle'); if(!el||!window.CSHero) return;
+  function paint(entry){
+    el.classList.add('swapping');
+    setTimeout(function(){
+      el.innerHTML='<span class="heading-white">'+entry.lead+'</span> '+
+                   '<span class="gradient-text gradient-spectrum">'+entry.accent+'</span>';
+      el.classList.remove('swapping');
+    },430);
+  }
+  window.CSHero.rotate({ onChange: paint });
 })();
 </script>
 
