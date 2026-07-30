@@ -250,10 +250,66 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
   color:var(--ap-teal-lit);background:rgba(11,24,21,.9);border:1.5px solid var(--ap-teal);flex:none}
 .step h3{font-size:18px;margin-bottom:6px}
 .step p{font-size:14.8px;color:var(--ap-silver);line-height:1.6}
-.proc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;counter-reset:pc}
-.proc-item{display:flex;gap:13px;align-items:flex-start;padding:16px 18px;border:1px solid var(--ap-border);border-radius:15px;background:rgba(12,24,21,.5)}
-.proc-item span{font-size:12px;font-weight:600;color:var(--ap-orange-lit);flex:none;min-width:20px}
-.proc-item p{font-size:14.2px;color:var(--ap-silver);line-height:1.45}
+/* process timeline — four phases on one connected track (vertical on phones) */
+.ptl{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:44px}
+.ptl::before{content:'';position:absolute;top:9px;left:12px;right:12px;height:2px;border-radius:2px;opacity:.55;
+  background:linear-gradient(90deg,var(--ap-teal-lit),var(--ap-sand) 38%,var(--ap-green) 66%,var(--ap-orange-lit))}
+.ptl-phase{position:relative;padding-top:38px}
+.ptl-phase[data-ph="1"]{--ph:var(--ap-teal-lit);--ph-glow:rgba(18,147,141,.4)}
+.ptl-phase[data-ph="2"]{--ph:var(--ap-sand);--ph-glow:rgba(217,176,140,.32)}
+.ptl-phase[data-ph="3"]{--ph:var(--ap-green);--ph-glow:rgba(104,190,35,.3)}
+.ptl-phase[data-ph="4"]{--ph:var(--ap-orange-lit);--ph-glow:rgba(224,86,27,.4)}
+.ptl-dot{position:absolute;top:0;left:2px;width:20px;height:20px;border-radius:50%;border:2px solid var(--ph);background:var(--ap-forest);box-shadow:0 0 16px var(--ph-glow)}
+.ptl-dot::after{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--ph)}
+.ptl-name{font-size:16px;font-weight:600;color:var(--ap-white)}
+.ptl-range{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ph);display:block;margin:2px 0 14px}
+.ptl-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ptl-list li{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border:1px solid var(--ap-border);border-radius:13px;background:rgba(12,24,21,.5);font-size:13.9px;line-height:1.45;color:var(--ap-silver)}
+.ptl-list li span{font-size:11.5px;font-weight:600;color:var(--ph);flex:none;min-width:20px;padding-top:1px}
+@media(max-width:900px){
+  .ptl{grid-template-columns:1fr;gap:30px}
+  .ptl::before{top:14px;bottom:6px;left:11px;right:auto;width:2px;height:auto;
+    background:linear-gradient(180deg,var(--ap-teal-lit),var(--ap-sand) 38%,var(--ap-green) 66%,var(--ap-orange-lit))}
+  .ptl-phase{padding-top:0;padding-left:40px}
+  .ptl-dot{top:2px}
+}
+
+/* partner network — two operations feeding one agent chain, benefits as flows */
+.pnet{margin-top:42px;display:grid;grid-template-columns:minmax(220px,1fr) minmax(270px,1.2fr) minmax(220px,1fr);gap:24px;align-items:start}
+.pnet-engines{grid-column:1/-1;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:stretch}
+.pnet-node{background:var(--ap-card);border:1px solid var(--ap-border);border-radius:var(--ap-radius);padding:22px 24px}
+.pnet-node strong{display:block;font-size:16px;font-weight:600;color:var(--ap-white);margin-bottom:4px}
+.pnet-node p{font-size:14.3px;color:var(--ap-silver);line-height:1.55}
+.pnet-tag{font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ap-teal-lit);display:block;margin-bottom:9px}
+.pnet-bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0 4px;text-align:center}
+.pnet-bridge .gv{display:none}
+.pnet-bridge-arrow{font-size:24px;line-height:1;color:var(--ap-teal-lit)}
+.pnet-bridge-label{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ap-silver);line-height:1.5}
+.pnet-spine{display:flex;flex-direction:column;align-items:stretch}
+.pnet-tier{text-align:center;border-color:var(--ap-border-lit)}
+.pnet-varrow{width:2px;height:30px;margin:0 auto 7px;background:rgba(18,147,141,.55);position:relative;flex:none}
+.pnet-varrow::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top:7px solid var(--ap-teal-lit)}
+.pnet-lane{border:1px dashed var(--ap-border);border-radius:var(--ap-radius);padding:22px;background:rgba(12,24,21,.35)}
+.pnet-lane-head{display:flex;align-items:center;gap:10px;font-size:11.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+.pnet-lane-down .pnet-lane-head{color:var(--ap-teal-lit)}
+.pnet-lane-up .pnet-lane-head{color:var(--ap-sand)}
+.pnet-lane-arrow{font-size:17px}
+.pnet-lane ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.pnet-lane li{font-size:13.9px;color:var(--ap-silver);line-height:1.5;padding-left:16px;position:relative}
+.pnet-lane li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%}
+.pnet-lane-down li::before{background:var(--ap-teal-lit)}
+.pnet-lane-up li::before{background:var(--ap-sand)}
+@media(max-width:960px){
+  .pnet{grid-template-columns:1fr;gap:18px}
+  .pnet-engines{grid-template-columns:1fr;gap:10px}
+  .pnet-bridge{flex-direction:row;gap:10px;padding:2px 0}
+  .pnet-bridge .gh{display:none}
+  .pnet-bridge .gv{display:inline}
+  .pnet-bridge-label br{display:none}
+  .pnet-spine{order:1}
+  .pnet-lane-down{order:2}
+  .pnet-lane-up{order:3}
+}
 
 /* ---------- LEADERSHIP ---------- */
 .leader{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:40px;align-items:start;
@@ -618,7 +674,47 @@ footer a:hover{color:var(--ap-white)}
   <div class="shell">
     <span class="eyebrow">Process</span>
     <h2 class="h2">A Clear Process From Discovery to Deployment</h2>
-    <div class="proc-grid" style="margin-top:36px" id="procGrid"></div>
+    <div class="ptl">
+      <div class="ptl-phase" data-ph="1">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Discover</h3>
+        <span class="ptl-range">Steps 01–02</span>
+        <ul class="ptl-list">
+          <li><span>01</span>Business discovery session</li>
+          <li><span>02</span>Customer journey and objective mapping</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="2">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Build</h3>
+        <span class="ptl-range">Steps 03–06</span>
+        <ul class="ptl-list">
+          <li><span>03</span>Content and asset collection</li>
+          <li><span>04</span>Knowledge architecture</li>
+          <li><span>05</span>Experience and interface design</li>
+          <li><span>06</span>AI configuration and response rules</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="3">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Connect &amp; Test</h3>
+        <span class="ptl-range">Steps 07–09</span>
+        <ul class="ptl-list">
+          <li><span>07</span>CRM and automation connection</li>
+          <li><span>08</span>Internal testing</li>
+          <li><span>09</span>Client review and approval</li>
+        </ul>
+      </div>
+      <div class="ptl-phase" data-ph="4">
+        <span class="ptl-dot" aria-hidden="true"></span>
+        <h3 class="ptl-name">Launch &amp; Improve</h3>
+        <span class="ptl-range">Steps 10–11</span>
+        <ul class="ptl-list">
+          <li><span>10</span>Launch</li>
+          <li><span>11</span>Monitoring and optimisation</li>
+        </ul>
+      </div>
+    </div>
     <p class="lead" style="margin-top:28px;font-weight:500;color:var(--ap-sand)">Every client implementation is built using approved information, defined escalation rules and a structured review process.</p>
   </div>
 </section>
@@ -629,8 +725,54 @@ footer a:hover{color:var(--ap-white)}
     <span class="eyebrow eyebrow-teal">Partners &amp; Agents</span>
     <h2 class="h2">Build the AI Presenter Market With Us</h2>
     <p class="lead" style="margin-bottom:14px">AI Presenter works with agencies, consultants, technology partners, regional representatives and business development professionals who want to introduce intelligent presentation and automation solutions to their markets.</p>
-    <p class="body" style="max-width:920px;margin-bottom:34px">Our North America operation is developing a structured network of regional agents and sub-agents across Canada and the United States, supported by the platform, production and implementation capabilities of the India operation.</p>
-    <div class="g4" id="partnerGrid"></div>
+    <p class="body" style="max-width:920px;margin-bottom:34px">Our North America operation is developing a structured network of regional agents and sub-agents across Canada and the United States, supported by the platform, production and implementation capabilities of the India operation. This is how the network fits together:</p>
+    <div class="pnet">
+      <div class="pnet-engines">
+        <div class="pnet-node">
+          <span class="pnet-tag">India Operation · Mumbai</span>
+          <strong>The production engine</strong>
+          <p>Platform, content production and implementation behind every deployment in the network.</p>
+        </div>
+        <div class="pnet-bridge" aria-hidden="true">
+          <span class="pnet-bridge-arrow"><span class="gh">⇄</span><span class="gv">⇅</span></span>
+          <span class="pnet-bridge-label">One platform <br>One standard</span>
+        </div>
+        <div class="pnet-node">
+          <span class="pnet-tag">North America Operation · Brampton, ON</span>
+          <strong>The network builder</strong>
+          <p>Business development, partnerships and regional representation across Canada and the United States.</p>
+        </div>
+      </div>
+
+      <aside class="pnet-lane pnet-lane-down">
+        <span class="pnet-lane-head"><span class="pnet-lane-arrow" aria-hidden="true">↓</span>The platform sends down</span>
+        <ul>
+          <li>International product and delivery support</li>
+          <li>Structured onboarding</li>
+          <li>Sales and presentation resources</li>
+          <li>Implementation coordination</li>
+        </ul>
+      </aside>
+
+      <div class="pnet-spine">
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Regional agents</strong><p>Lead territories across Canada and the United States.</p></div>
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Sub-agents</strong><p>Extend each territory with local reach and relationships.</p></div>
+        <span class="pnet-varrow" aria-hidden="true"></span>
+        <div class="pnet-node pnet-tier"><strong>Clients</strong><p>Businesses across multiple industries, presented by AI Presenter.</p></div>
+      </div>
+
+      <aside class="pnet-lane pnet-lane-up">
+        <span class="pnet-lane-head"><span class="pnet-lane-arrow" aria-hidden="true">↑</span>Partners build up</span>
+        <ul>
+          <li>Local market development</li>
+          <li>Product demonstrations</li>
+          <li>Opportunities across multiple industries</li>
+          <li>Long-term account and relationship potential</li>
+        </ul>
+      </aside>
+    </div>
     <div style="margin-top:30px"><a class="btn btn-primary" href="#contact" data-ap="ap_partner_enquiry_click" data-label="Partner — Discuss Partnership">Discuss a Regional or Agency Partnership</a></div>
   </div>
 </section>
@@ -799,10 +941,6 @@ var IMPL_OPTIONS = [
  ["Enterprise Experience","Custom integrations, multiple locations, partner networks, advanced automation and dedicated workflows.",["Enterprise deployment","Multi-branch operations","Agency networks","International campaigns","Multi-product or multi-region use"]]
 ];
 
-var PARTNER_ADV = ["International product and delivery support","Local market development","Product demonstrations","Structured onboarding","Sales and presentation resources","Implementation coordination","Opportunities across multiple industries","Long-term account and relationship potential"];
-
-var PROCESS = ["Business discovery session","Customer journey and objective mapping","Content and asset collection","Knowledge architecture","Experience and interface design","AI configuration and response rules","CRM and automation connection","Internal testing","Client review and approval","Launch","Monitoring and optimisation"];
-
 var FAQS = [
  ["Is AI Presenter only a chatbot?","No. AI Presenter combines presentation, conversation, visuals, navigation, qualification, CRM workflows and follow-up into one connected customer experience."],
  ["Can AI Presenter be trained on our business information?","Yes. The platform is configured using approved business documents, FAQs, product details, sales information, media assets and response rules supplied or approved by the client."],
@@ -900,16 +1038,6 @@ function el(tag,cls,html){var e=document.createElement(tag); if(cls)e.className=
   IMPL_OPTIONS.forEach(function(o){
     w.appendChild(el('article','card impl','<h3 class="h3">'+o[0]+'</h3><p>'+o[1]+'</p><ul>'+o[2].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul>'));
   });
-})();
-
-(function(){ // partner advantages
-  var w=document.getElementById('partnerGrid');
-  PARTNER_ADV.forEach(function(s){ w.appendChild(el('article','card','<p style="color:var(--ap-white);font-size:15px;font-weight:500">'+s+'</p>')); });
-})();
-
-(function(){ // process
-  var w=document.getElementById('procGrid');
-  PROCESS.forEach(function(s,n){ w.appendChild(el('div','proc-item','<span>'+String(n+1).padStart(2,'0')+'</span><p>'+s+'</p>')); });
 })();
 
 (function(){ // FAQ + schema
