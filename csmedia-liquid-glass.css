@@ -1,0 +1,172 @@
+/*!
+ * CS Media & Production — Liquid Glass controls
+ * Used by the AI Presenter page (/ai-presenter) in place of the BendyButton
+ * 3D engine. Pure CSS: no DOM restructuring, so media controls — the carousel
+ * stage is a <button> wrapping a 16:9 image — can never be repainted or
+ * collapsed by an engine again.
+ *
+ * The look, from the liquid-glass reference: a dark smoked-glass slab with a
+ * bright specular rim along the top, a curved reflection band, and a coloured
+ * bloom underneath. Primary actions bloom orange (the page's brand action
+ * colour), secondary and utility controls bloom teal.
+ *
+ * Anatomy per control:
+ *   background   — vertical smoke gradient over backdrop blur
+ *   border+inset — the polished rim, brightest at the top edge
+ *   ::before     — the curved specular reflection (top 45% of the slab)
+ *   box-shadow   — drop shadow + the coloured bloom
+ */
+
+/* ---------------------------------------------------------------- base */
+/* .lgx never sets `position` — the carousel arrows are position:absolute
+   and overriding that dropped them out of place, which is exactly the class
+   of bug this system exists to avoid. The init adds .lgx-rel only to
+   elements that were static, so the specular ::before always has a home. */
+.lgx-rel { position: relative; }
+.lgx {
+  isolation: isolate;
+  overflow: hidden;
+  color: #f4f8f6;
+  background:
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .14) 0%,
+      rgba(255, 255, 255, .04) 34%,
+      rgba(7, 16, 14, .38) 62%,
+      rgba(2, 8, 7, .52) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, .20);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .40),
+    inset 0 -10px 18px -12px rgba(255, 255, 255, .16),
+    0 12px 28px -8px rgba(0, 0, 0, .60);
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1),
+              box-shadow .25s ease, border-color .25s ease, background .25s ease;
+}
+/* the glass needs something to blur; without backdrop-filter support fall
+   back to a solid smoked surface so text stays readable */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lgx { background-color: rgba(9, 19, 17, .88); }
+}
+
+/* curved specular reflection across the top of the slab */
+.lgx::before {
+  content: '';
+  position: absolute;
+  left: 6%; right: 6%; top: 2px;
+  height: 46%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, .04) 78%, transparent);
+  filter: blur(.5px);
+  pointer-events: none;
+  z-index: 1;
+}
+.lgx > * { position: relative; z-index: 2; }
+
+.lgx:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, .34);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .52),
+    inset 0 -10px 18px -12px rgba(255, 255, 255, .20),
+    0 16px 34px -8px rgba(0, 0, 0, .62);
+}
+.lgx:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .30),
+    inset 0 4px 10px rgba(0, 0, 0, .35),
+    0 6px 16px -6px rgba(0, 0, 0, .55);
+}
+.lgx:focus-visible { outline: 2px solid #58c5bd; outline-offset: 3px; }
+
+/* ------------------------------------------------------ coloured blooms */
+/* primary — orange, the page's action colour */
+.lgx--primary {
+  background:
+    radial-gradient(120% 90% at 50% 118%, rgba(193, 68, 14, .55) 0%, rgba(193, 68, 14, .16) 46%, transparent 72%),
+    linear-gradient(180deg,
+      rgba(255, 255, 255, .16) 0%,
+      rgba(255, 255, 255, .05) 34%,
+      rgba(26, 12, 6, .40) 62%,
+      rgba(10, 4, 2, .55) 100%);
+  border-color: rgba(255, 176, 130, .30);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .42),
+    inset 0 -12px 22px -12px rgba(255, 122, 48, .38),
+    0 12px 30px -6px rgba(0, 0, 0, .55),
+    0 16px 38px -10px rgba(193, 68, 14, .58);
+}
+.lgx--primary:hover {
+  border-color: rgba(255, 196, 158, .44);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .55),
+    inset 0 -12px 22px -12px rgba(255, 122, 48, .46),
+    0 16px 36px -8px rgba(0, 0, 0, .58),
+    0 20px 46px -10px rgba(193, 68, 14, .70);
+}
+
+/* secondary / utility — teal */
+.lgx--teal {
+  border-color: rgba(120, 210, 200, .26);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .38),
+    inset 0 -12px 22px -12px rgba(38, 168, 158, .30),
+    0 12px 28px -8px rgba(0, 0, 0, .58),
+    0 14px 34px -12px rgba(13, 110, 106, .60);
+}
+.lgx--teal:hover {
+  border-color: rgba(150, 226, 217, .40);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .50),
+    inset 0 -12px 22px -12px rgba(38, 168, 158, .40),
+    0 16px 34px -8px rgba(0, 0, 0, .60),
+    0 18px 42px -12px rgba(13, 110, 106, .75);
+}
+
+/* quiet — square utility controls (burger, close, lightbox, carousel nav);
+   glass without a bloom so they never compete with content */
+.lgx--quiet { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .30), 0 8px 20px -8px rgba(0, 0, 0, .55); }
+
+/* ------------------------------------------------- the version switcher */
+/* small glass chips; the active version glows teal like a lit key */
+.mode-toggle.lgx-track {
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .12);
+  gap: 2px;
+}
+.lgx-track .mt-btn {
+  border-radius: 999px;
+  opacity: .8;
+  color: #eef4f2;
+}
+.lgx-track .mt-btn.active {
+  opacity: 1;
+  background:
+    radial-gradient(120% 100% at 50% 120%, rgba(13, 110, 106, .70) 0%, rgba(13, 110, 106, .22) 52%, transparent 78%),
+    linear-gradient(180deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .04) 40%, rgba(4, 26, 24, .5));
+  border: 1px solid rgba(120, 210, 200, .38);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .45),
+    0 6px 16px -6px rgba(13, 110, 106, .70);
+}
+
+/* on phones the four-version track scrolls inside the nav instead of
+   pushing it wide (same behaviour the other versions get from the shared
+   bendy stylesheet, carried here because this page no longer loads it) */
+@media (max-width: 768px) {
+  .nav-act, .nav-right { min-width: 0; }
+  .mode-toggle {
+    min-width: 0;
+    flex: 1 1 auto;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mode-toggle::-webkit-scrollbar { display: none; }
+  .mode-toggle > * { flex: 0 0 auto; }
+  .lgx-track .mt-btn { padding: 6px 10px; font-size: 9.5px; }
+}

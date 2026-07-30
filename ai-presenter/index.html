@@ -99,6 +99,8 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 #mnav a{color:var(--ap-white);text-decoration:none;font-size:19px;font-weight:500;padding:15px 0;border-bottom:1px solid var(--ap-border);min-height:44px}
 #mnav .btn{margin-top:18px}
 .mnav-close{position:absolute;top:22px;right:24px;background:transparent;border:1px solid var(--ap-border);color:var(--ap-white);width:44px;height:44px;border-radius:12px;font-size:20px;cursor:pointer}
+@media(max-width:1500px){nav{gap:14px;padding-inline:20px}.nav-links{gap:16px}.nav-act .btn-secondary{display:none}}
+@media(max-width:1280px){.nav-links{display:none}.nav-burger{display:inline-flex}}
 @media(max-width:1080px){.nav-links{display:none}.nav-burger{display:inline-flex}.nav-act .btn-secondary{display:none}}
 @media(max-width:640px){.nav-act .btn-primary{display:none}.mt-btn{padding:6px 8px;font-size:9.5px}}
 
@@ -1110,10 +1112,42 @@ document.querySelectorAll('.mt-btn').forEach(function(b){b.addEventListener('cli
 </script>
 
 <!-- ===== BendyButton 3D key — CS Media & Production ===== -->
-<link rel="stylesheet" href="/bendy3d.css">
-<link rel="stylesheet" href="/csmedia-bendy.css">
-<script src="/bendy3d.js"></script>
-<script src="/csmedia-bendy-init.js" data-mode="3d"></script>
+<!-- ===== Liquid glass controls — AI Presenter only ==================
+     This page does NOT load the BendyButton 3D engine: its carousel stage
+     is a <button> wrapping a 16:9 image, and the engine's DOM rebuild
+     painted it over as a giant key and collapsed the lightbox controls.
+     Glass here is pure CSS — nothing restructures the buttons. -->
+<link rel="stylesheet" href="/csmedia-liquid-glass.css">
+<script>
+(function(){
+  // apply the glass classes to this page's controls
+  var give = function(sel, cls){
+    document.querySelectorAll(sel).forEach(function(e){
+      e.classList.add('lgx');
+      if (cls) e.classList.add(cls);
+      // the specular layer needs a positioned host, but forcing
+      // position:relative onto absolutely-positioned controls (the
+      // carousel arrows, the menu close) tears them out of place
+      if (getComputedStyle(e).position === 'static') e.classList.add('lgx-rel');
+    });
+  };
+  give('.btn-primary', 'lgx--primary');
+  give('.btn-secondary', 'lgx--teal');
+  give('.nav-burger, .mnav-close, .lb-btn, .csl-nav', 'lgx--quiet');
+  var mt = document.querySelector('.mode-toggle');
+  if (mt) mt.classList.add('lgx-track');
+
+  // keep the active version visible inside the scrollable track on phones
+  var a = document.querySelector('.mode-toggle .mt-btn.active');
+  if (a){
+    var t = a.parentElement;
+    if (t && t.scrollWidth > t.clientWidth){
+      t.scrollLeft += a.getBoundingClientRect().left - t.getBoundingClientRect().left
+                      - (t.clientWidth - a.offsetWidth) / 2;
+    }
+  }
+})();
+</script>
 <!-- ===================================================== -->
 </body>
 </html>
