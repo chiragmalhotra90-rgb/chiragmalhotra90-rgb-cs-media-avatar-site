@@ -186,16 +186,13 @@ h1,h2,h3,h4{font-weight:600;line-height:1.12;letter-spacing:-.015em}
 .prow:first-of-type{border-top:1px solid var(--ap-border)}
 @media(max-width:768px){.prow{grid-template-columns:1fr;gap:9px}}
 .prow .p-q{font-size:16.5px;font-weight:500;color:var(--ap-white);display:flex;gap:12px;align-items:flex-start}
-.prow .p-q span{color:var(--ap-orange-lit);flex:none;font-weight:600}
+.prow .p-q span{color:var(--ap-orange-lit);font-weight:600}
+.prow .p-q span:first-child{flex:none}
+.prow .p-q span+span{min-width:0}
 .prow .p-a{font-size:15px;color:var(--ap-silver);padding-left:18px;border-left:2px solid rgba(13,110,106,.55)}
 .prow .p-a b{color:var(--ap-teal-lit);font-weight:500;display:block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
 
 /* ---------- LIVE EXPERIENCE ---------- */
-.live-frame{border:1px solid var(--ap-border);border-radius:var(--ap-radius-lg);overflow:hidden;background:#050f0e;
-  box-shadow:0 30px 90px rgba(0,0,0,.45)}
-.live-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(216,224,220,.05);border-bottom:1px solid var(--ap-border)}
-.live-bar i{width:10px;height:10px;border-radius:50%;background:rgba(216,224,220,.22);display:block}
-.live-bar .u{margin-left:12px;font-size:12px;color:var(--ap-silver)}
 .live-note{margin-top:20px;font-size:14px;color:var(--ap-silver);padding:16px 20px;border-radius:16px;
   background:rgba(13,110,106,.09);border:1px solid rgba(13,110,106,.26)}
 
@@ -480,28 +477,12 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ BUSINESS PROBLEM ============ -->
-<section class="rv">
-  <div class="shell">
-    <span class="eyebrow">The Real Problem</span>
-    <h2 class="h2">Most Businesses Do Not Have a Lead Problem.<br>They Have a <span class="accent-orange">Response Problem.</span></h2>
-    <p class="lead" style="margin-bottom:14px">Potential customers arrive at different times, ask different questions and expect immediate clarity. Delayed responses, inconsistent explanations and disconnected follow-up cause genuine opportunities to disappear.</p>
-    <p class="body" style="max-width:920px;margin-bottom:40px">AI Presenter creates one reliable system that remains available, informed and consistent across every interaction.</p>
-    <div id="problemRows"></div>
-  </div>
-</section>
-
 <!-- ============ LIVE EXPERIENCE ============ -->
 <section id="live" class="rv">
   <div class="shell">
     <span class="eyebrow eyebrow-teal">Live Experience</span>
     <h2 class="h2">Do Not Just Read About It. Experience It.</h2>
     <p class="lead" style="margin-bottom:30px">Meet Maya, the conversational face of AI Presenter. Ask questions, explore a project, navigate locations and experience how a customer interacts with a business through an intelligent guided interface.</p>
-
-    <div class="live-frame">
-      <div class="live-bar" aria-hidden="true"><i></i><i></i><i></i><span class="u">AI Presenter — live interface</span></div>
-      <img src="/ai-presenter/media/08_skyhawks_investor_presentation.jpg" width="1536" height="864"
-           alt="AI Presenter delivering a full investor deck with Maya answering questions in a live Q&A panel alongside the slides.">
-    </div>
 
     <div class="hero-ctas" style="margin-top:26px">
       <a class="btn btn-primary" href="#contact" data-ap="ap_live_experience_click" data-label="Live — Launch Live Experience">Launch Live Experience</a>
@@ -582,6 +563,16 @@ footer a:hover{color:var(--ap-white)}
 </section>
 
 <!-- ============ BUSINESS OUTCOMES ============ -->
+<section class="rv">
+  <div class="shell">
+    <span class="eyebrow">The Real Problem</span>
+    <h2 class="h2">Most Businesses Do Not Have a Lead Problem.<br>They Have a <span class="accent-orange">Response Problem.</span></h2>
+    <p class="lead" style="margin-bottom:14px">Potential customers arrive at different times, ask different questions and expect immediate clarity. Delayed responses, inconsistent explanations and disconnected follow-up cause genuine opportunities to disappear.</p>
+    <p class="body" style="max-width:920px;margin-bottom:40px">AI Presenter creates one reliable system that remains available, informed and consistent across every interaction.</p>
+    <div id="problemRows"></div>
+  </div>
+</section>
+
 <section class="rv">
   <div class="shell">
     <span class="eyebrow">Business Outcomes</span>
@@ -773,11 +764,8 @@ var HERO_STATEMENTS = [
 var PROBLEMS = [
  ["Enquiries arrive outside office hours","An always-available guided business presentation."],
  ["Different salespeople provide different information","One controlled and approved business knowledge system."],
- ["Customers do not understand the complete offer","Interactive explanation based on individual interest and questions."],
  ["Teams repeat the same basic information","AI handles early-stage education while the team focuses on serious conversations."],
- ["Leads are captured without useful context","Conversation-led requirement capture and qualification."],
- ["Follow-up becomes irregular or too aggressive","Structured, relevant and knowledge-based follow-up."],
- ["International customers need confidence and accountability","India technology delivery connected to local North American representation."]
+ ["Leads are captured without useful context","Conversation-led requirement capture and qualification."]
 ];
 
 var HOW_STEPS = [
