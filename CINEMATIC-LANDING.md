@@ -35,6 +35,31 @@ it is reachable and shareable but never the page search results surface.
 5. Once the hero is behind you a scrim drops the weather back so the content
    sections stay readable; the smoke and storm keep running underneath.
 
+## The rotating headline
+
+The landing headline is shared. `csmedia-hero-lines.js` holds thirteen lines,
+each split into a `lead` (plain) and an `accent` (the part that carries the
+version's gradient), plus the 5s interval. Professional, Cinematic and Casual
+all read that one file, so the message is the same wherever a visitor lands —
+each version just renders it in its own type:
+
+| Version | How it renders |
+| --- | --- |
+| Professional | fade + rise on the `h1`, spectrum gradient on the accent |
+| Casual | cross-fade on the `h1`, lime gradient on the accent |
+| Cinematic | the letter-by-letter title animation, blue→red across the line |
+
+Edit the copy in `csmedia-hero-lines.js` and it changes on all three.
+
+On the Cinematic version only the headline swaps — the kicker, the sentence of
+copy and the two calls to action stay put, so the block animates on its own
+state rather than the card's. The line is re-fitted to the frame on every swap,
+which is why a two-word line and an eleven-word line both fill it.
+
+Auto-updating text has to be able to stop, so `CSHero.rotate` does not run at
+all under `prefers-reduced-motion` (the first line simply stays), and it pauses
+on a hidden tab.
+
 ## Sections
 
 Ported verbatim from the Professional version — same copy, same numbers, same

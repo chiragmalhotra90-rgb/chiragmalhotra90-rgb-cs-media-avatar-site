@@ -363,6 +363,28 @@
   min-height: 0 !important;
 }
 
+/* ═══════════════════════════════════════════ THE VERSION SWITCHER ══ */
+/* The switcher is a segmented control, not a call to action — with four
+   versions in it, CTA-sized padding runs the nav past the edge of the
+   viewport on a laptop, never mind a phone. Size these keys for what they
+   are. Placed after the per-version themes so it ties and wins on order. */
+[data-cs-bendy] .mt-btn,
+[data-cs-bendy] .mode-toggle .b3d {
+  --b3d-pad-y: 10px;
+  --b3d-pad-x: 16px;
+  --b3d-size: 11px;
+}
+
+/* Laptop widths: the switcher is the first thing to give, before a nav starts
+   dropping its links. */
+@media (max-width: 1300px) {
+  [data-cs-bendy] .mt-btn,
+  [data-cs-bendy] .mode-toggle .b3d {
+    --b3d-pad-x: 12px;
+    --b3d-size: 10.5px;
+  }
+}
+
 /* ═════════════════════════════════════════════════ SMALL SCREENS ══ */
 /* Each version already shrinks its own controls on phones, but those rules
    set `padding` / `font-size` on the host — and once a button is a 3D key the
@@ -378,7 +400,13 @@
     --b3d-size: 9.5px;
     --b3d-tracking: .03em;
   }
+  /* A flex item will not shrink below its content unless you say so, so
+     without min-width:0 the track just grows and max-width/overflow never
+     get a chance — which is how the Start button ended up off-screen. */
+  .nav-right, .nav-act { min-width: 0; flex: 1 1 auto; justify-content: flex-end; }
   .mode-toggle {
+    flex: 1 1 auto;          /* claim what the nav has left, then scroll */
+    min-width: 0;
     max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
@@ -386,4 +414,18 @@
   }
   .mode-toggle::-webkit-scrollbar { display: none; }
   .mode-toggle > * { flex: 0 0 auto; }
+}
+
+/* Small phones: whatever the nav has left has to be at least one key wide, or
+   the version you are on cannot be shown in full however far the track
+   scrolls. */
+@media (max-width: 480px) {
+  .mode-toggle { padding: 1px; }     /* the track's own padding costs a key 6px */
+  [data-cs-bendy] .mt-btn,
+  [data-cs-bendy] .mode-toggle .b3d {
+    --b3d-pad-y: 7px;
+    --b3d-pad-x: 8px;
+    --b3d-size: 9px;
+    --b3d-tracking: .02em;
+  }
 }

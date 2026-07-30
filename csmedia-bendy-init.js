@@ -211,13 +211,20 @@
     // With four versions the switcher scrolls sideways on a phone, so the
     // version you are actually on can start off-screen. Bring it into view
     // inside its own track — never the page.
-    var active = document.querySelector('.mode-toggle .mt-btn.active');
-    if (active && active.scrollIntoView) {
+    // offsetLeft is measured from the nearest positioned ancestor — which for
+    // a static track inside a fixed nav is the nav, not the track. Measure the
+    // gap between the two rects instead and nudge the existing scroll.
+    function centreActiveVersion() {
+      var active = document.querySelector('.mode-toggle .mt-btn.active');
+      if (!active) return;
       var track = active.parentElement;
-      if (track && track.scrollWidth > track.clientWidth) {
-        track.scrollLeft = active.offsetLeft - (track.clientWidth - active.offsetWidth) / 2;
-      }
+      if (!track || track.scrollWidth <= track.clientWidth) return;
+      var delta = active.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      track.scrollLeft += delta - (track.clientWidth - active.offsetWidth) / 2;
     }
+    centreActiveVersion();
+    // the keys resize when the webfont lands, so measure again after it does
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(centreActiveVersion);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

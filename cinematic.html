@@ -258,7 +258,7 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
 @media(max-width:640px){
   nav{ padding:12px 16px } nav.scrolled{ padding:9px 16px }
   .mt-btn{ padding:5px 8px; font-size:9px }
-  .start-btn{ display:none }
+  nav .start-btn{ display:none }
 }
 
 /* ============================================================
@@ -321,8 +321,15 @@ nav.scrolled{ padding:11px 40px; background:rgba(5,6,12,.92); border-bottom-colo
   opacity:.42; mix-blend-mode:overlay; pointer-events:none;
 }
 .sp{ display:inline-block; width:.3em }
-.card.is-in .glyph{ opacity:1; transform:translate3d(0,0,0) rotateX(0) scale(1); filter:blur(0) }
-.card.is-out .glyph{ opacity:0; transform:translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06); filter:blur(20px); transition-duration:.5s,.5s,.5s; transition-delay:calc(var(--i) * 12ms) }
+.card.is-in .glyph:not(.rot){ opacity:1; transform:translate3d(0,0,0) rotateX(0) scale(1); filter:blur(0) }
+.card.is-out .glyph:not(.rot){ opacity:0; transform:translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06); filter:blur(20px); transition-duration:.5s,.5s,.5s; transition-delay:calc(var(--i) * 12ms) }
+
+/* The rotating headline swaps every few seconds while the kicker, copy and
+   calls to action stay put, so it animates on its own state rather than the
+   card's — otherwise a new line would appear already landed. */
+.headline{ display:flex; flex-direction:column; align-items:center; transform-style:preserve-3d }
+.headline.is-in .glyph.rot{ opacity:1; transform:translate3d(0,0,0) rotateX(0) scale(1); filter:blur(0) }
+.headline.is-out .glyph.rot{ opacity:0; transform:translate3d(0,-.14em,90px) rotateX(16deg) scale(1.06); filter:blur(20px); transition-duration:.5s,.5s,.5s; transition-delay:calc(var(--i) * 12ms) }
 
 .kicker{
   font-size:clamp(.72rem,1.5vw,.96rem); letter-spacing:.42em; text-transform:uppercase;
@@ -920,6 +927,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line-soft); pad
   </div>
 </div>
 
+<script src="/csmedia-hero-lines.js"></script>
 <script>
 (() => {
 'use strict';
@@ -933,8 +941,7 @@ const CONFIG = {
     { lines: ['NO CREW'],     hold: 1050 },
     { lines: ['NO RESHOOTS'], hold: 1200 },
     {
-      lines: ['CS MEDIA'],
-      sub:   'THE AVATAR ENGINE',
+      rotating: true,          // headline comes from CSHero.lines, every 5s
       final: true,
       kicker: 'CS Media &amp; Production',
       lede:  'AI-powered content, video, websites, CRM, branding & automation — under one connected engine.',
@@ -990,14 +997,26 @@ document.querySelectorAll('[data-goto]').forEach(a => {
 const deck  = $('#deck');
 const cards = [];
 
-function makeLine(text, mod){
+/* The landing copy is shared with the Professional and Casual versions —
+   csmedia-hero-lines.js is the one place it lives. */
+const HERO = (window.CSHero && window.CSHero.lines) ||
+             [{ lead: 'CS MEDIA', accent: 'THE AVATAR ENGINE' }];
+let headlineEl = null;
+
+function buildHeadline(entry){
+  headlineEl.textContent = '';
+  headlineEl.appendChild(makeLine(entry.lead, null, true));
+  headlineEl.appendChild(makeLine(entry.accent, 'sub', true));
+}
+
+function makeLine(text, mod, rot){
   const line = document.createElement('div');
   line.className = 'line' + (mod ? ' line--' + mod : '');
   let idx = 0;
   for (const ch of text){
     if (ch === ' '){ const sp = document.createElement('span'); sp.className = 'sp'; line.appendChild(sp); idx++; continue; }
     const g = document.createElement('span');
-    g.className = 'glyph';
+    g.className = rot ? 'glyph rot' : 'glyph';
     g.textContent = ch;
     g.setAttribute('data-char', ch);
     g.style.setProperty('--i', idx++);
@@ -1012,8 +1031,16 @@ CONFIG.cards.forEach(spec => {
   card.style.zIndex = spec.final ? 3 : 2;
 
   if (spec.kicker){ const k = document.createElement('p'); k.className = 'kicker'; k.innerHTML = spec.kicker; card.appendChild(k); }
-  spec.lines.forEach(t => card.appendChild(makeLine(t)));
-  if (spec.sub) card.appendChild(makeLine(spec.sub, 'sub'));
+
+  if (spec.rotating){
+    headlineEl = document.createElement('div');
+    headlineEl.className = 'headline';
+    card.appendChild(headlineEl);
+    buildHeadline(HERO[0]);
+  } else {
+    spec.lines.forEach(t => card.appendChild(makeLine(t)));
+    if (spec.sub) card.appendChild(makeLine(spec.sub, 'sub'));
+  }
   if (spec.lede){ const p = document.createElement('p'); p.className = 'lede'; p.textContent = spec.lede; card.appendChild(p); }
 
   if (spec.actions){
@@ -1088,7 +1115,11 @@ const wait = (ms, fn) => timers.push(setTimeout(fn, ms));
 function show(card){
   card.el.classList.remove('is-out');
   card.el.classList.add('is-live');
-  requestAnimationFrame(() => requestAnimationFrame(() => card.el.classList.add('is-in')));
+  const head = card.el.querySelector('.headline');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    card.el.classList.add('is-in');
+    if (head) head.classList.add('is-in');
+  }));
 }
 function hide(card){
   card.el.classList.remove('is-in');
@@ -1115,12 +1146,31 @@ function play(from = 0){
         $('#skip').hidden   = true;
         $('#replay').hidden = false;
         markSeen();
+        startRotation();
       });
       break;
     }
     wait(t + inMs + hold, () => hide(card));
     t += inMs + hold + CONFIG.cardOut;
   }
+}
+
+let rotator = null;
+function swapHeadline(entry){
+  if (!headlineEl) return;
+  headlineEl.classList.remove('is-in');
+  headlineEl.classList.add('is-out');
+  wait(480, () => {
+    buildHeadline(entry);
+    headlineEl.classList.remove('is-out');
+    fitLines();                 // the new line is a different length
+    paintGradients();
+    requestAnimationFrame(() => requestAnimationFrame(() => headlineEl.classList.add('is-in')));
+  });
+}
+function startRotation(){
+  if (rotator || !window.CSHero) return;
+  rotator = window.CSHero.rotate({ onChange: swapHeadline });
 }
 
 function skipToEnd(){
@@ -1131,6 +1181,7 @@ function skipToEnd(){
   $('#skip').hidden   = true;
   $('#replay').hidden = false;
   markSeen();
+  startRotation();
 }
 
 $('#skip').addEventListener('click', skipToEnd);
