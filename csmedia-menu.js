@@ -27,6 +27,9 @@
     ['cinematic',    'Cinematic',    '/cinematic.html',    'The trailer experience'],
     ['casual',       'Casual',       '/',                  'The playground']
   ];
+  var INDUSTRIES = [
+    ['Real Estate', '/real-estate.html', 'videos · content · AI']
+  ];
   var KNOWLEDGE = [
     ['The Digital Marketing Map', '/knowledge.html#map'],
     ['Knowledge Nexus', '/knowledge.html#nexus', 'coming soon']
@@ -137,6 +140,9 @@
       try { localStorage.setItem('cs_mode', v[0]); } catch (e) {}
     });
   });
+
+  var gi = group('Industries');
+  INDUSTRIES.forEach(function (k) { row(gi, k[0], k[1], k[2]); });
 
   var gk = group('Knowledge');
   KNOWLEDGE.forEach(function (k) { row(gk, k[0], k[1], k[2]); });
