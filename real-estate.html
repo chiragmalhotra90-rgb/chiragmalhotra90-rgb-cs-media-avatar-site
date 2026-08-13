@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real Estate Videos, Content &amp; AI Presenters — CS Media &amp; Production</title>
+<meta name="description" content="Project films, walkthrough videos, social reels and AI presenters for real estate. CS Media &amp; Production helps developers and agents present projects, answer buyers and capture leads — from Mumbai, India and Brampton, Canada.">
+<link rel="canonical" href="https://csmediaandproduction.in/real-estate.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CS Media &amp; Production">
+<meta property="og:title" content="Real Estate Videos, Content &amp; AI Presenters">
+<meta property="og:description" content="Project films, walkthrough videos, social reels and AI presenters that sell property around the clock.">
+<meta property="og:url" content="https://csmediaandproduction.in/real-estate.html">
+<meta property="og:image" content="https://csmediaandproduction.in/ai-presenter/media/10_hsa_ai_navigator.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --k-bg:#0a0d0f; --k-card:rgba(255,255,255,.035); --k-border:rgba(255,255,255,.12);
+  --k-white:#f2f5f4; --k-silver:#aab4b1; --k-teal:#12938d; --k-teal-lit:#9be0d8;
+  --k-sand:#d9b08c; --k-orange:#e0561b; --k-radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--k-bg);color:var(--k-white);font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(60% 40% at 18% 8%,rgba(18,147,141,.12),transparent 65%),
+             radial-gradient(50% 40% at 88% 92%,rgba(217,176,140,.08),transparent 65%)}
+:focus-visible{outline:2px solid var(--k-teal-lit);outline-offset:3px;border-radius:6px}
+
+.k-nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(18px,4vw,42px);background:rgba(10,13,15,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--k-border)}
+.k-brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--k-white)}
+.k-brand b{font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase}
+.k-brand small{font-size:9px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--k-silver)}
+.k-nav-right{display:flex;align-items:center;gap:12px}
+
+.k-shell{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:clamp(40px,7vw,80px) clamp(18px,4vw,42px) 30px}
+.k-eyebrow{font-size:11.5px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--k-teal-lit);display:block;margin-bottom:14px}
+h1{font-size:clamp(30px,5.4vw,52px);font-weight:650;line-height:1.12;letter-spacing:-.01em;margin-bottom:18px}
+h1 .warm{color:var(--k-sand)}
+h2{font-size:clamp(22px,3vw,32px);font-weight:650;line-height:1.2;margin-bottom:12px}
+.k-lead{font-size:clamp(16px,1.4vw,19px);color:var(--k-silver);max-width:780px;margin-bottom:30px}
+.k-sec{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:clamp(26px,4vw,44px) clamp(18px,4vw,42px)}
+
+.k-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.k-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 26px;border-radius:999px;
+  font-size:14.5px;font-weight:500;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;
+  transition:background .25s,transform .22s}
+.k-btn-primary{background:var(--k-orange);color:#fff}
+.k-btn-primary:hover{transform:translateY(-2px);background:#f0642a}
+.k-btn-ghost{background:transparent;color:var(--k-white);border-color:var(--k-teal)}
+.k-btn-ghost:hover{background:rgba(18,147,141,.18);transform:translateY(-2px)}
+
+.k-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:26px}
+.k-card{background:var(--k-card);border:1px solid var(--k-border);border-radius:var(--k-radius);padding:24px;transition:border-color .3s}
+.k-card:hover{border-color:rgba(18,147,141,.5)}
+.k-card h3{font-size:17px;font-weight:600;margin-bottom:6px}
+.k-card p{font-size:14.3px;color:var(--k-silver);line-height:1.55}
+
+.k-show{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:26px}
+.k-shot{border:1px solid var(--k-border);border-radius:var(--k-radius);overflow:hidden;background:#06090b}
+.k-shot img{display:block;width:100%;height:auto}
+.k-shot figcaption{padding:14px 18px;font-size:13.5px;color:var(--k-silver);border-top:1px solid var(--k-border)}
+.k-shot figcaption b{color:var(--k-white);font-weight:600;display:block;font-size:14.5px;margin-bottom:2px}
+
+/* video shelf — same click-to-load contract as the Knowledge page */
+.vid-flow{display:flex;flex-direction:column;gap:24px;margin-top:26px}
+.vid-item{background:var(--k-card);border:1px solid var(--k-border);border-radius:var(--k-radius);padding:clamp(18px,3vw,26px)}
+.vid-head{display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:0}
+.vid-head h3{font-size:18px;font-weight:600;margin-bottom:4px}
+.vid-head p{font-size:14.3px;color:var(--k-silver);max-width:640px}
+.vid-stage{margin-top:20px;position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid var(--k-border);
+  background:radial-gradient(120% 90% at 50% 115%,rgba(18,147,141,.3),transparent 60%),#06090b}
+.vid-stage[hidden]{display:none}
+.vid-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid-open{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 24px;
+  border-radius:999px;border:1px solid var(--k-teal);background:transparent;color:var(--k-white);
+  font-family:inherit;font-size:14.5px;font-weight:500;cursor:pointer;transition:background .25s,transform .22s}
+.vid-open:hover{background:rgba(18,147,141,.18);transform:translateY(-2px)}
+.vid-open:disabled{cursor:default;opacity:.75;transform:none}
+
+.k-band{background:var(--k-card);border:1px solid var(--k-border);border-radius:var(--k-radius);padding:clamp(28px,4vw,44px);text-align:center}
+.k-band p{color:var(--k-silver);max-width:700px;margin:0 auto 22px}
+
+.k-foot{position:relative;z-index:1;border-top:1px solid var(--k-border);margin-top:40px;padding:26px clamp(18px,4vw,42px);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--k-silver)}
+.k-foot a{color:var(--k-white);text-decoration:none;padding-block:6px;display:inline-block;min-height:32px}
+.k-foot a:hover{color:var(--k-teal-lit)}
+</style>
+</head>
+<body>
+
+<header class="k-nav">
+  <a class="k-brand" href="/ai-presenter"><b>CS Media &amp; Production</b><small>Real Estate</small></a>
+  <div class="k-nav-right"><span class="cs-menu-slot"></span></div>
+</header>
+
+<main>
+<section class="k-shell">
+  <span class="k-eyebrow">Real Estate · Videos · Content · AI</span>
+  <h1>Content That Sells Property.<br><span class="warm">Presenters That Never Sleep.</span></h1>
+  <p class="k-lead">CS Media &amp; Production builds the full content engine for real estate — project films, walkthrough videos, social reels and AI presenters that introduce your project, answer every buyer's questions and capture qualified leads, at every hour a buyer is looking.</p>
+  <div class="k-ctas">
+    <a class="k-btn k-btn-primary" href="/ai-presenter#contact">Book a Real Estate Demo</a>
+    <a class="k-btn k-btn-ghost" href="#work">See Client Work</a>
+  </div>
+</section>
+
+<section class="k-sec" id="stack">
+  <span class="k-eyebrow">What We Make</span>
+  <h2>The Real Estate Content Stack</h2>
+  <div class="k-grid">
+    <article class="k-card"><h3>Project Films &amp; Walkthroughs</h3><p>Cinematic project films and walkthrough videos that present towers, villas and townships the way buyers want to see them.</p></article>
+    <article class="k-card"><h3>Social Reels &amp; Campaigns</h3><p>Short-form reels, launch campaigns and paid-promotion creatives built for property marketing calendars.</p></article>
+    <article class="k-card"><h3>AI Presenter for Projects</h3><p>Maya presents your project, walks buyers through plans and amenities, and answers questions by voice or text — 24/7, in the buyer's language.</p></article>
+    <article class="k-card"><h3>AI Navigator</h3><p>An interactive project map with location intelligence — travel times, schools, hospitals, connectivity — explored by the buyer, guided by AI.</p></article>
+    <article class="k-card"><h3>Lead Capture &amp; CRM Follow-Up</h3><p>Every conversation qualified and handed to your sales team with full context, then followed up automatically.</p></article>
+    <article class="k-card"><h3>Brand &amp; Launch Collateral</h3><p>Brochures, decks, landing pages and launch content — one consistent brand across every buyer touchpoint.</p></article>
+  </div>
+</section>
+
+<section class="k-sec" id="work">
+  <span class="k-eyebrow">Client Work</span>
+  <h2>Built for Home Search Advisors</h2>
+  <p class="k-lead" style="margin-bottom:0">A complete AI-presented real-estate experience, live for a working brokerage — presented by Maya, explored by buyers.</p>
+  <div class="k-show">
+    <figure class="k-shot">
+      <img src="/ai-presenter/media/10_hsa_ai_navigator.jpg" alt="AI Navigator for Home Search Advisors — interactive project map with travel times and Maya answering location questions" loading="lazy" width="1536" height="864">
+      <figcaption><b>AI Navigator</b>The project on a living map — travel times, landmarks and connectivity, with Maya answering location questions live.</figcaption>
+    </figure>
+    <figure class="k-shot">
+      <img src="/ai-presenter/media/11_hsa_custom_ui.jpg" alt="Custom-built Home Search Advisors interface — topic navigation around the brand with Maya ready to present and answer" loading="lazy" width="1536" height="864">
+      <figcaption><b>Custom Interface</b>A custom-made home screen around the brand — every topic a tap away, Maya ready to present, answer and talk.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="k-sec" id="videos">
+  <span class="k-eyebrow">Watch</span>
+  <h2>Real Estate, Presented</h2>
+  <p class="k-lead" style="margin-bottom:0">Videos load only when you press play, so the page stays light. More project films are on the way.</p>
+
+  <div class="vid-flow">
+    <article class="vid-item" data-yt="yvKjmDCwu40">
+      <div class="vid-head">
+        <div>
+          <h3>Maya Explains AI Presenter</h3>
+          <p>How an AI presenter greets buyers, presents a project and answers questions — explained by Maya herself in 2 minutes.</p>
+        </div>
+        <button type="button" class="vid-open">Play ▶</button>
+      </div>
+      <div class="vid-stage" hidden></div>
+    </article>
+
+    <!-- ==================================================================
+         NEW REAL-ESTATE VIDEOS GO HERE — copy the .vid-item block above.
+         For a YouTube video set data-yt="VIDEO_ID"; for a self-hosted file
+         set data-src="/path/to/video.mp4" instead. Each block inherits the
+         click-to-load player automatically.
+         ================================================================== -->
+  </div>
+</section>
+
+<section class="k-sec">
+  <div class="k-band">
+    <h2>Launching a Project?</h2>
+    <p>From the first teaser reel to an AI presenter that works every enquiry — one partner, one connected engine, serving India, Canada and the USA.</p>
+    <a class="k-btn k-btn-primary" href="/ai-presenter#contact">Talk to Our Team</a>
+  </div>
+</section>
+</main>
+
+<footer class="k-foot">
+  <span>© 2026 CS Media &amp; Production</span>
+  <a href="/ai-presenter">← Back to the site</a>
+</footer>
+
+<script>
+// click-to-load players — zero third-party weight until play is pressed
+document.querySelectorAll('.vid-item').forEach(function(item){
+  var btn=item.querySelector('.vid-open'), stage=item.querySelector('.vid-stage');
+  if(!btn||!stage) return;
+  btn.addEventListener('click',function(){
+    if(item.dataset.on) return; item.dataset.on='1';
+    btn.disabled=true; btn.textContent='Playing';
+    stage.hidden=false;
+    var f=document.createElement(item.dataset.yt?'iframe':'video');
+    if(item.dataset.yt){
+      f.src='https://www.youtube-nocookie.com/embed/'+item.dataset.yt+'?autoplay=1&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&color=white';
+      f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen=true;
+      f.title=item.querySelector('h3').textContent;
+    }else{
+      f.src=item.dataset.src; f.controls=true; f.autoplay=true; f.playsInline=true;
+      f.style.cssText='position:absolute;inset:0;width:100%;height:100%';
+    }
+    stage.appendChild(f);
+  });
+});
+</script>
+<script>window.CSMenuPage={current:'',sections:[
+  ['What We Make','#stack'],
+  ['Client Work','#work'],
+  ['Videos','#videos']
+]};</script>
+<script src="/csmedia-menu.js" defer></script>
+</body>
+</html>
