@@ -286,7 +286,9 @@ footer a:hover{color:#8fb4ff}
 </section>
 
 <!-- ===== SERVICES ===== -->
-<section class="band" id="services">
+<!-- pulled up over the sticky stage's exit so there's no black beat
+     between Touchdown and the first section -->
+<section class="band" id="services" style="margin-top:-44vh;position:relative;z-index:5">
   <span class="eyebrow">What we do</span>
   <h2 class="head"><span class="grad">THE ENGINE ROOM</span></h2>
   <p class="lead">Every discipline under one roof, wired together — so the content, the site, the presenter and the follow-up all speak to each other.</p>
@@ -375,7 +377,9 @@ footer a:hover{color:#8fb4ff}
       if (t > 0.05) active = i;
       var last = i === scenes.length - 1;
       /* enter fade / exit fade (the last scene stays landed) */
-      var o = t < 0.18 ? t/0.18 : (last ? 1 : (t > 0.82 ? (1-t)/0.18 : 1));
+      /* the first scene is the landing view — it must be fully visible at
+         scroll position zero, so it skips the entrance fade entirely */
+      var o = (i === 0 || t >= 0.18) ? (last ? 1 : (t > 0.82 ? (1-t)/0.18 : 1)) : t/0.18;
       sc.style.opacity = o.toFixed(3);
       var ls = layers[i];
       for (var j = 0; j < ls.length; j++) {
