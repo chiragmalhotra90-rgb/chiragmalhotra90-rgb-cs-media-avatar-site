@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Knowledge — CS Media &amp; Production</title>
-<meta name="description" content="Interactive knowledge experiences from CS Media &amp; Production — the Digital Marketing Map, the Knowledge Nexus, and more over time. Each one loads only when you open it.">
+<meta name="description" content="Interactive knowledge experiences from CS Media &amp; Production — the Digital Marketing Map, Creative Knowledge Library, Knowledge Nexus, and more over time.">
 <meta name="robots" content="noindex, follow">
 <style>
 :root{
@@ -87,6 +87,17 @@ h1{font-size:clamp(30px,5.4vw,52px);font-weight:650;line-height:1.12;letter-spac
          behaviour automatically.
          ================================================================== -->
 
+    <article class="know-item" id="creative-library" data-embed="/creative-resources.html">
+      <div class="know-head">
+        <div>
+          <h2>Creative Knowledge Library</h2>
+          <p>Five quick-access branches for design inspiration, UI/UX, textures, colors and AI tools — searchable, favorite-ready, and connected to the exact pages you use.</p>
+        </div>
+        <button type="button" class="know-load">Open the Library</button>
+      </div>
+      <div class="know-stage" hidden></div>
+    </article>
+
     <!-- FIXED LAST — the Knowledge Nexus always closes the flow -->
     <article class="know-item" id="nexus" data-embed="/nexus/Digital%20Marketing%20Nexus.html">
       <div class="know-head">
@@ -131,6 +142,7 @@ document.querySelectorAll('.know-item').forEach(function(item){
 </script>
 <script>window.CSMenuPage={current:'',sections:[
   ['The Digital Marketing Map','#map'],
+  ['Creative Knowledge Library','#creative-library'],
   ['Knowledge Nexus','#nexus']
 ]};</script>
 <script src="/csmedia-menu.js" defer></script>
