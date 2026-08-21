@@ -58,8 +58,24 @@
     card.dataset.industry = item.industry;
     var poster = el('div', 'work-poster');
     poster.dataset.world = item.worlds[0];
+    if (item.poster) {
+      var image = el('img', 'work-poster-image');
+      image.src = item.poster.src;
+      image.alt = item.poster.alt;
+      image.width = item.poster.width;
+      image.height = item.poster.height;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      image.addEventListener('error', function () {
+        poster.classList.remove('has-image');
+        image.remove();
+      }, { once: true });
+      poster.classList.add('has-image');
+      poster.style.setProperty('--work-position', item.poster.position || '50% 50%');
+      poster.appendChild(image);
+    }
     poster.appendChild(el('span', 'work-number', String(index + 1).padStart(2, '0')));
-    var identity = el('div');
+    var identity = el('div', 'work-identity');
     identity.appendChild(el('span', 'work-industry', item.industry));
     identity.appendChild(el('strong', 'work-client', item.client));
     poster.appendChild(identity);
