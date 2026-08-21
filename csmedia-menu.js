@@ -22,10 +22,14 @@
   var CUR = PAGE.current || '';
 
   var VERSIONS = [
-    ['aipresenter',  'AI Presenter', '/ai-presenter',      'The landing experience'],
-    ['professional', 'Professional', '/professional.html', 'The full agency site'],
-    ['cinematic',    'Cinematic',    '/cinematic.html',    'The trailer experience'],
-    ['casual',       'Casual',       '/',                  'The playground']
+    ['aipresenter',  'AI Presenter', '/ai-presenter',      'avatar · presenter-led content'],
+    ['professional', 'Professional', '/professional.html', 'websites · CRM · automation · growth'],
+    ['cinematic',    'Cinematic',    '/cinematic.html',    'custom shoots · film · campaigns'],
+    ['casual',       'Casual',       '/casual.html',        'UI/UX · creative service experiences']
+  ];
+  var EXPLORE = [
+    ['Services & Packages', '/services.html', 'choose the right world'],
+    ['See Our Work', '/work.html', '8 selected cases']
   ];
   var INDUSTRIES = [
     ['Real Estate', '/real-estate.html', 'videos · content · AI']
@@ -141,6 +145,9 @@
       try { localStorage.setItem('cs_mode', v[0]); } catch (e) {}
     });
   });
+
+  var ge = group('Explore');
+  EXPLORE.forEach(function (k) { row(ge, k[0], k[1], k[2]); });
 
   var gi = group('Industries');
   INDUSTRIES.forEach(function (k) { row(gi, k[0], k[1], k[2]); });

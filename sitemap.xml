@@ -9,12 +9,24 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://csmediaandproduction.in/real-estate.html</loc>
+    <loc>https://csmediaandproduction.in/cinematic.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://csmediaandproduction.in/services.html</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://csmediaandproduction.in/work.html</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://csmediaandproduction.in/</loc>
-    <priority>0.6</priority>
+    <loc>https://csmediaandproduction.in/casual.html</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://csmediaandproduction.in/real-estate.html</loc>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://csmediaandproduction.in/gallery/</loc>

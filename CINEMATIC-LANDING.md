@@ -65,7 +65,7 @@ on a hidden tab.
 
 Ported verbatim from the Professional version — same copy, same numbers, same
 prices: The Problem · Services (12) · Selected Work (counters + case filter) ·
-Operating Workflow · Pricing (+ ₹999 trial) · Onboarding · Selected Clients ·
+Operating Workflow · Pricing · Onboarding · Selected Clients ·
 CTA · footer · AI chatbot. **The Knowledge Hub is deliberately not included**
 and nothing on this page links to it.
 
