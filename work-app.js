@@ -83,6 +83,16 @@
     var body = el('div', 'work-body');
     body.appendChild(el('p', '', item.summary));
     body.appendChild(el('div', 'work-outcome', item.outcome));
+    if (item.deliverables && item.deliverables.length) {
+      var details = el('details', 'work-details');
+      details.appendChild(el('summary', '', 'Selected scope'));
+      var deliverables = el('ul', 'work-deliverables');
+      item.deliverables.forEach(function (deliverable) {
+        deliverables.appendChild(el('li', '', deliverable));
+      });
+      details.appendChild(deliverables);
+      body.appendChild(details);
+    }
     var worlds = el('div', 'work-worlds');
     item.worlds.forEach(function (id) { worlds.appendChild(el('span', '', worldName(id))); });
     body.appendChild(worlds);
