@@ -4,6 +4,7 @@
   "installCommand": null,
   "outputDirectory": ".",
   "redirects": [
-    { "source": "/professional.html", "destination": "/", "permanent": true }
+    { "source": "/professional.html", "destination": "/", "permanent": true },
+    { "source": "/nexus/:path*", "destination": "/knowledge.html", "permanent": true }
   ]
 }

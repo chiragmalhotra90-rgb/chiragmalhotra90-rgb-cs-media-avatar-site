@@ -37,8 +37,7 @@
   ];
   var KNOWLEDGE = [
     ['The Digital Marketing Map', '/knowledge.html#map'],
-    ['Creative Knowledge Library', '/knowledge.html#creative-library', '51 quick links'],
-    ['Knowledge Nexus', '/knowledge.html#nexus', 'coming soon']
+    ['Creative Knowledge Library', '/knowledge.html#creative-library', '51 quick links']
   ];
   var ACTIONS = [
     ['Watch Maya explain AI Presenter', '/ai-presenter#watch'],

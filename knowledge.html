@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Knowledge — CS Media &amp; Production</title>
-<meta name="description" content="Interactive knowledge experiences from CS Media &amp; Production — the Digital Marketing Map, Creative Knowledge Library, Knowledge Nexus, and more over time.">
+<meta name="description" content="Interactive knowledge experiences from CS Media &amp; Production — explore the Digital Marketing Map and Creative Knowledge Library.">
 <meta name="robots" content="noindex, follow">
 <style>
 :root{
@@ -81,10 +81,9 @@ h1{font-size:clamp(30px,5.4vw,52px);font-weight:650;line-height:1.12;letter-spac
     </article>
 
     <!-- ==================================================================
-         NEW ANIMATION SETS GO HERE, IN ORDER — keep the Map first and the
-         Nexus last. Copy a .know-item block above, point data-embed at the
-         new animation's HTML file, and it inherits the click-to-load
-         behaviour automatically.
+         NEW ANIMATION SETS GO HERE, IN ORDER — keep the Map first. Copy a
+         .know-item block, point data-embed at the new animation's HTML file,
+         and it inherits the click-to-load behaviour automatically.
          ================================================================== -->
 
     <article class="know-item" id="creative-library" data-embed="/creative-resources.html">
@@ -98,17 +97,6 @@ h1{font-size:clamp(30px,5.4vw,52px);font-weight:650;line-height:1.12;letter-spac
       <div class="know-stage" hidden></div>
     </article>
 
-    <!-- FIXED LAST — the Knowledge Nexus always closes the flow -->
-    <article class="know-item" id="nexus" data-embed="/nexus/Digital%20Marketing%20Nexus.html">
-      <div class="know-head">
-        <div>
-          <h2>Knowledge Nexus</h2>
-          <p>The digital-marketing universe, mapped — click any node to explore how strategy, content, AI and automation connect into one growth engine.</p>
-        </div>
-        <button type="button" class="know-load">Open the Nexus</button>
-      </div>
-      <div class="know-stage" hidden></div>
-    </article>
   </div>
 </main>
 
@@ -142,8 +130,7 @@ document.querySelectorAll('.know-item').forEach(function(item){
 </script>
 <script>window.CSMenuPage={current:'',sections:[
   ['The Digital Marketing Map','#map'],
-  ['Creative Knowledge Library','#creative-library'],
-  ['Knowledge Nexus','#nexus']
+  ['Creative Knowledge Library','#creative-library']
 ]};</script>
 <script src="/csmedia-menu.js" defer></script>
 <script src="/csmedia-guide.js" defer></script>
