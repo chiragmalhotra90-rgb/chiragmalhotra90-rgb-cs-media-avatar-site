@@ -3,8 +3,7 @@
   "buildCommand": null,
   "installCommand": null,
   "outputDirectory": ".",
-  "rewrites": [
-    { "source": "/", "destination": "/professional.html" },
-    { "source": "/casual.html", "destination": "/index.html" }
+  "redirects": [
+    { "source": "/professional.html", "destination": "/", "permanent": true }
   ]
 }
