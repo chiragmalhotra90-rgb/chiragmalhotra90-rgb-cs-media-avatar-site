@@ -4,6 +4,7 @@
   "installCommand": null,
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/", "destination": "/professional.html" },
     { "source": "/casual.html", "destination": "/index.html" }
   ]
 }

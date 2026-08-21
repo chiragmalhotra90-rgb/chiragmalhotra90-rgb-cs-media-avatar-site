@@ -13,16 +13,15 @@ site's BendyButton stylesheet/engine and the `/api/chat` endpoint.
 | Mode | URL | Switcher label |
 | --- | --- | --- |
 | AI Presenter | `/ai-presenter` | AI Presenter |
-| Professional | `/professional.html` | Professional |
+| Professional | `/` | Professional |
 | **Cinematic** | `/cinematic.html` | Cinematic |
-| Casual | `/` | Casual |
+| Casual | `/casual.html` | Casual |
 
-`localStorage.cs_mode` remembers the visitor's choice, and `/` forwards them
-back to it. **Anyone arriving with no stored choice — organic search, a shared
-link, a new device — lands on AI Presenter, the lightest version.** The
-cinematic page also carries `robots: noindex, follow` and a canonical pointing
-at `professional.html`, so it is reachable and shareable but never the page
-search results surface.
+`localStorage.cs_mode` remembers the visitor's choice inside the version
+switcher. The canonical `/` route opens Professional, while Casual remains
+available at `/casual.html`. The cinematic page also carries `robots: noindex,
+follow`, so it is reachable and shareable but never the page search results
+surface.
 
 ## What it does
 

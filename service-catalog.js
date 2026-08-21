@@ -58,7 +58,7 @@
       {
         id: 'professional',
         name: 'Professional',
-        route: '/professional.html',
+        route: '/',
         short: 'Systems, automation and growth execution',
         promise: 'Turn attention into an organised system that captures, follows up and improves.',
         description: 'Websites, funnels, CRM, automation, marketing operations and reporting joined into one working growth system.',

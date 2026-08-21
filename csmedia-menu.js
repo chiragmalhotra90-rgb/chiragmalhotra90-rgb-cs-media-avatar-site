@@ -24,7 +24,7 @@
 
   var VERSIONS = [
     ['aipresenter',  'AI Presenter', '/ai-presenter',      'avatar · presenter-led content'],
-    ['professional', 'Professional', '/professional.html', 'websites · CRM · automation · growth'],
+    ['professional', 'Professional', '/',                  'websites · CRM · automation · growth'],
     ['cinematic',    'Cinematic',    '/cinematic.html',    'custom shoots · film · campaigns'],
     ['casual',       'Casual',       '/casual.html',        'UI/UX · creative service experiences']
   ];

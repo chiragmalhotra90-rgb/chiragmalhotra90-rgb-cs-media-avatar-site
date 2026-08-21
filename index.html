@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<!-- Send returning visitors back to the version they chose. Anyone arriving
-     fresh — search, a shared link, a new device — lands on AI Presenter. -->
-<script>try{var p=location.pathname.replace(/\/+$/,'')||'/';if(p!=='/casual.html'){var m=localStorage.getItem('cs_mode');if(m==='professional'){location.replace('/professional.html');}else if(m==='cinematic'){location.replace('/cinematic.html');}else if(m==='aipresenter'){location.replace('/ai-presenter');}else if(m!=='casual'){location.replace('/ai-presenter');}}}catch(e){}</script>
+<!-- Keep direct index-file requests aligned with the visitor's saved version.
+     The public Casual route is /casual.html; the canonical root is Professional. -->
+<script>try{var p=location.pathname.replace(/\/+$/,'')||'/';if(p!=='/casual.html'){var m=localStorage.getItem('cs_mode');if(m==='professional'){location.replace('/');}else if(m==='cinematic'){location.replace('/cinematic.html');}else if(m==='aipresenter'){location.replace('/ai-presenter');}else if(m!=='casual'){location.replace('/ai-presenter');}}}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Casual — UI/UX &amp; Creative Service Experiences | CS Media</title>
@@ -2527,4 +2527,5 @@ CONTACT: info@csmediaandproduction.in · csmediaandproduction.in · @CSMediaProd
   ['Casual Process','#endtoend'],['See Our Work','#proof'],['Contact','#cta']
 ]};</script>
 <script src="/csmedia-menu.js" defer></script>
+<script src="/csmedia-guide.js" defer></script>
 </body></html>
